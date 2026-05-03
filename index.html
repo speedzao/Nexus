@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - Downloder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === VARIÁVEIS HDR E CORES === */
+        :root {
+            --bg-color: #050505;
+            --surface-color: #111111;
+            --primary-red: #ff003c;
+            --dark-red: #8a0020;
+            --text-main: #f0f0f0;
+            --text-muted: #888;
+            --hdr-glow: 0 0 15px rgba(255, 0, 60, 0.6), 0 0 30px rgba(255, 0, 60, 0.4);
+            --hdr-glow-intense: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.6), 0 0 60px rgba(255, 0, 60, 0.4);
+        }
+
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Rolagem suave ao clicar nos links */
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Customizada */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--dark-red); 
+            border-radius: 5px; 
+            border: 1px solid var(--primary-red);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
+
+        /* === EFEITO VHS & SCANLINES === */
+        .vhs-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Animação de Glitch no Texto */
+        .glitch {
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--surface-color);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 blue;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 44px, 0); }
+            20% { clip: rect(80px, 9999px, 12px, 0); }
+            40% { clip: rect(30px, 9999px, 90px, 0); }
+            60% { clip: rect(90px, 9999px, 50px, 0); }
+            80% { clip: rect(20px, 9999px, 80px, 0); }
+            100% { clip: rect(60px, 9999px, 10px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(20px, 9999px, 90px, 0); }
+            20% { clip: rect(50px, 9999px, 30px, 0); }
+            40% { clip: rect(80px, 9999px, 10px, 0); }
+            60% { clip: rect(10px, 9999px, 70px, 0); }
+            80% { clip: rect(90px, 9999px, 20px, 0); }
+            100% { clip: rect(40px, 9999px, 60px, 0); }
+        }
+
+        /* === HEADER === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: var(--surface-color);
+            border-bottom: 2px solid var(--primary-red);
+            box-shadow: var(--hdr-glow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            letter-spacing: 4px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid var(--primary-red);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: inset 0 0 10px rgba(255,0,60,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            box-shadow: var(--hdr-glow);
+            transform: scale(1.05);
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 10px;
+            outline: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            width: 250px;
+        }
+
+        .search-bar i { color: var(--primary-red); }
+
+        /* === LAYOUT PRINCIPAL === */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* SIDEBAR */
+        aside {
+            width: 280px;
+            background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%);
+            border-right: 1px solid #333;
+            padding: 30px 20px;
+            /* Deixa a sidebar grudada na tela */
+            position: sticky;
+            top: 85px; /* Altura do header aproximada */
+            height: calc(100vh - 85px);
+            overflow-y: auto;
+        }
+
+        aside h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu { list-style: none; }
+        .nav-menu li { margin-bottom: 15px; }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-menu a i {
+            color: var(--primary-red);
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: white;
+            background: rgba(255, 0, 60, 0.1);
+            text-shadow: 0 0 8px var(--primary-red);
+            border-left: 4px solid var(--primary-red);
+            transform: translateX(5px);
+        }
+
+        .nav-menu a:hover i {
+            transform: rotate(15deg) scale(1.2);
+            text-shadow: var(--hdr-glow);
+        }
+
+        .dmca-link {
+            color: #ff3333 !important;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); }
+        }
+
+        /* GRID DE JOGOS E MAIN */
+        main {
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - 280px);
+        }
+
+        .category-section {
+            margin-bottom: 80px;
+            scroll-margin-top: 100px; /* Evita que o header cubra o título ao rolar */
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--dark-red);
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        .grid-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, var(--primary-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 0px 15px rgba(255,0,60,0.3);
+        }
+
+        .grid-header h2 i {
+            margin-right: 15px;
+            color: var(--primary-red);
+            -webkit-text-fill-color: var(--primary-red);
+        }
+
+        /* SISTEMA DE FILTRO */
+        .filter-container { position: relative; }
+
+        .filter-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--primary-red);
+            color: white;
+            padding: 10px 20px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 0, 60, 0.2);
+            box-shadow: var(--hdr-glow);
+        }
+
+        .filter-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: var(--surface-color);
+            border: 1px solid var(--primary-red);
+            border-radius: 5px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 320px;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+
+        .filter-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .filter-tag {
+            background: rgba(255, 0, 60, 0.1);
+            color: var(--primary-red);
+            padding: 6px 14px;
+            cursor: pointer;
+            border: 1px solid var(--dark-red);
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .filter-tag:hover, .filter-tag.active {
+            background: var(--primary-red);
+            color: white;
+            box-shadow: var(--hdr-glow);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        /* CARDS DE JOGO */
+        .game-card {
+            background: var(--surface-color);
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .game-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary-red);
+            box-shadow: var(--hdr-glow);
+        }
+
+        .game-card:hover::after { left: 150%; }
+
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 2px solid #222;
+            transition: filter 0.3s;
+        }
+
+        .game-card:hover .game-img {
+            filter: contrast(130%) saturate(120%);
+            border-bottom-color: var(--primary-red);
+        }
+
+        .game-info { padding: 20px; }
+        
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .game-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(255, 0, 60, 0.1);
+            color: var(--primary-red);
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid var(--dark-red);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* === MODAIS === */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            width: 800px;
+            max-width: 90%;
+            border: 2px solid var(--primary-red);
+            box-shadow: var(--hdr-glow-intense);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 2.5rem;
+            color: var(--text-main);
+            cursor: pointer;
+            z-index: 10;
+            text-shadow: 0 0 10px black;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover { 
+            color: var(--primary-red); 
+            transform: rotate(90deg);
+        }
+
+        .modal-header-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--primary-red);
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+
+        .modal-body {
+            padding: 30px;
+            margin-top: -100px; 
+            position: relative;
+            z-index: 5;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 10px black, 0 0 20px var(--primary-red);
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .modal-desc {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-left: 4px solid var(--primary-red);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, var(--dark-red), var(--primary-red));
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: var(--hdr-glow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-download:hover {
+            transform: scale(1.02);
+            box-shadow: var(--hdr-glow-intense);
+        }
+
+        .btn-download:hover::before { left: 100%; }
+        
+        .btn-download i { animation: bounce-down 1s infinite; }
+
+        @keyframes bounce-down {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* Modal DMCA Específico */
+        .dmca-content { padding-top: 50px; text-align: center; }
+        .dmca-content h2 { color: #ff3333; font-size: 3rem; margin-bottom: 20px; }
+        .dmca-content i { font-size: 5rem; color: #ff3333; margin-bottom: 20px; text-shadow: 0 0 20px red; }
+    </style>
+</head>
+<body>
+
+    <div class="vhs-overlay"></div>
+
+    <header>
+        <div class="logo glitch" data-text="NEXUS">NEXUS</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar no sistema...">
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <h3><i class="fas fa-database"></i> CATEGORIAS</h3>
+            <ul class="nav-menu">
+                <li><a href="#section-jogos-pc"><i class="fas fa-gamepad"></i> Jogos PC</a></li> 
+                <li><a href="#section-apps-pc"><i class="fa-solid fa-desktop"></i> Apps PC</a></li>
+                <li><a href="#section-jogos-android"><i class="fa-brands fa-android"></i> Jogos ANDROID</a></li>
+                <li><a href="#section-apps-android"><i class="fa-solid fa-mobile-screen"></i> Apps ANDROID</a></li>
+                <li><a href="#section-emuladores"><i class="fa fa-keyboard"></i> Emuladores</a></li>
+                <li><a href="#section-extras"><i class="fa fa-coffee"></i> Extras</a></li>
+            </ul>
+
+            <h3 style="margin-top: 40px;"><i class="fas fa-server"></i> STATUS</h3>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="openDmcaModal()" class="dmca-link"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
+                <li><a href="#" style="font-size: 1rem; color: #0f0;"><i class="fas fa-bolt"></i> Servidores OK</a></li>
+            </ul>
+        </aside>
+
+        <main id="mainContent">
+            
+            <div class="category-section" id="section-jogos-pc">
+                <div class="grid-header">
+                    <h2><i class="fas fa-gamepad"></i> Jogos - PC</h2>
+                    <div class="filter-container">
+                        <button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> Filtrar Tags</button>
+                        <div class="filter-menu" id="filterMenu"></div>
+                    </div>
+                </div>
+                <div class="games-grid" id="container-jogos-pc"></div>
+            </div>
+
+            <div class="category-section" id="section-apps-pc">
+                <div class="grid-header">
+                    <h2><i class="fa-solid fa-desktop"></i> Aplicativos - PC</h2>
+                </div>
+                <div class="games-grid" id="container-apps-pc"></div>
+            </div>
+
+            <div class="category-section" id="section-jogos-android">
+                <div class="grid-header">
+                    <h2><i class="fa-brands fa-android"></i> Jogos - ANDROID</h2>
+                </div>
+                <div class="games-grid" id="container-jogos-android"></div>
+            </div>
+
+            <div class="category-section" id="section-apps-android">
+                <div class="grid-header">
+                    <h2><i class="fa-solid fa-mobile-screen"></i> Aplicativos - ANDROID</h2>
+                </div>
+                <div class="games-grid" id="container-apps-android"></div>
+            </div>
+
+            <div class="category-section" id="section-emuladores">
+                <div class="grid-header">
+                    <h2><i class="fa fa-keyboard"></i> Emuladores</h2>
+                </div>
+                <div class="games-grid" id="container-emuladores"></div>
+            </div>
+
+            <div class="category-section" id="section-extras">
+                <div class="grid-header">
+                    <h2><i class="fa fa-coffee"></i> Extras</h2>
+                </div>
+                <div class="games-grid" id="container-extras"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="gameModal">
+        <div class="modal-content">
+            <i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i>
+            <img src="" alt="Game Banner" class="modal-header-img" id="modalImg">
+            
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle">Nome do Jogo</h2>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="modalTags"></div>
+                <p class="modal-desc" id="modalDesc"></p>
+
+                <a href="#" class="btn-download" id="modalDownloadBtn" target="_blank">
+                    <i class="fas fa-download"></i> Baixar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="dmcaModal">
+        <div class="modal-content dmca-content modal-body">
+            <i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h2 style="font-family: 'Orbitron', sans-serif; text-transform: uppercase;">Aviso de Direitos Autorais (DMCA)</h2>
+            <p class="modal-desc" style="text-align: left; background: rgba(255,0,0,0.1); border-left-color: red;">
+                O NEXUS funciona apenas como um indexador. Não hospedamos nenhum arquivo em nossos servidores. Todos os links são criados e disponibilizados por terceiros na internet.
+                Se você é dono de algum conteúdo e deseja que ele seja removido, entre em contato conosco com as provas de autoria e o removeremos imediatamente de nosso diretório. <br><br>
+                Entre em Contato: nexushope31@gmail.com
+            </p>
+            <button class="btn-download" style="background: #333;" onclick="closeModal('dmcaModal')">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <script>
+        /* === BANCO DE DADOS (Categorias Ajustadas) === */
+        const gamesDB = [
+            // JOGOS PC
+            { id: 1, category: "jogos-pc",
+             title: "Angry Birds",
+              img: "https://i.pinimg.com/736x/33/f4/1c/33f41cb1d37bbdc2b523d5655d4629b2.jpg",
+               tags: ["Puzzle", "Casual"],
+                desc: "Derrote os porcos e pegue seu ovo.",
+                 link: "#" },
+
+            { id: 2, category: "jogos-pc",
+             title: "Alice American Mcgee 1",
+              img: "https://i.pinimg.com/736x/6a/41/8a/6a418affa7b491fc97eb1a7f78f222b8.jpg",
+               tags: ["Aventura", "Plataforma", "Terror"],
+                desc: "O inicio de macabrisses.",
+                 link: "#" },
+
+            { id: 3, category: "jogos-pc",
+             title: "Alice Madness Return 2",
+              img: "https://i.pinimg.com/1200x/1a/dc/94/1adc9461b59db9951b12947a46fa1f69.jpg",
+               tags: ["Aventura", "Plataforma", "Terror"],
+                desc: "Despedace demônios com uma trilha sonora épica.",
+                 link: "#" },
+
+            { id: 4, category: "jogos-pc",
+             title: "Animal Revolt Battle",
+              img: "https://i.pinimg.com/736x/fd/ea/99/fdea99ab4b093c8bf511ca187f772720.jpg",
+               tags: ["Simulador", "Sandbox"],
+                desc: "Crie batalhas insanas entre feras.",
+                 link: "#" },
+
+            { id: 5, category: "jogos-pc",
+             title: "Assassin's Creed",
+              img: "https://i.pinimg.com/736x/5a/be/af/5abeaf303ac241df5f1f06bf7d047642.jpg",
+               tags: ["Aventura", "Mundo Aberto", "Stealth"],
+                desc: "Explore o mundo aberto clássico.",
+                 link: "#" },
+
+            { id: 6, category: "jogos-pc",
+             title: "Bully",
+              img: "https://i.pinimg.com/1200x/bc/dd/bb/bcddbb371a674e918115137f1cfe6e7c.jpg",
+               tags: ["Aventura", "Mundo Aberto"],
+                desc: "Domine a escola em Bully.",
+                 link: "#" },
+
+            { id: 8, category: "jogos-pc", 
+            title: "Baldi´s Basics",
+             img: "https://i.pinimg.com/736x/3d/66/62/3d6662e44cab5319808440e9db67302e.jpg",
+              tags: ["Runner", ],
+               desc: "Tente escapar da sua escola!",
+                 link: "#" },
+
+            { id: 9, category: "jogos-pc",
+             title: "Battlefield 2",
+              img: "https://i.pinimg.com/1200x/a0/79/0a/a0790aad3e3627472a6cc7145ddb3075.jpg",
+               tags: ["FPS", "Guerra"], desc: "O Famoso, TIRO, PORRADA e BOMBA!",
+                link: "#" },
+
+            { id: 10, category: "jogos-pc", 
+            title: "Buckshot Roulette",
+             img: "https://i.pinimg.com/736x/e5/bf/14/e5bf14dbebc62959a3094a7235527f86.jpg",
+              tags: ["Sorte", "Terror"],
+               desc: "Faça Roleta Russa com o Tinhoso!",
+                link: "#" },
+                
+            { id: 11, category: "jogos-pc",
+             title: "Carnivores",
+              img: "https://i.pinimg.com/1200x/e8/c3/ff/e8c3ff2e5e1b80ea8464a92bdaa59e30.jpg",
+               tags: ["FPS", "Hunter"],
+                desc: "Caçada a dinossauros!",
+                 link: "#" },
+
+            { id: 12, category: "jogos-pc",
+             title: "Cookie Clicker",
+              img: "https://i.pinimg.com/736x/4d/30/d4/4d30d4c84638bdfc607c4160ce7d9fba.jpg",
+               tags: ["Clicker", "Casual"],
+                desc: "Um classico Clicker!",
+                 link: "#" },
+
+            { id: 20, category: "jogos-pc",
+             title: "Counter Strike 1.6",
+              img: "https://counter-strike-download.net/img/classic/cs16-cover.webp",
+               tags: ["FPS",],
+                desc: "Um classico FPS! (INSTALADOR)",
+                 link: "https://www.mediafire.com/file/ef4z3pyjpht22mg/CS16_Setup.exe/file" },
+
+            { id: 21, category: "jogos-pc",
+             title: "Call Of Duty 1",
+              img: "https://i.pinimg.com/1200x/39/be/8e/39be8e415e94023b864e8a41799cac06.jpg",
+               tags: ["FPS", "Guerra", "Ação" ],
+                desc: "O pioneiro dos jogos de guerra!",
+                 link: "https://drive.google.com/file/d/1PuvhbAJzIwbRK6xLnxKhSxTCe4kWKwmD/view" },
+                 
+            { id: 22, category: "jogos-pc",
+             title: "Call Of Duty 2",
+              img: "https://gaming-cdn.com/images/products/5705/orig/call-of-duty-2-pc-mac-jogo-steam-cover.jpg?v=1710513086",
+               tags: ["FPS", "Guerra", "Ação" ],
+                desc: "Continuando a Segunda Guerra MUNDIAL!",
+                 link: "https://mega.nz/file/qgJgCSgL#N1w1uRuPTWoKOT5nwiNI6KaOp6jKEhn-MR8HP2RvMRw" },
+
+            { id: 23, category: "jogos-pc",
+             title: "COD 4: Modern Warfare",
+              img: "https://i.pinimg.com/736x/91/fc/8c/91fc8cac608cc6477e7ee8c2415caab3.jpg",
+               tags: ["FPS", "Guerra", "Ação" ],
+                desc: "Chega de 2 guerra, agora o bagulho é atual!",
+                 link: "https://gofile.io/d/rpeZ8y" },
+
+            { id: 24, category: "jogos-pc",
+             title: "COD: Modern Warfare 2",
+              img: "https://i.pinimg.com/1200x/48/2c/c8/482cc8cbd6c4d8d35d3909fe6d2de2f0.jpg",
+               tags: ["FPS", "Guerra", "Ação" ],
+                desc: "Continuação direta do MW 1! - Baixe o FDM para TORRENTS RAPIDOS!",
+                 link: "https://www.mediafire.com/file/ep17lc8bv8tyh5x/Call_of_Duty_Modern_Warfare_2_%2528v1.0%2529_%255BDarck_Repack%255D.torrent/file" },
+
+            { id: 25, category: "jogos-pc",
+             title: "COD: Modern Warfare 3",
+              img: "https://i.pinimg.com/1200x/84/3d/d4/843dd41df63cfa16ad89e220c3b431a0.jpg",
+               tags: ["FPS", "Guerra", "Ação" ],
+                desc: "Desfecho da franquia MW! - Baixe o FDM para TORRENTS RAPIDOS!",
+                 link: "https://www.mediafire.com/file/supc4f6ahh6ck7m/Call_of_Duty_Modern_Warfare_3_%2528v1.9.461_%252B_DLCs%2529_-_%255BDODI_Repack%255D.torrent/file" },
+
+            { id: 26, category: "jogos-pc",
+             title: "Call of Juarez Gunslinger",
+              img: "https://i.pinimg.com/1200x/36/7d/76/367d76e19006ba6592eb6f7325c0fafd.jpg",
+               tags: ["FPS", "Ação" ],
+                desc: "O caos reina no velho oeste.",
+                 link: "https://drive.google.com/file/d/1RsrKNxc1V1DTiSCa5LDoJBA8fIOUEMV9/view?usp=sharing" },
+
+            { id: 27, category: "jogos-pc",
+             title: "Crazy Taxi",
+              img: "https://i.pinimg.com/736x/7d/fa/dc/7dfadc4331075f449e4d9be0258d3ec4.jpg",
+               tags: ["Casual", "Corrida" ],
+                desc: "Seja o taxista mais louco de todos!",
+                 link: "https://www.mediafire.com/file/rki1fl88mx8pcy2/Crazy_Taxi.zip/file" },
+
+            { id: 28, category: "jogos-pc",
+             title: "Diablo",
+              img: "https://i.pinimg.com/736x/7b/bc/29/7bbc29d84eadc8580bd3534aeb8ea4ed.jpg",
+               tags: ["RPG", "Ação" ],
+                desc: "Focado na eterna luta entre o Paraíso e o Inferno.",
+                 link: "https://www.mediafire.com/file/c0ajhehm199exhl/Diablo.zip/file" },
+
+            { id: 29, category: "jogos-pc",
+             title: "Doom 1",
+              img: "https://i.pinimg.com/736x/51/31/de/5131de90c5c378e62e5c99bba65ba36d.jpg",
+               tags: ["FPS", "Shooter" ],
+                desc: "Derrote os capetas de formas brutais!",
+                 link: "https://www.mediafire.com/file/9i7gg4t8qgqrg36/Doom_1.zip/file" },
+
+            { id: 30, category: "jogos-pc",
+             title: "Doom 2",
+              img: "https://i.pinimg.com/1200x/3f/19/40/3f194020bb2a42a67da5738bb222e8a2.jpg",
+               tags: ["FPS", "Shooter" ],
+                desc: "Derrote os capetas de formas brutais!",
+                 link: "https://www.mediafire.com/file/jcjeuu1e58dtz0d/Doom_2.zip/file" },
+
+            { id: 31, category: "jogos-pc",
+             title: "Delta Force 2",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/32630/header.jpg?t=1733246331",
+               tags: ["FPS", "Ação" ],
+                desc: "Porradaria comendo solta!",
+                 link: "https://www.mediafire.com/file/9otwrqzneerkv45/DeltaForce+2+(Setup).zip/file" },
+
+            { id: 32, category: "jogos-pc",
+             title: "Far Cry 1",
+              img: "https://cdn1.epicgames.com/71f938f91f0a4ccfaba0be708a930e8a/offer/GameName_Store_Landscape_2560x1440-2560x1440-83f5fc72a43aa3aaec79d56b094b8505.jpg?resize=1&w=480&h=270&quality=medium",
+               tags: ["FPS", "Ação" ],
+                desc: "Seja surpreendido com esse otimo jogo!",
+                 link: "https://www.mediafire.com/file/6oyae42tu6qc154/Far+Cry+1.zip/file" },
+
+            { id: 33, category: "jogos-pc",
+             title: "Far Cry 2",
+              img: "https://cdn2.unrealengine.com/fc-fc2-store-landscape-2560x1440-2560x1440-ff6dea297bad.jpg",
+               tags: ["FPS", "Ação" ],
+                desc: "Você em malária e tente sobreviver na Africa, ação a todo momento!",
+                 link: "https://www.mediafire.com/file/fk1j2vibzvf3yh3/FarCry+2+(Edition+Fourtune).zip/file" },
+
+            { id: 34, category: "jogos-pc",
+             title: "Five Nights At Freddy",
+              img: "https://static.wikia.nocookie.net/freddy-fazbears-pizza/images/d/da/FNaF1.jpg/revision/latest?cb=20230410020858",
+               tags: ["PointClicker", "Terror" ],
+                desc: "Você é um segurança em uma pizzaria desgraçada!",
+                 link: "https://www.mediafire.com/file/ndsor58ffdqwvqz/Five_Nights_at_Freddys_1.exe/file" },
+
+            { id: 35, category: "jogos-pc",
+             title: "Five Nights At Freddy 3",
+              img: "https://m.media-amazon.com/images/I/71Pib7x9NbL.jpg",
+               tags: ["PointClicker", "Terror" ],
+                desc: "Sobreviva por 6 noites com os animatronicos!",
+                 link: "https://drive.google.com/file/d/1mM17UTXrcgWXcqMe1eNgBLlnu_S9QKyP/view" },
+
+            { id: 36, category: "jogos-pc",
+             title: "Five Nights At Freddy 4",
+              img: "https://preview.redd.it/made-a-fnaf-4-banner-v0-mjcv9ww34k5d1.png?auto=webp&s=38472469b88232b20a3d1c5cb0a300a4483b0853",
+               tags: ["PointClicker", "Terror" ],
+                desc: "Você é uma criança sozinha em casa, sobreviva!",
+                 link: "https://www.mediafire.com/file/ubyufqld8frzp93/Five_Nights_At_Freddys_4.exe/file" },
+
+            { id: 37, category: "jogos-pc",
+             title: "Fireboy and Watergirl",
+              img: "https://i.pinimg.com/1200x/34/7f/49/347f49512ca711e32afb492f21674a36.jpg",
+               tags: ["Casual", "Puzzle" ],
+                desc: "Chame seu amigo e jogue direto em um PC, resolvendo puzzles!",
+                 link: "https://www.mediafire.com/file/ppycfkictstv9a8" },
+
+            { id: 38, category: "jogos-pc",
+             title: "GTA SAN andreas",
+              img: "https://i.pinimg.com/1200x/ce/67/79/ce6779b66560468dda9bc12f0ee9800d.jpg",
+               tags: ["Mundo Aberto", "Ação", "Aventura" ],
+                desc: "Simpleste o maior jogo de mundo aberto que revolucionou a indstruia de games!",
+                 link: "https://drive.usercontent.google.com/download?id=1N7bM4fMGPpI6oo-s-e-lhzoSD0uOd3Oj&export=download&authuser=0" },
+
+
+            { id: 39, category: "jogos-pc",
+             title: "Granny",
+              img: "https://i.pinimg.com/736x/a6/b1/2f/a6b12f2d5d6d976eb3c6bbe5a08f123d.jpg",
+               tags: ["Terror", "Casual" ],
+                desc: "Fuja da casa da velha filha da mãe!",
+                 link: "https://www.mediafire.com/file/698wowh0e890ufg/Granny.zip/file" },
+
+
+            { id: 40, category: "jogos-pc",
+             title: "Happy Wheels",
+              img: "https://i.pinimg.com/736x/d3/15/73/d31573d9e2238afd39f5c9c8222260a1.jpg",
+               tags: ["Casual", "Plataforma" ],
+                desc: "Sobreviva nas fases!",
+                 link: "https://www.mediafire.com/file/lqymeiy6y1a8ikl" },
+
+
+            { id: 41, category: "jogos-pc",
+             title: "Minecraft JAVA",
+              img: "https://i.pinimg.com/236x/d5/bc/00/d5bc0025bdf20a10cdc5bcbc07e6b71e.jpg",
+               tags: ["Mundo Aberto", "Aventura", "Casual" ],
+                desc: "Launcher das Atuais versões do Minecraft!",
+                 link: "https://www.mediafire.com/file/g263i7d7ti4n0vj/LegacyLauncher_Installer_legacy.exe/file" },
+
+
+            { id: 42, category: "jogos-pc",
+             title: "MINECRAFT BEDROCK",
+              img: "https://i.pinimg.com/1200x/56/53/da/5653daf49e63213204e82ddde6eee1ba.jpg",
+               tags: ["Mundo Aberto", "Aventura", "Casual" ],
+                desc: "O maior jogo de todos!",
+                 link: "https://www.mediafire.com/file/xlhtwkwjf8gy3lw/MCPE+UNLOCKED.zip/file" },
+
+            { id: 43, category: "jogos-pc",
+             title: "Mortal Kombat Trillogy",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1pcDj2k9v6Z2im8ZOTZpVDFtHC4Pujyn_EA&s",
+               tags: ["Luta", "Arcade" ],
+                desc: "Fight brutal!",
+                 link: "https://www.mediafire.com/file/qb306wlku8drh0p/Mortal_Kombat_Trilogy.zip/file" },
+
+
+            { id: 43, category: "jogos-pc",
+             title: "Madagascar",
+              img: "https://images.launchbox-app.com/90e35f88-fd17-4de6-a839-0d694e5d5ac4.jpg",
+               tags: ["Aventura", "Plataforma" ],
+                desc: "Colete itens em mini-games!",
+                 link: "https://www.mediafire.com/file/dyc9nh2m9y0zcvn/Madagascar_Win_Files_EN.rar/file" },
+
+
+            { id: 44, category: "jogos-pc",
+             title: "Midnight Club 2",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/12160/header.jpg?t=1709651727",
+               tags: ["Corrida", "Mundo Aberto" ],
+                desc: "Corridas Organizadas em Tokyo!",
+                 link: "https://www.mediafire.com/file/kqwhtqybnyva2rr/Midnight+Club+2.zip/file" },
+
+            { id: 45, category: "jogos-pc",
+             title: "Need For Speed Underground 2",
+              img: "https://cdn2.steamgriddb.com/thumb/39d9ed17e9496bdabfdc1d0a6d89c38d.jpg",
+               tags: ["Corrida", "Mundo Aberto", "Casual" ],
+                desc: "Ganhe reputação e corridas!",
+                 link: "https://mega.nz/file/615SnLTT#kjFRONG7GDVqs8QL3tG-nP-TB3MOQRXKew95XV4WjnM" },
+
+            { id: 46, category: "jogos-pc",
+             title: "Need For Speed Most Wanted",
+              img: "https://cdn2.steamgriddb.com/thumb/6fdb8f7d90e975d5d19959a0fcebf123.jpg",
+               tags: ["Corrida", "Mundo Aberto", "Casual" ],
+                desc: "Derrote os membros da BlackList e seja insano!",
+                 link: "https://mega.nz/file/PlwUGS6S#Im-VfZLtbXXg0if-cf5Jj2mAndX2hBsa0tfjMARjjWQ" },
+
+            { id: 47, category: "jogos-pc",
+             title: "Portal",
+              img: "https://theescaperoomer.com/wp-content/uploads/2021/12/download-1.jpg",
+               tags: ["Aventura", "Puzzle" ],
+                desc: "Fuja dos puzzles juntamente com a Portal Gun!",
+                 link: "https://www.mediafire.com/file/z8yulq1zmkpwwhj/Portal.zip/file" },
+
+            { id: 48, category: "jogos-pc",
+             title: "PacMan",
+              img: "https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_auto/www.fizzcreations.com/wp-content/uploads/2020/01/PAC-MAN-Banner.jpg",
+               tags: ["Arcade", "Casual" ],
+                desc: "Fuja e Coma!",
+                 link: "https://www.mediafire.com/file/e0eszcsz7878ope/Pac_Man.zip/file" },
+
+            { id: 49, category: "jogos-pc",
+             title: "Plants Vs Zombies",
+              img: "https://m.media-amazon.com/images/I/71CV-HJ79FL._AC_UF894,1000_QL80_.jpg",
+               tags: ["Casual", "Defense" ],
+                desc: "Proteja sua casa dos zumbis!",
+                 link: "https://www.mediafire.com/file/vrewb4p7a3f1otx/Plantas+VS+Zombies+GOTY.zip/file" },  
+
+            { id: 50, category: "jogos-pc",
+             title: "Resident Evil 4",
+              img: "https://assets.nintendo.com/image/upload/ar_16:9,c_lpad,w_1240/b_white/f_auto/q_auto/store/software/switch/70010000012858/f4d4fd20c956621c4a342a8cade2e366f0e3cd43765bb52eccd0fea32b1606ce",
+               tags: ["Aventura", "Ação", "Terror" ],
+                desc: "Salve a filha do presidente e sobreviva em meio inferno!",
+                 link: "https://www.mediafire.com/file/7icues177t7rpke/Resident+Evil+4.zip/file" },
+
+            { id: 51, category: "jogos-pc",
+             title: "Sally Face",
+              img: "https://images.gog-statics.com/43ee463b699804cb53fbd44cd890396ef8eb897953b2fc04aa91409143226018.jpg",
+               tags: ["Puzzle", "Terror", "Casual" ],
+                desc: "Após a morte da sua mãe, coisas bizarras começam a acontecer!",
+                 link: "https://www.mediafire.com/file/lljs1ikrlfzpgsn/Sally_Face.zip/file" },
+
+            { id: 52, category: "jogos-pc",
+             title: "StoryTeller",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi5hl0Z5U9nkCMgzQqw_BG5y4_VpdRsnOOJA&s",
+               tags: ["Casual", "Puzzle" ],
+                desc: "Crie historias com base nos quadros!",
+                 link: "https://www.mediafire.com/file/tfwtj6wq5l08nf3/Storyteller.zip/file" },
+
+            { id: 53, category: "jogos-pc",
+             title: "Stardew Valley",
+              img: "https://hisameartwork.wordpress.com/wp-content/uploads/2018/01/sdv-banner.jpg",
+               tags: ["Simulador", "Casual" ],
+                desc: "Seu mundo, suas escolhas.",
+                 link: "https://www.mediafire.com/file/ptylw7gv6xgm5w4/Stardew_Valley.zip/file" },
+
+            { id: 54, category: "jogos-pc",
+             title: "Subway Surfers",
+              img: "https://static.wikia.nocookie.net/b4757685-f04c-49c6-ae80-eb9140f13c0e/scale-to-width/755",
+               tags: ["Corrida", ],
+                desc: "Fuja do carcereiro em meio aos trens!",
+                 link: "https://www.mediafire.com/file/doyzg3wk06glto7/Subway+Surfers.7z/file" },
+
+            { id: 55, category: "jogos-pc",
+             title: "wolvesville",
+              img: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2502760/header.jpg?t=1776857694",
+               tags: ["Estratégia", "Casual" ],
+                desc: "Tipo um Among Us, só que no Chat!",
+                 link: "https://www.wolvesville.com/" },
+
+            { id: 56, category: "jogos-pc",
+             title: "Sonic Classic 1 e 2",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToG01BC3_0h474tnmSQfpJgzOlrhQKU81Ujg&s",
+               tags: ["Plataforma", ],
+                desc: "Clássico Sonic!",
+                 link: "https://www.mediafire.com/file/g3t1h0eu09ip8tb/Sonic+Classic.7z/file" },
+
+            { id: 57, category: "jogos-pc",
+             title: "Stumble Guys BOTS",
+              img: "https://mir-s3-cdn-cf.behance.net/project_modules/1400/39a148196278795.661d75eca2b66.jpg",
+               tags: ["Aventura", "Estratégia" ],
+                desc: "Jogue SG com Bots, leve e sem wi-fi!",
+                 link: "https://www.mediafire.com/file/561xej9tlddqdqb/OptiStumble+Guys+0.37+Offline+BETA+1.7z/file" },
+
+            { id: 58, category: "jogos-pc",
+             title: "Theres a Butcher Around",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1077430/header.jpg?t=1589974427",
+               tags: ["Estratégia", "Terror", "Casual" ],
+                desc: "Esconda-se e tente sobreviver ao açougueiro!",
+                 link: "https://www.mediafire.com/file/pf52akxbco3djhr/Theres_a_Butcher_Around.zip/file" },
+
+            { id: 58, category: "jogos-pc",
+             title: "Terraria",
+              img: "https://shared.steamstatic.com/store_item_assets/steam/apps/105600/header.jpg?t=1769844435",
+               tags: ["Plataforma", "Aventura" ],
+                desc: "Sobrevivencia 2d!",
+                 link: "https://www.mediafire.com/file/e41ktawjhoyi3jj/Terraria.zip/file" },
+
+            { id: 59, category: "jogos-pc",
+             title: "The Walking Dead: Season 1",
+              img: "https://cdn1.epicgames.com/offer/bloodroot/TWD1_EPIC_Landscape_2560x1440_2560x1440-769095bad4d31fa3570f4d247b90c507",
+               tags: ["Escolhas", "Casual" ],
+                desc: "Apocalipse zumbi começou, sobreviva com escolhas inteligentes!",
+                 link: "https://www.mediafire.com/file/57qwxissr07njpj/The_Walking_Dead_Season_1_%255B400_days_%252B_patch1%255D_-_%255BDODI_Repack%255D.zip/file" },
+
+            { id: 60, category: "jogos-pc",
+             title: "UNO",
+              img: "https://hype.games/_next/image?url=https%3A%2F%2Fimg.hype.games%2Fcdn%2F7915dea2-34c1-41b4-9228-3ff9fe937a45COVER%20-%20uno.png&w=3840&q=75",
+               tags: ["Casual", "PointClicker" ],
+                desc: "Classico UNO!",
+                 link: "https://www.mediafire.com/file/v5yuz847v0v7o31/UNO.Build.9377745.zip/file" },
+
+            { id: 61, category: "jogos-pc",
+             title: "UNDERTALE",
+              img: "https://m.media-amazon.com/images/I/61SjLlZWNNL._AC_UF1000,1000_QL80_.jpg",
+               tags: ["RPG", "Casual" ],
+                desc: "Um incrivel RPG!",
+                 link: "https://www.mediafire.com/file/t7ijhnxsovjf68r/Undertale.zip/file" },
+
+            { id: 62, category: "jogos-pc",
+             title: "WorldBox",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbY_E93663FWT79AkZ02DxWizFjuG6yacUtg&s",
+               tags: ["Casual", "Simulador" ],
+                desc: "O famoso, simulador de um deus. Crie o mundo do seu jeito!",
+                 link: "https://www.mediafire.com/file/s7k5givy04taape/WorldBox_v0.22.9.zip/file" },
+
+            { id: 63, category: "jogos-pc",
+             title: "Win7 Games",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMXl6_9x1xTAkNZ11ECOV42tMfEi8eW48gfg&s",
+               tags: ["Classic", ],
+                desc: "Classicos jogos do Windows 7!",
+                 link: "https://www.mediafire.com/file/woteuzbdsro40fw/Windows7Games_para_Windows_11_10_8.exe/file" },
+
+            { id: 0, category: "jogos-pc",
+             title: "",
+              img: "",
+               tags: ["", "" ],
+                desc: "",
+                 link: "" },
+
+
+                 // APPS PC
+            { id: 7, category: "apps-pc",
+             title: "Audacity",
+              img: "https://i.pinimg.com/1200x/77/09/1b/77091b5cbae439366f93f9b0b7997eda.jpg",
+               tags: ["Gravador", "Audio", "Edição"],
+                desc: "Edite e crie audios.",
+                 link: "https://www.mediafire.com/file/u7n8rivmsyrufsv/AudaCity+(3.7.7).exe/file" },
+
+            { id: 5000, category: "apps-pc",
+             title: "AutoClicker",
+              img: "https://opautoclicker.dev/wp-content/uploads/elementor/thumbs/op-auto-clicker-pw59ty6tejmmc5virlui3ayalk43bstr0hzhyacfra.png",
+               tags: ["Clicker", ],
+                desc: "Cliques automaticos no PC!",
+                 link: "https://www.mediafire.com/file/zryyv6zwq8rtkuq/Op+Auto+Clicker.exe/file" },
+
+            { id: 5001, category: "apps-pc",
+             title: "AutoHOTKey",
+              img: "https://i.ytimg.com/vi/nxnfFRTAvto/maxresdefault.jpg",
+               tags: ["Remap", ],
+                desc: "Remapei Teclas, Binds etc.",
+                 link: "https://www.mediafire.com/file/ciu035grqnxi4iv/AutoHotkey_2.0.19_setup.exe/file" },
+
+            { id: 5002, category: "apps-pc",
+             title: "Bandicam",
+              img: "https://i.ytimg.com/vi/Aox3fR8j68U/maxresdefault.jpg",
+               tags: ["Gravador", ],
+                desc: "Gravador muito leve para pc sem marca d´água!",
+                 link: "https://www.mediafire.com/file/ulhbtkxo7vvygnj/Bandicam+Portable.zip/file" },
+
+            { id: 5003, category: "apps-pc",
+             title: "Camtasia",
+              img: "https://images.wondershare.com/filmora/camtasia-features.jpg",
+               tags: ["Editor", ],
+                desc: "O melhor quando o assunto é editores leves para computadores batatas. Versão: 8.4",
+                 link: "https://www.mediafire.com/file/ehviz08gnpayj0e/Camtasia+Studio+8+MingPlay+Games.zip/file" },
+
+            { id: 5004, category: "apps-pc",
+             title: "DeepClean",
+              img: "https://i.ytimg.com/vi/zgSwPmifoM8/maxresdefault.jpg",
+               tags: ["Ajudante", ],
+                desc: "Desinstale apps e limpe seu Windows!",
+                 link: "https://www.mediafire.com/file/y24fl8iiiffa07d/DeepClean+-+Unistall+Tool.zip/file" },
+
+            { id: 5005, category: "apps-pc",
+             title: "Everything",
+              img: "https://mysoftwarefree.com/wp-content/uploads/2022/08/Everything-Free-Download.png",
+               tags: ["Ajudante", ],
+                desc: "Caçe arquivos do windows de forma fácil!",
+                 link: "https://www.mediafire.com/file/da0i1grxcc9q7gx/Everything-1.4.1.1032.x64-Setup.exe/file" },
+
+            { id: 5006, category: "apps-pc",
+             title: "Xbox Driver Controller 360",
+              img: "https://bk.ibxk.com.br/2014/06/09/09094228806028.jpg",
+               tags: ["Ajudante", ],
+                desc: "Drive dos Controles de XBOX para WINDOWS! - Só instalar ele e o controle vai reconhecer (Reiniciar)",
+                 link: "https://www.mediafire.com/file/9y184mv1wcfq55l/microsoft-xbox-360-controller-driver-6-2-29-0.exe/file" },
+
+            { id: 5007, category: "apps-pc",
+             title: "DriverBoost",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAUFnYhGi73edJENnlAFevqPVqri7SkjOtzQ&s",
+               tags: ["Ajudante", ],
+                desc: "Instale Drivers do Windows automaticamente!",
+                 link: "https://www.mediafire.com/file/vwztzks3ucccfpd/Driver+Boost.exe/file" },
+
+            { id: 5008, category: "apps-pc",
+             title: "Format Factory",
+              img: "https://images.sftcdn.net/images/t_app-cover-s-16-9,f_auto/p/b687844a-96bf-11e6-8a2e-00163ed833e7/3512415152/format-factory-screenshot.jpg",
+               tags: ["Ajudante", ],
+                desc: "O famoso faz tudo, downloder do youtube e converta arquivos. Ex: Mp3 to Mp4",
+                 link: "https://www.mediafire.com/file/50no8svjlihqxua/FormatFactory+(5.21.0.0).exe/file" },   
+                 
+            { id: 5009, category: "apps-pc",
+             title: "FRAPS",
+              img: "https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_b26388eb2c2289f22775635d07b8713c/fraps.jpg",
+               tags: ["Ajudante", ],
+                desc: "Veja o FPS de seus jogos!",
+                 link: "https://www.mediafire.com/file/472grt7yilllwf5/Fraps.exe/file" },   
+
+            { id: 5010, category: "apps-pc",
+             title: "Free Download Manager",
+              img: "https://mestresdainformatica.com.br/wp-content/uploads/2024/11/Free-Download-Manager-O-Melhor-Gerenciador-de-Downloads-Gratis-Review-Completo-e-Guia-de-Uso.png",
+               tags: ["Ajudante", ],
+                desc: "Seu donwload está demorando? Instale o FDM e baixe com rapideza, QUALQUER SITE E TORRENT! FDM",
+                 link: "https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe" },   
+
+            { id: 5011, category: "apps-pc",
+             title: "HDD RAW TOOL COPY",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSV1nSgXN-fL6IfKIkO5M8Y1PM_wNsBLGRgA&s",
+               tags: ["Ajudante", ],
+                desc: "Copie sistemas de video-games portateis, backups, ssd, hd, etc.. A melhor alternativa pro Win32disk Imager!",
+                 link: "https://www.mediafire.com/file/3he69zmar2dwypo/HDDRawCopy1.10Setup.exe/file" },   
+
+            { id: 5012, category: "apps-pc",
+             title: "IrFanView",
+              img: "https://www.dostupnysoftver.sk/88-large_default/irfanview-slovensky.jpg",
+               tags: ["Viewer", ],
+                desc: "O vizualizador de fotos mais leve.",
+                 link: "https://www.mediafire.com/file/6becnhsj50ic788/Viwer+de+fotos+x64.exe/file" },   
+
+            { id: 5013, category: "apps-pc",
+             title: "Rufus",
+              img: "https://canalbpv.com/wp-content/uploads/2022/02/RUFUS_materia.jpg",
+               tags: ["Ajudante", ],
+                desc: "Boots, formatação de pendrives etc.",
+                 link: "https://github.com/pbatard/rufus/releases/download/v4.12/rufus-4.12_x86.exe" },  
+
+            { id: 5014, category: "apps-pc",
+             title: "Rufus",
+              img: "https://canalbpv.com/wp-content/uploads/2022/02/RUFUS_materia.jpg",
+               tags: ["Ajudante", ],
+                desc: "Boots, formatação de pendrives etc.",
+                 link: "https://github.com/pbatard/rufus/releases/download/v4.12/rufus-4.12_x86.exe" },  
+
+            // JOGOS ANDROID
+            { id: 1000, category: "jogos-android",
+             title: "60 Seconds",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/368360/capsule_616x353.jpg?t=1760090040",
+               tags: ["Escolhas", "Casual", "Estratégia"],
+                desc: "Sobreviva com escolhas inteligentes!",
+                 link: "https://www.mediafire.com/file/mzruxdd8vqeemz9/60+Seconds.apk/file" },
+
+            // APPS ANDROID
+            { id: 2000, category: "apps-android",
+             title: "Ps Touch",
+              img: "https://i.pcmag.com/imagery/reviews/07a1U60hRhBlSVTlSh4pEs9-1..v1569471334.jpg",
+               tags: ["Designer", "Photoshop", "Editor"],
+                desc: "O melhor PhotoShop de celular! V9.9.9",
+                 link: "https://mega.nz/file/1V8wQDIT#o_rcg5FRecSNfNQv1BPTWhXkHvonwTA6gtkIBn5M8JI" },
+
+            // EMULADORES
+
+            { id: 3000, category: "emuladores",
+             title: "PC - ADOBE FLASH PLAYER",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfi95OWEVjVcoN_WUAfHlo6Bwmhi2dbBltA&s",
+               tags: ["Flash",],
+                desc: "Jogue jogos Flashs aqui!",
+                 link: "https://www.mediafire.com/file/ncwfehqev3rl4uk/Adobe_Flash_Player_32.exe/file" },
+
+            // Extras
+
+            { id: 4000, category: "extras",
+             title: "ANDROID - REMOVER ANUNCIOS",
+              img: "https://static.vecteezy.com/ti/vetor-gratis/p1/16317349-sem-anuncios-para-design-de-promocao-logotipo-do-banner-para-design-de-conceito-ilustracaoial-de-venda-anuncio-na-internet-bloqueador-de-anuncios-gratuito-tendencia-de-estilo-plano-moderno-logotipo-de-proibicao-vetor.jpg",
+               tags: ["Android",],
+                desc: "Quando voce baixa um jogo e ele está repleto de anuncio, com essa dica, voce remove todos eles!",
+                 link: "https://noadsandroid.blogspot.com/2026/02/portugues-agora-irei-te-mostrar-o-passo.html" },
+
+            { id: 4001, category: "extras",
+             title: "PC - DEPENDENCIAS",
+              img: "https://m.media-amazon.com/images/I/41Dpnwkv9AL.png",
+               tags: ["PC",],
+                desc: "Baixou um jogo deu erro de DLL ou não abriu? Instale as dependencias.",
+                 link: "https://www.mediafire.com/file/03ejofbwahqmr3k/Dependencies.zip/file" },
+   
+
+
+
+
+
+        ];
+
+        /* === RENDERIZADOR UNIVERSAL === */
+        function renderGames(gameList) {
+            // Mapeando os containers pelo ID correto
+            const containers = {
+                "jogos-pc": document.getElementById('container-jogos-pc'),
+                "apps-pc": document.getElementById('container-apps-pc'),
+                "jogos-android": document.getElementById('container-jogos-android'),
+                "apps-android": document.getElementById('container-apps-android'),
+                "emuladores": document.getElementById('container-emuladores'),
+                "extras": document.getElementById('container-extras'),
+            };
+
+            // Limpa todos os containers antes de preencher
+            Object.values(containers).forEach(container => {
+                if(container) container.innerHTML = '';
+            });
+
+            gameList.forEach(game => {
+                const tagsHTML = game.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                const cardHTML = `
+                    <div class="game-card" onclick="openGameModal(${game.id})">
+                        <img src="${game.img}" alt="${game.title}" class="game-img">
+                        <div class="game-info">
+                            <h3 class="game-title">${game.title}</h3>
+                            <div class="game-tags">${tagsHTML}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Joga o card dentro do container correspondente a sua categoria
+                if (containers[game.category]) {
+                    containers[game.category].innerHTML += cardHTML;
+                }
+            });
+
+            // Oculta seções vazias para deixar o site mais limpo
+            ['jogos-pc', 'apps-pc', 'jogos-android', 'apps-android'].forEach(cat => {
+                const section = document.getElementById(`section-${cat}`);
+                if(containers[cat] && containers[cat].innerHTML === '') {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = 'block';
+                }
+            });
+        }
+
+        // Inicializa Renderização
+        renderGames(gamesDB);
+
+        /* === SISTEMA DE BUSCA (SEARCH BAR) === */
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const termo = e.target.value.toLowerCase();
+            const jogosFiltrados = gamesDB.filter(game => 
+                game.title.toLowerCase().includes(termo) || 
+                game.tags.some(tag => tag.toLowerCase().includes(termo))
+            );
+            renderGames(jogosFiltrados);
+        });
+
+        /* === SISTEMA DE FILTRO (TAGS) NO HEADER DE JOGOS PC === */
+        const filterBtn = document.getElementById('filterBtn');
+        const filterMenu = document.getElementById('filterMenu');
+        const todasTags = [...new Set(gamesDB.flatMap(g => g.tags))].sort();
+
+        filterMenu.innerHTML = `<div class="filter-tag active" onclick="filtrarPorTag('Todos', event)">Todos</div>`;
+        todasTags.forEach(tag => {
+            filterMenu.innerHTML += `<div class="filter-tag" onclick="filtrarPorTag('${tag}', event)">${tag}</div>`;
+        });
+
+        filterBtn.addEventListener('click', () => filterMenu.classList.toggle('active'));
+
+        function filtrarPorTag(tagSelecionada, event) {
+            document.querySelectorAll('.filter-tag').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            filterMenu.classList.remove('active');
+
+            if (tagSelecionada === 'Todos') {
+                renderGames(gamesDB);
+            } else {
+                const filtrados = gamesDB.filter(game => game.tags.includes(tagSelecionada));
+                renderGames(filtrados);
+            }
+        }
+
+        /* === GERENCIADOR DE MODAIS === */
+        function openGameModal(id) {
+            const game = gamesDB.find(g => g.id === id);
+            if (!game) return;
+
+            document.getElementById('modalImg').src = game.img;
+            document.getElementById('modalTitle').innerText = game.title;
+            document.getElementById('modalDesc').innerText = game.desc;
+            document.getElementById('modalTags').innerHTML = game.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+            document.getElementById('modalDownloadBtn').href = game.link; 
+
+            document.getElementById('gameModal').classList.add('active');
+        }
+
+        function openDmcaModal() {
+            document.getElementById('dmcaModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Fechar ao clicar fora ou apertar ESC
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            }
+        });
+    </script>
+</body>
+</html>
