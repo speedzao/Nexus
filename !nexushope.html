@@ -1,0 +1,2528 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusHope | Download Center</title>
+<link rel="icon" href="logo.png">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --red:#ff0000;
+  --neon:#ff3b3b;
+  --bg:#050507;
+  --card:#111118;
+  --glass:rgba(255,255,255,.05);
+  --text:#f1f1f1;
+  --muted:#777;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#000000,#00031f);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* SIDEBAR */
+nav{
+  position:fixed;
+  top:0;left:0;
+  width:240px;height:100vh;
+  background:linear-gradient(180deg,#000000,#080808);
+  border-right:1px solid #1a1a1a;
+  padding:25px;
+}
+
+.logo{
+  font-family:Orbitron;
+  font-size:24px;
+  font-weight:800;
+  color:var(--red);
+}
+.logo span{color:white;}
+
+nav ul{
+  list-style:none;
+  margin-top:35px;
+}
+
+nav ul li a{
+  display:block;
+  padding:12px 14px;
+  margin:6px 0;
+  color:var(--muted);
+  text-decoration:none;
+  border-radius:10px;
+  transition:.25s;
+}
+
+nav ul li a:hover{
+  background:var(--glass);
+  color:white;
+  transform:translateX(6px);
+}
+
+/* MAIN */
+main{
+  margin-left:240px;
+  padding:50px;
+}
+
+/* HEADER */
+header h1{
+  font-family:Orbitron;
+  font-size:3rem;
+  background:linear-gradient(90deg,#ff0000,#ff6b6b);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+header p{
+  color:var(--muted);
+  margin-top:10px;
+}
+
+/* SEARCH */
+.search{
+  margin:30px 0;
+}
+
+.search input{
+  width:100%;
+  padding:14px 18px;
+  border-radius:14px;
+  border:1px solid #222;
+  background:#0b0b12;
+  color:white;
+  outline:none;
+  transition:.2s;
+}
+
+/*-PARTE UPDATEEEEEEE-->*/
+
+.update {
+  position: sticky;
+  bottom: 20px;               /* distância do fundo */
+  background: rgba(255, 0, 0, 0.15);
+  padding: 12px 15px;
+  margin: 30px 0 20px 0;
+  border-radius: 12px;
+  border: 1px solid var(--red);
+  text-align: center;
+  font-weight: bold;
+  color: #ffaaaa;
+  cursor: pointer;
+  z-index: 5;
+  backdrop-filter: blur(4px);
+}
+
+.update:hover {
+  background: rgba(255, 0, 0, 0.35);
+  color: white;
+}
+
+/*-PARTE UPDATEEEEEEE-->*/
+
+.update:hover {
+  background: rgba(255, 0, 0, 0.35);
+  color: white;
+}
+
+.search input:focus{
+  border-color:var(--red);
+  box-shadow:0 0 12px rgba(255,0,0,.4);
+}
+
+/* TAGS */
+.tags{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+.tag{
+  padding:6px 14px;
+  border:1px solid #333;
+  border-radius:20px;
+  font-size:.75rem;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.tag:hover,
+.tag.active{
+  background:var(--red);
+  border-color:var(--red);
+}
+
+/* SECTIONS */
+.section{
+  margin-top:60px;
+}
+
+.section h2{
+  font-family:Orbitron;
+  font-size:1.4rem;
+  border-left:4px solid var(--red);
+  padding-left:12px;
+  margin-bottom:20px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#12121c,#08080f);
+  border:1px solid #222;
+  border-radius:18px;
+  padding:22px;
+  cursor:pointer;
+  transition:.35s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  border-color:var(--red);
+  box-shadow:0 0 20px rgb(122, 0, 0);
+}
+
+.card h3{
+  font-size:1.1rem;
+  margin-bottom:6px;
+}
+
+.card p{
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+.badge{
+  position:absolute;
+  top:12px;right:12px;
+  background:var(--red);
+  padding:3px 10px;
+  font-size:.65rem;
+  border-radius:10px;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(6px);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal-box{
+  background:linear-gradient(180deg,#090913,#07070d);
+  border:1px solid var(--red);
+  border-radius:20px;
+  padding:35px;
+  width:90%;
+  max-width:600px;
+  position:relative;
+  animation:fade .2s ease;
+}
+
+@keyframes fade{
+  from{transform:scale(.9);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+.close{
+  position:absolute;
+  top:14px;right:18px;
+  font-size:26px;
+  color:#aaa;
+  cursor:pointer;
+}
+
+.modal-box h2{
+  font-family:Orbitron;
+  color:var(--red);
+}
+
+.modal-box p{
+  margin-top:12px;
+  font-size:.9rem;
+  color:#ccc;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:22px;
+  padding:13px 36px;
+  background:linear-gradient(90deg,#ff0000,#ff4444);
+  border-radius:10px;
+  color:white;
+  text-decoration:none;
+  font-weight:700;
+  transition:.25s;
+}
+
+.btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 20px rgba(255,0,0,.6);
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  nav{
+    width:100%;
+    height:auto;
+    position:relative;
+  }
+  main{
+    margin-left:0;
+    padding:20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Hope</span></div>
+
+  <ul class="menu">
+    <li><a href="#jogos">🎮 Jogos</a></li>
+    <li><a href="#ferramentas">🛠️ Ferramentas</a></li>
+    <li><a href="#celulargames">📱 Jogos/Celular</a></li>
+    <li><a href="#celularapps">🪀 Apps/Celular</a></li>
+    <li><a href="#extras">💾 Extras</a></li>
+    <li><a href="#emuladores">🧰 Emuladores</a></li>
+    <li><a href="#emular">📡 Para Emular</a></li>
+    <li><a href="#hqsl">📘 Livros/HQs</a></li>
+  </ul>
+
+  <div class="nav-info">
+    <p class="dmca">📞 DMCA: nexushope31@gmail.com</p>
+    <p class="aviso"><p style="font-size: 15px;"><span style="color: rgb(119, 119, 119);">Todos jogos e apps foram pegos da internet, podendo conter algum tipo de malware. Baixe por sua conta e risco.</span></p> <p style="font-size: 10px;"><span style="color: rgba(139, 143, 155, 0);">-Apps e jogos foram obtidos da internet. Baixe por sua conta e risco.</p>
+  </div>
+
+  <p class="update" onclick="document.getElementById('modal-update').style.display='flex'">
+    Último update
+  </p>
+</nav>
+
+<main>
+
+<header>
+<div class="logo">Nexus<span>Hope</span></div>
+  <p>Central De Downloads.</p>
+</header>
+
+<div class="search">
+  <input type="text" id="search" placeholder="Buscar download...">
+</div>
+
+<div class="tags">
+  <div class="tag active" data-tag="all">Tudo</div>
+  <div class="tag" data-tag="leve">Leves</div>
+  <div class="tag" data-tag="pesado">Pesados</div>
+</div>
+
+<!-- jogos -->
+
+<div class="section" id="jogos">
+  <h2>🎮 Jogos</h2>
+  <div class="grid">
+
+    <div class="card" data-tag="leve" onclick="openModal('ab')">
+      <span class="badge">Puzzle</span>
+      <h3>Angry Birds</h3>
+      <p>Derrote os porcos e pegue seu ovo.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('alcm')">
+      <span class="badge">Aventura</span>
+      <h3>Alice de American Mcgee - 1</h3>
+      <p>Quando a loucura começou.</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('alc')">
+      <span class="badge">Aventura</span>
+      <h3>Alice Madness Returns - 2</h3>
+      <p>A loucura da alice está de volta.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('an')">
+      <span class="badge">Luta</span>
+      <h3>Animal Revolt Battle Simulator</h3>
+      <p>Coloque animais a briga!</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('acrd')">
+      <span class="badge">Plataforma</span>
+      <h3>Assassin´s Creed: DC</h3>
+      <p>Um dos melhores assassin´s creeds.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('bully')">
+      <span class="badge">OpenWorld</span>
+      <h3>Bully</h3>
+      <p>Faça uma zona na escola!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('balde')">
+      <span class="badge">Run</span>
+      <h3>Baldi's Basics</h3>
+      <p>Fuja da escola.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('bf2')">
+      <span class="badge">FPS</span>
+      <h3>Battle Field 2</h3>
+      <p>FPS com tiro, porrada e bomba.</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('bf6')">
+      <span class="badge">FPS</span>
+      <h3>Battle Field 6</h3>
+      <p>Acabe com inimigos em um FPS insano!</p>
+    </div>
+    
+    <div class="card" data-tag="leve" onclick="openModal('br')">
+      <span class="badge">Inscryption</span>
+      <h3>Buckshot Roulette</h3>
+      <p>Roleta russa com um capeta.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('carn')">
+      <span class="badge">Caça</span>
+      <h3>Carnivoros</h3>
+      <p>Caçe dinossauros.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('cc')">
+      <span class="badge">Click</span>
+      <h3>Cookie Clicker</h3>
+      <p>Clique o maximo que puder.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('cs')">
+      <span class="badge">FPS</span>
+      <h3>Counter Strike 1.6</h3>
+      <p>Um instalador do clássico CS 1.6</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('cod1')">
+      <span class="badge">FPS</span>
+      <h3>Call Of Duty</h3>
+      <p>Segunda guerra, tiro, porrada e bomba.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('cod2')">
+      <span class="badge">FPS</span>
+      <h3>Call Of Duty 2</h3>
+      <p>FPS de guerra.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('codmw1')">
+      <span class="badge">FPS</span>
+      <h3>COD 4: Modern Warfare</h3>
+      <p>A guerra nos dias de hoje.</p>
+    </div>
+
+        <div class="card" data-tag="leve" onclick="openModal('codmw2')">
+      <span class="badge">FPS</span>
+      <h3>COD: Modern Warfare 2</h3>
+      <p>Continuação do MW1, mas agora com outras ameaças!</p>
+    </div>
+
+        <div class="card" data-tag="leve" onclick="openModal('codmw3')">
+      <span class="badge">FPS</span>
+      <h3>COD: Modern Warfare 3</h3>
+      <p>Continuação pós toda desgraça do MW2!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('coj')">
+      <span class="badge">FPS</span>
+      <h3>Call of Juarez GunsLiger</h3>
+      <p>FPS arcade do velho oeste.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('crazytaxi')">
+      <span class="badge">OpenWorld</span>
+      <h3>Crazy Taxi</h3>
+      <p>Um clássico!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('db')">
+      <span class="badge">RPG</span>
+      <h3>Diablo</h3>
+      <p>Um instalador do clássico RPG diablo.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('doom1')">
+      <span class="badge">RunAndGun</span>
+      <h3>Doom 1</h3>
+      <p>FPS acelerado e extremamente leve.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('doom2')">
+      <span class="badge">RunAndGun</span>
+      <h3>Doom 2</h3>
+      <p>FPS acelerado e extremamente leve.</p>
+    </div>
+
+        <div class="card" data-tag="leve" onclick="openModal('df2')">
+      <span class="badge">FPS 1998</span>
+      <h3>Delta Force 2</h3>
+      <p>Guerras.</p>
+    </div>
+
+        <div class="card" data-tag="pesado" onclick="openModal('daygone')">
+      <span class="badge">FPS 1998</span>
+      <h3>Days Gone</h3>
+      <p>Sobrevivência pós-apocalíptica.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('farcry')">
+      <span class="badge">FPS</span>
+      <h3>Far Cry 1</h3>
+      <p>FPS de Mundo aberto!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('farcry2')">
+      <span class="badge">FPS</span>
+      <h3>Far Cry 2</h3>
+      <p>FPS com um mundo aberto insano.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('fnaf1')">
+      <span class="badge">Horror</span>
+      <h3>Five Nights At Freddy 1</h3>
+      <p>SOBREVIVA A NOITE!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('fnaf2')">
+      <span class="badge">Horror</span>
+      <h3>Five Nights At Freddy 2</h3>
+      <p>SOBREVIVA A NOITE!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('fnaf3')">
+      <span class="badge">Horror</span>
+      <h3>Five Nights At Freddy 3</h3>
+      <p>SOBREVIVA A NOITE!</p>
+    </div>
+
+
+    <div class="card" data-tag="leve" onclick="openModal('fnaf4')">
+      <span class="badge">Horror</span>
+      <h3>Five Nights At Freddy 4</h3>
+      <p>SOBREVIVA A NOITE!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('fl')">
+      <span class="badge">Puzzle</span>
+      <h3>FireBoy and LavaGirl</h3>
+      <p>Resolvam puzzles juntos.</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('gow2018')">
+      <span class="badge">Aventura</span>
+      <h3>God Of War: 2018</h3>
+      <p>Retenção pós Olympus.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('gtasan')">
+      <span class="badge">OPENWORLD</span>
+      <h3>GTA San Andreas</h3>
+      <p>Mundo aberto insano.</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('gtav')">
+      <span class="badge">OpenWorld</span>
+      <h3>Grand Theft Auto V</h3>
+      <p>Um mundo aberto insano com missões.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('grannypc')">
+      <span class="badge">Puzzle</span>
+      <h3>Granny</h3>
+      <p>Um porte de granny para pc!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('hws')">
+      <span class="badge">Plataforma</span>
+      <h3>Happy Wheels</h3>
+      <p>O clássico brutal.</p>
+    </div>
+    
+    <div class="card" data-tag="leve" onclick="openModal('legacy')">
+      <span class="badge">Aventura</span>
+      <h3>Minecraft Java</h3>
+      <p>Sobrevivência e criativo. (Launcher)</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('mkt')">
+      <span class="badge">LUTA</span>
+      <h3>Mortal Kombat Trillogy</h3>
+      <p>O insano MKT leve.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('mad')">
+      <span class="badge">Aventura</span>
+      <h3>Madagascar</h3>
+      <p>Continuação direta do filme.</p>
+    </div>
+
+        <div class="card" data-tag="leve" onclick="openModal('midnight2')">
+      <span class="badge">Corrida</span>
+      <h3>Midnight Club 2</h3>
+      <p>Corridas organizadas em Tokyo!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('nfs')">
+      <span class="badge">CORRIDA</span>
+      <h3>Need For Speed Most Wanted</h3>
+      <p>NFSMW BLACK EDITION!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('nfsu')">
+      <span class="badge">Corrida</span>
+      <h3>Need for Speed Underground 2</h3>
+      <p>Faça corridas e ganhe reputação!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('portal')">
+      <span class="badge">Puzzle</span>
+      <h3>Portal</h3>
+      <p>Resolva puzzles!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('pm')">
+      <span class="badge">MAZE</span>
+      <h3>PAC-MAN</h3>
+      <p>Sobreviva dos fantasmas famintos.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('pvz')">
+      <span class="badge">TowerDefense</span>
+      <h3>Plants vs Zombies</h3>
+      <p>Sobrevivência Divertida.</p>
+    </div>
+
+<div class="card" data-tag="leve" onclick="openModal('popt')">
+     <span class="badge">Aventura</span>
+     <h3>Prince of Persia The Sands of Time</h3>
+     <p>Liberte as areias do tempo!</p>
+</div>
+
+    <div class="card" data-tag="leve" onclick="openModal('re4')">
+      <span class="badge">Aventura</span>
+      <h3>Resident Evil 4</h3>
+      <p>Você é um agente contratado para salvar um garota no apocalipse!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('sf')">
+      <span class="badge">Puzzle</span>
+      <h3>Sally Face</h3>
+      <p>Você se mudou para um predio desgraçado.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('stl')">
+      <span class="badge">Historia</span>
+      <h3>StoryTeller</h3>
+      <p>Faça sua história.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('sv')">
+      <span class="badge">Survival</span>
+      <h3>Stardew Valley</h3>
+      <p>O famoso fazendinha.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('subwaypc')">
+      <span class="badge">Slides</span>
+      <h3>Subway Surfers</h3>
+      <p>Desvie de todos obstaculos!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('sonic12')">
+      <span class="badge">Plataforma</span>
+      <h3>Sonic 1 e 2</h3>
+      <p>Os clássicos sonics!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('stumblepc')">
+      <span class="badge">Run</span>
+      <h3>Stumble Guys - Bots</h3>
+      <p>Com bots, otimizado e offiline!</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('tb')">
+      <span class="badge">2d</span>
+      <h3>There's a Butcher Around</h3>
+      <p>Escolha lugares estrategicos contra o açogueiro.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('terraria')">
+      <span class="badge">Survival</span>
+      <h3>Terraria</h3>
+      <p>Sobrevivência em 2d.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('ti')">
+      <span class="badge">Survival</span>
+      <h3>The true ingredients</h3>
+      <p>Sobreviva no Siri-Cascudo</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('twd1')">
+      <span class="badge">Escolhas</span>
+      <h3>The Walking Dead: Season 1</h3>
+      <p>História de apocalipse.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('uno')">
+      <span class="badge">Puzzle</span>
+      <h3>Uno</h3>
+      <p>O clássico jogo de cartas.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('undertale')">
+      <span class="badge">BulletHell</span>
+      <h3>Undertale</h3>
+      <p>RPG com moralidade.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('worldbox')">
+      <span class="badge">SANDBOX</span>
+      <h3>WorldBox</h3>
+      <p>Simulador de deus.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('win7g')">
+      <span class="badge">Win7</span>
+      <h3>Windows 7 Games</h3>
+      <p>Jogue os clássicos jogos do windows 7!</p>
+    </div>
+
+    <div class="card" data-tag="pesado" onclick="openModal('171')">
+      <span class="badge">OpenWorld</span>
+      <h3>171</h3>
+      <p>O famoso GTA brasileiro.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FERRAMENTAS -->
+
+<div class="section" id="ferramentas">
+  <h2>🛠️ Ferramentas</h2>
+  <div class="grid">
+
+    <div class="card" data-tag="tool" onclick="openModal('warp')">
+      <span class="badge">VPN</span>
+      <h3>1.1.1 VPN Warp</h3>
+      <p>Mude sua VPN do pc.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('auci')">
+      <span class="badge">Helper</span>
+      <h3>AudaCity</h3>
+      <p>Edite e grave áudios.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('auto')">
+      <span class="badge">Helper</span>
+      <h3>AutoClicker</h3>
+      <p>Cliques automaticos.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('AutoHotKey')">
+      <span class="badge">Helper</span>
+      <h3>AutoHotKey</h3>
+      <p>Remapei teclas, dê funções e etc!</p>
+    </div>
+
+        <div class="card" data-tag="tool" onclick="openModal('autopower')">
+      <span class="badge">Editor</span>
+      <h3>ApowerEdit</h3>
+      <p>Editor de vídeo, leve e para PC!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('bandicam')">
+      <span class="badge">RECORDER</span>
+      <h3>BandiCam</h3>
+      <p>Gravador de tela.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('cdspc')">
+      <span class="badge">HQs</span>
+      <h3>CDisplayEx</h3>
+      <p>Leitor de HQs!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('camtasia')">
+      <span class="badge">EDITOR</span>
+      <h3>Camtasia 8.4</h3>
+      <p>Editor de vídeo para computadores de baixo recurso.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('deepclean')">
+      <span class="badge">Clear</span>
+      <h3>DeepClean</h3>
+      <p>Desinstale e limpe seu windows!</p>
+    </div>
+
+        <div class="card" data-tag="tool" onclick="openModal('everthing')">
+      <span class="badge">Helper</span>
+      <h3>Everthing</h3>
+      <p>Caçe todos arquivos do seu Pc de forma super rápida!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('control')">
+      <span class="badge">Drivers</span>
+      <h3>Driver Xbox Controle</h3>
+      <p>Baixe os drivers do seu controle Xbox.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('driveboost')">
+      <span class="badge">Helper</span>
+      <h3>DriverBoost</h3>
+      <p>Atualize seus drivers.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('fcr')">
+      <span class="badge">VPN</span>
+      <h3>Formart Factory</h3>
+      <p>Mude mp4 para mp3 etc.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('fraps')">
+      <span class="badge">CONTADOR FPS</span>
+      <h3>Fraps</h3>
+      <p>Confira o FPS do seu jogo.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('free')">
+      <span class="badge">Download</span>
+      <h3>Free Download Manager</h3>
+      <p>Aplicativo para baixar arquivos da internet super rápidos!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('hddr')">
+      <span class="badge">HDD</span>
+      <h3>HDD Raw Copy</h3>
+      <p>Alternativa melhor do Win32disktool!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('photo')">
+      <span class="badge">Player Foto</span>
+      <h3>IrFanView.</h3>
+      <p>O vizualizador de fotos mais leve e bom.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('rufus')">
+      <span class="badge">Tool</span>
+      <h3>Rufus</h3>
+      <p>Faça seu pendrive bootável e etc.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('boost')">
+      <span class="badge">Booster</span>
+      <h3>SoundBooster</h3>
+      <p>Aplicativo para aumentar o som do seu computador em %500!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('transmission')">
+      <span class="badge">Download</span>
+      <h3>Transmission</h3>
+      <p>Aplicativo para baixar arquivos TORRENTS!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('ventoy')">
+      <span class="badge">BOOT</span>
+      <h3>Ventoy</h3>
+      <p>Deixe seu pendrive bootável.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('vlc')">
+      <span class="badge">PLAYER</span>
+      <h3>VlC</h3>
+      <p>O melhor vizualizador de video atualmente.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('winrar')">
+      <span class="badge">UNZIP</span>
+      <h3>WinRar</h3>
+      <p>Extraia seus arquivos .zip, .rar e etc.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('winaero')">
+      <span class="badge">Personalizer</span>
+      <h3>Winero Tweaker</h3>
+      <p>Personalize seu Windows do jeito que quiser!</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('you2')">
+      <span class="badge">Download</span>
+      <h3>You2Mate</h3>
+      <p>O app para baixar vídeos e músicas do youtube.</p>
+    </div>
+
+    <div class="card" data-tag="tool" onclick="openModal('youmd')">
+      <span class="badge">Download</span>
+      <h3>Youtube Movie Downloader</h3>
+      <p>Baixe vídeos e musicas do YT!</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="section" id="celulargames">
+<h2>📱 Jogos/Celular</h2>
+<div class="grid">
+  
+<div class="card" data-tag="leve" onclick="openModal('60seconds')">
+<span class="badge">Jogo</span>
+<h3>60 Seconds</h3>
+<p>Sobreviva o máximo que puder após o apocalipse.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('bullyan')">
+<span class="badge">Jogo</span>
+<h3>Bully</h3>
+<p>Zaralho total na escola!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('cph')">
+<span class="badge">Jogo</span>
+<h3>CupHead</h3>
+<p>Cuphead completo e dlc.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('cmagic')">
+<span class="badge">Jogo</span>
+<h3>Combact Magic</h3>
+<p>Dinheiro infinito mas Offiline!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('flatzombiesdefense')">
+<span class="badge">Zombies</span>
+<h3>Flat Zombies</h3>
+<p>Flat Zombies defense com dinheiro infinito!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('papaan')">
+<span class="badge">Jogo</span>
+<h3>Papa´s Collection</h3>
+<p>Pack da série Papa´s!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('hollow')">
+<span class="badge">Jogo</span>
+<h3>Hollow Knight Silksong</h3>
+<p>Continuação do Hollow.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('kickthebuddy1')">
+<span class="badge">Jogo</span>
+<h3>Kick The Buddy 1</h3>
+<p>Zaralhe o buddy com dinheiro e gemas infinitas.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('second')">
+<span class="badge">Jogo</span>
+<h3>Kick The Buddy 2</h3>
+<p>Second kick com dinheiro e gemas infinitas.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('swampattack')">
+<span class="badge">CLICK</span>
+<h3>SwampAttack</h3>
+<p>Mate os monstros estilo PVZ com dinheiro infinito!!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('pojav')">
+<span class="badge">Launcher</span>
+<h3>Minecraft Java</h3>
+<p>Com o pojavlauncher você joga minecraft java no celular!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('mcpe1')">
+<span class="badge">Jogo</span>
+<h3>Minecraft Bedrock</h3>
+<p>O melhor jogo de sobrevivência atualizado!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('narut')">
+<span class="badge">Jogo</span>
+<h3>Naruto Senki</h3>
+<p>Naruto senki com todos personagens desbloquados.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('occ1')">
+<span class="badge">Zombie</span>
+<h3>Occupation 1</h3>
+<p>Apocalipse zumbi.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('occ2')">
+<span class="badge">Zombie</span>
+<h3>Occupation 2.5</h3>
+<p>Continuação direta do Occupation 1!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('ppc1an')">
+<span class="badge">Horror</span>
+<h3>Poppy Play Time: 1</h3>
+<p>Porte do PPT CHAPTER 1 para mobile!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('sixg')">
+<span class="badge">Installer</span>
+<h3>Six Guns</h3>
+<p>Velho oeste com dinheiro infinito.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('gt')">
+<span class="badge">Jogo</span>
+<h3>Gta San Andreas</h3>
+<p>Gta san mobile.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('rhv')">
+<span class="badge">OpenWorld</span>
+<h3>Rope Hero Vice</h3>
+<p>Com dinheiro infinito!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('svz1')">
+<span class="badge">Plataforma</span>
+<h3>Stickman Vs Zombies</h3>
+<p>Com dinheiro infinito!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('terrarian')">
+<span class="badge">Jogo</span>
+<h3>Terraria</h3>
+<p>Clássico terraria 2d!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('und')">
+<span class="badge">Jogo</span>
+<h3>Undertale</h3>
+<p>RPG clássico para celular.</p>
+</div>
+
+</div>
+<div class="section" id="celularapps">
+<h2>🪀 Apps/Celular</h2>
+<div class="grid">
+
+<div class="card" data-tag="leve" onclick="openModal('pstouch')">
+<span class="badge">Photoshop</span>
+<h3>Photoshop Touch</h3>
+<p>(PS Touch)Editor de fotos mobile, completo na sua melhor versão.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('smarplay')">
+<span class="badge">Play</span>
+<h3>Smartplay+</h3>
+<p>Assista séries, filmes e desenhos.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('powerdirector')">
+<span class="badge">Editor</span>
+<h3>PowerDirector</h3>
+<p>Editor de vídeo completo!</p>
+</div>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('octopus')">
+<span class="badge">MAPPING</span>
+<h3>Octopus</h3>
+<p>Mapeador de TEC/MOU para celular!</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="section" id="extras">
+<h2>💾 Extras</h2>
+<div class="grid">
+
+<div class="card" data-tag="tool" onclick="openModal('ads')">
+<span class="badge">EXTRA</span>
+<h3>Remover anúncios</h3>
+<p>Android</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('mcpe')">
+<span class="badge">EXTRA</span>
+<h3>Desbloquear MCPE!</h3>
+<p>PC</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('depe')">
+<span class="badge">EXTRA</span>
+<h3>Dependências</h3>
+<p>PC</p>
+</div>
+
+</div>
+</div>
+<div class="section" id="emuladores">
+<h2>🚜 Emuladores
+<div class="grid">
+
+<div class="card" data-tag="tool" onclick="openModal('adobe')">
+<span class="badge">Player</span>
+<h3>AdobeFlashPlayer</h3>
+<p>Aplicativo para jogar jogos flash.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('aether')">
+<span class="badge">PS2</span>
+<h3>AetherSX2</h3>
+<p>Emule ps2 no seu celular!</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('RetroArch')">
+<span class="badge">Emular</span>
+<h3>RetroArch</h3>
+<p>Aplicativo para emular diversos videogames retro!</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('pcsx2')">
+<span class="badge">Emular</span>
+<h3>PCSX2</h3>
+<p>Aplicativo para emular um ps2!</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('ppsspp')">
+<span class="badge">Emular</span>
+<h3>PPSSPP - PC</h3>
+<p>Aplicativo para emular um ppsspp para pc!</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('snes9x')">
+<span class="badge">Emular</span>
+<h3>Snes9x</h3>
+<p>Emulador do nintendo snes!</p>
+</div>
+
+
+</div>
+</div>
+<div class="section" id="emular">
+<h2>🎲 Para emular
+<div class="grid">
+
+<div class="card" data-tag="tool" onclick="openModal('acb')">
+<span class="badge">PPSSPP</span>
+<h3>Assassin’s Creed Bloodlines</h3>
+<p>Assassino de elite.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('bob')">
+<span class="badge">RetroArch</span>
+<h3>B.O.B</h3>
+<p>PC e CELULAR.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('cfg')">
+<span class="badge">Flash</span>
+<h3>Carmel Flash Games</h3>
+<p>Pack de jogos Flashs.</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('papapc')">
+<span class="badge">Flash</span>
+<h3>Papa´s Collection PC</h3>
+<p>Coleção de jogos do Papa´s.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('godghost')">
+<span class="badge">PPSSPP</span>
+<h3>God Of War Ghost Of Sparta</h3>
+<p>PC e CELULAR.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('inkagames')">
+<span class="badge">FLASH</span>
+<h3>InkaGames Collection</h3>
+<p>Uma coleção de jogos Flashs da Inka!</p>
+</div>
+
+<div class="card" data-tag="leve" onclick="openModal('thu2')">
+<span class="badge">PPSSPP</span>
+<h3>Tony Hawk’s Underground 2</h3>
+<p>Seja um skater profissional.</p>
+</div>
+
+    <div class="card" data-tag="leve" onclick="openModal('tq')">
+      <span class="badge">Flash</span>
+      <h3>Troll Face Quests</h3>
+      <p>Coleção dos troll face quests.</p>
+    </div>
+
+    <div class="card" data-tag="leve" onclick="openModal('rb')">
+      <span class="badge">Flash</span>
+      <h3>Red Ball Colections</h3>
+      <p>Vários jogos da franquia Red Ball.</p>
+    </div>
+</div>
+</div>
+
+<div class="section" id="hqsl">
+<h2>📚Livros e HQs
+<div class="grid">
+
+<div class="card" data-tag="tool" onclick="openModal('twdhq')">
+<span class="badge">HQs</span>
+<h3>The Walking Dead</h3>
+<p>Baixe e leia.</p>
+</div>
+
+<div class="card" data-tag="tool" onclick="openModal('foh')">
+<span class="badge">Serie</span>
+<h3>Fragments Of Humanity</h3>
+<p>Baixe e leia.</p>
+</div>
+
+</div>
+</div>
+
+</main>
+
+<!--                                             MODAIS                                                           -->
+<div id="modal-pvz" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('pvz')">×</span>
+<h2>Plants vs Zombies</h2>
+<p>Defenda sua casa contra zumbis.</p>
+<a class="btn" href="https://www.mediafire.com/file/vrewb4p7a3f1otx/Plantas+VS+Zombies+GOTY.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-snes9x" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('snes9x')">×</span>
+<h2>SNES9X</h2>
+<p>Jogue jogos de snes sem precisar extrai-los.</p>
+<a class="btn" href="https://www.mediafire.com/file/t8dgz09ahc4rtcq/snes9x.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-rufus" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('rufus')">×</span>
+<h2>Rufus</h2>
+<p>Boots, formatação e etc.</p>
+<a class="btn" href="https://github.com/pbatard/rufus/releases/download/v4.12/rufus-4.12_x86.exe" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fnaf3" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fnaf3')">×</span>
+<h2>FNAF 3</h2>
+<p>SOBREVIVA A NOITE! (usei o drive pois mediafire bloqueou.)</p>
+<a class="btn" href="https://drive.google.com/file/d/1mM17UTXrcgWXcqMe1eNgBLlnu_S9QKyP/view?usp=sharing">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fnaf2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fnaf2')">×</span>
+<h2>FNAF 2</h2>
+<p>SOBREVIVA A NOITE! (usei o drive pois mediafire bloqueou.)</p>
+<a class="btn" href="https:https://drive.google.com/file/d/1VsKquQrbEHuljG-p9XU0DOqO0tYmtc7X/view?usp=drive_link" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-crazytaxi" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('crazytaxi')">×</span>
+<h2>Crazy Taxi</h2>
+<p>O mundo aberto do taxista maluco!</p>
+<a class="btn" href="https://www.mediafire.com/file/rki1fl88mx8pcy2/Crazy_Taxi.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fnaf1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fnaf1')">×</span>
+<h2>FNAF 1</h2>
+<p>SOBREVIVA A NOITE! (ignore o aviso de malware do mediafire)</p>
+<a class="btn" href="https://www.mediafire.com/file/ndsor58ffdqwvqz/Five_Nights_at_Freddys_1.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bully" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bully')">×</span>
+<h2>Bully Scholarship Edition</h2>
+<p>Faça uma zona na escola.</p>
+<a class="btn" href="https://www.mediafire.com/file/3gqqbuhz5iaq3uc/Bully+Scholarship+Edition.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bully" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bully')">×</span>
+<h2>Bully Scholarship Edition</h2>
+<p>Faça uma zona na escola.</p>
+<a class="btn" href="https://www.mediafire.com/file/3gqqbuhz5iaq3uc/Bully+Scholarship+Edition.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-portal" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('portal')">×</span>
+<h2>Portal</h2>
+<p>Consiga a famosa portal gun!</p>
+<a class="btn" href="https://www.mediafire.com/file/z8yulq1zmkpwwhj/Portal.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-foh" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('foh')">×</span>
+<h2>FOH</h2>
+<p>Serie de zumbis sendo desenvolvida por mim!</p>
+<a class="btn" href="https://serietesteblog.blogspot.com/2026/01/fragmentos-da-humanidade-temp-1-ep-1.html" target="_blank">LER</a>
+</div>
+</div>
+
+<div id="modal-acb" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('acb')">×</span>
+<h2>Assassin’s Creed Bloodlines</h2>
+<p>Baixe pelo: RomsFun diretamente.</p>
+<a class="btn" href="https://romsfun.com/download/assassins-creed-bloodlines-11131/5" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-thu2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('thu2')">×</span>
+<h2>Tony Hawk’s Underground 2</h2>
+<p>Baixe pelo: RomsFun diretamente.</p>
+<a class="btn" href="https://romsfun.com/download/tony-hawks-underground-2-2-18900/4" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+
+<div id="modal-twdhq" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('twdhq')">×</span>
+<h2>TWD HQs</h2>
+<p>Série da HQ TWD!</p>
+<a class="btn" href="https://guardioesdoglobo.blogspot.com/2013/02/the-walking-dead.html" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bob" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bob')">×</span>
+<h2>B.O.B</h2>
+<p>Um jogo de plataforma no espaço. (Emulador recomendado: RetroArch)</p>
+<a class="btn" href="https://www.mediafire.com/file/tcoiwon717r0rov/B.O.B+GENSIS.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-nfsu" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('nfsu')">×</span>
+<h2>Need For Speed Underground 2</h2>
+<p>Um jogo de Corrida incrivel.</p>
+<a class="btn" href="https://mega.nz/file/615SnLTT#kjFRONG7GDVqs8QL3tG-nP-TB3MOQRXKew95XV4WjnM" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cod1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cod1')">×</span>
+<h2>Call Of Duty 1</h2>
+<p>Um jogo de guerra que marcou o mundo.</p>
+<a class="btn" href="https://drive.google.com/file/d/1PuvhbAJzIwbRK6xLnxKhSxTCe4kWKwmD/view?usp=sharing" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-godghost" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('godghost')">×</span>
+<h2>DEUS DA GUERRA - FANTASMA DE SPARTA</h2>
+<p>O brutal jogo de ação e aventura.</p>
+<a class="btn" href="https://romsfun.com/roms/playstation-portable/god-of-war-ghost-of-sparta-160387.html" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ppsspp" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ppsspp')">×</span>
+<h2>PPSSPP</h2>
+<p>Emule o clássico videogame psp.</p>
+<a class="btn" href="https://www.ppsspp.org/files/1_19_3/ppsspp_win.zip" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-60seconds" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('60seconds')">×</span>
+<h2>60 Seconds MOBILE</h2>
+<p>O apocalipse começou, tente viver.</p>
+<a class="btn" href="https://www.mediafire.com/file/mzruxdd8vqeemz9/60+Seconds.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-terraria" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('terraria')">×</span>
+<h2>Terraria</h2>
+<p>Survival insano em 2d!</p>
+<a class="btn" href="https://www.mediafire.com/file/e41ktawjhoyi3jj/Terraria.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-RetroArch" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('RetroArch')">×</span>
+<h2>RetroArch</h2>
+<p>Emule diversos jogos retro!</p>
+<a class="btn" href="https://www.mediafire.com/file/0p0kd8gtsk16iin/RetroArch+(v1-22-2-0).zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-free" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('free')">×</span>
+<h2>FDM</h2>
+<p>Seu donwload está demorando? Instale o FDM e baixe com rapidez!</p>
+<a class="btn" href="https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-pcsx2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('pcsx2')">×</span>
+<h2>PCSX2</h2>
+<p>Emule um ps2 no seu pc! (ja vem com bios)</p>
+<a class="btn" href="https://www.mediafire.com/file/3i9igefkbzcmh46/PCSX2.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-papapc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('papapc')">×</span>
+<h2>Papa´s Collection PC</h2>
+<p>Uma série de jogos da franquia Papa´s Flash.</p>
+<a class="btn" href="https://www.mediafire.com/file/iuew4g2yerbcbiw/Papa%25C2%25B4s_Games_-_Collection_%2528PC%2529.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-gtav" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('gtav')">×</span>
+<h2>GTA V</h2>
+<p>Simplesmente um dos melhores jogos do mundo!</p>
+<a class="btn" href="https://buzzheavier.com/rkksxkwu6kef" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-codmw1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('codmw1')">×</span>
+<h2>Call of Duty 4: Modern Warfare</h2>
+<p>A guerra, só que desta vez nos tempos atuais.</p>
+<a class="btn" href="https://gofile.io/d/rpeZ8y" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fl" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fl')">×</span>
+<h2>FireBoy and LavaGirl</h2>
+<p>Resolvam puzzles com seu amigo(a)!</p>
+<a class="btn" href="https://www.mediafire.com/file/ppycfkictstv9a8" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-hws" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('hws')">×</span>
+<h2>Happy Wheels</h2>
+<p>O clássico joguinho brutal.</p>
+<a class="btn" href="https://www.mediafire.com/file/lqymeiy6y1a8ikl" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-uno" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('uno')">×</span>
+<h2>UNO</h2>
+<p>O clássico Uno só que desta vez para PC!</p>
+<a class="btn" href="https://www.mediafire.com/file/v5yuz847v0v7o31/UNO.Build.9377745.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+
+<div id="modal-acrd" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('acrd')">×</span>
+<h2>Assassin's Creed™: Director's Cut Edition</h2>
+<p>Baixe primeiro o "Free download manager" e depois instale esse arquivo torrent para baixar o jogo.</p>
+<a class="btn" href="https://www.mediafire.com/file/4jexa76q607py7i/Assassin%27s+Creed+2008+GOG.torrent/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-grannypc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('grannypc')">×</span>
+<h2>Granny PC</h2>
+<p>Jogue o clássico Granny no seu pc!</p>
+<a class="btn" href="https://www.mediafire.com/file/698wowh0e890ufg/Granny.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-mad" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('mad')">×</span>
+<h2>Madagascar</h2>
+<p>O jogo Madagascar (2005), desenvolvido pela Toys for Bob e publicado pela Activision, é um jogo de plataforma 3D baseado no filme da DreamWorks. A trama segue Alex (leão), Marty (zebra), Glória (hipopótamo) e Melman (girafa) fugindo do zoológico de Nova York e chegando à ilha de Madagascar, enfrentando desafios e lêmures.  </p>
+<a class="btn" href="https://www.mediafire.com/file/dyc9nh2m9y0zcvn/Madagascar_Win_Files_EN.rar/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-171" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('171')">×</span>
+<h2>171</h2>
+<p>171 é um jogo de ação e aventura em mundo aberto, desenvolvido pela brasileira Betagames Group, focado na vida de Nicolau Souza, um morador de comunidade que tenta viver honestamente, mas é forçado a entrar no submundo do crime devido ao envolvimento de seu irmão, Rogério, com facções perigosas. O jogo se passa em Paulistânia, uma cidade fictícia inspirada em São Paulo, e tem lançamento final previsto para 2026. </p>
+<a class="btn" href="//koyso.com/game/1798" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bf6" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bf6')">×</span>
+<h2>BattleFild 6</h2>
+<p>Battlefield 6 (2025) apresenta uma campanha focada na narrativa ambientada entre 2027 e 2028, focando no conflito entre uma OTAN enfraquecida e a Pax Armata, uma corporação militar privada que busca dominar o poder global. O jogador assume o papel da unidade de elite Dagger 1-3 (ou Dagger 13) dos fuzileiros navais, combatendo em cenários globais como Gibraltar e Nova York. </p>
+<a class="btn" href="https://koyso.com/game/2244" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-daygone" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('daygone')">×</span>
+<h2>Days Gone</h2>
+<p>Days Gone é um jogo de ação em mundo aberto situado no Oregon pós-apocalíptico, dois anos após uma pandemia global transformar a humanidade em criaturas canibais ("Frenéticos"). O jogador controla Deacon St. John, um motoqueiro e caçador de recompensas que busca respostas sobre o possível paradeiro de sua esposa, Sarah, dada como morta.</p>
+<a class="btn" href="https://koyso.com/game/300" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-octopus" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('octopus)">×</span>
+<h2>Octopus</h2>
+<p>Mapeie o seu teclado e mouse para jogar direto do celular!</p>
+<a class="btn" href="https://cdn901.onehost.io/2023/Octopus_7.2.8_1715372869_latestmodapks.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+
+<div id="modal-gow2018" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('gow2018')">×</span>
+<h2>God Of War: 2018</h2>
+<p>God of War (2018) segue Kratos, o ex-deus grego da guerra, vivendo no mundo nórdico de Midgard com seu filho, Atreus, após a morte de sua esposa, Faye. A missão principal é cumprir o último desejo de Faye: espalhar suas cinzas no pico mais alto de todos os reinos. Esta jornada transforma o relacionamento entre o pai relutante e seu filho, enfrentando monstros e deuses. </p>
+<a class="btn" href="https://koyso.com/game/69" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-alc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('alc')">×</span>
+<h2>Alice Madness Returns</h2>
+<p> Alice Liddell, agora com 19 anos e vivendo em um orfanato em Londres, 11 anos após um incêndio matar sua família.</p>
+<a class="btn" href="https://mega.nz/file/b0p3kKTb#v3TJrrtCq2VGDJ0Uiyjxrp2Tge7nZ7mu49PF7tb9o5I" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-hollow" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('hollow')">×</span>
+<h2>Hollow Knight Silksong mobile</h2>
+<p>Hollow Knight: Silksong é a aguardada sequência do aclamado jogo indie de ação e aventura estilo Metroidvania, Hollow Knight, onde os jogadores controlam a personagem Hornet em uma nova jornada por um reino desconhecido chamado Pharloom, explorando, combatendo mais de 150 inimigos, descobrindo novos poderes e desvendando mistérios, sendo lançado em setembro de 2025 para diversas plataformas e recebendo aclamação da crítica por sua arte, música e jogabilidade.</p>
+<a class="btn" href="https://download2390.mediafire.com/k12p342c8x7gwTZ5TUVmOCGx8qgncNzl1f1FnmsOb3FAME5sAWP1h71RKgnKPSYXGzsOD3CO7vv8EnxPxM-d6IVq8mjbjF_65P3-rF3lnmuR9-aHj5dv-QqBzS6GT0wxQEdj6AV3Z68TQqIf4DyUQ0fgEXOGsBAKIDM3x4Ft_N_vDDQ/9klgapg7aakp2j8/Hollow+Knight+Silksong+-+v1.0-Beta+10%5BFreddy%5C%27s%5D_Tekmods.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-smarplay" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('smartplay')">×</span>
+<h2>Smartplat+</h2>
+<p>Assista series, filmes etc gratuitamente. Mas lembre-se de remover os anuncios seguindo os passos a seguir.</p>
+<a class="btn" href="https://download2393.mediafire.com/14i3okx2umjgdODylTx2IwEUPmHymhzFc5sxTGZ4PiqBWDjDWIEaOiVuYj-qf6TcZ_5HTeOLex-T0chr4RuFuX4m44M9miIK2sqZPTW8hORyn_pHpJMN-MR4IwSfTE1EIZzebbpJRyT1GpWlCn96IPms_mkw2w7Zane36C38C_h-jRA/j1zenw2pwkbgg7a/smart-play-1.16.apk" target="_blank">BAIXAR</a>
+<a class="btn" href="https://noadsandroid.blogspot.com/2026/02/portugues-agora-irei-te-mostrar-o-passo.html" target="_blank">REMOVER ANÚNCIOS</a>
+</div>
+</div>
+
+<div id="modal-aether" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('aether')">×</span>
+<h2>AetherSX2</h2>
+<p>Emule um ps2 direto do seu celular!</p>
+<a class="btn" href="https://files.aethersx2.com.br/AetherSX2-APK-v1.5-aethersx2.com.br.apk" target="_blank">APP</a>
+<a class="btn" href="https://files.aethersx2.com.br/AetherSX2-BIOS-Europe.bin" target="_blank">BIOS</a>
+</div>
+</div>
+
+<div id="modal-second" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('second')">×</span>
+<h2>Second Kick</h2>
+<p>Em Kick the Buddy: Second Kick, você está livre para cometer as mais terríveis maldades com um boneco irônico e muito marrento. Quanto mais maldades, mais dinheiro para comprar novos artefatos de tortura. Com dinheiro infinito. </p>
+<a class="btn" href="https://cdn446.onehost.io/2023/Kick_The_Buddy_Second_Kick_1.14.1523_1765313840_latestmodapks.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-stumblepc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('stumblepc')">×</span>
+<h2>Stumble Guys PC</h2>
+<p>Otimizado, offiline e com bots!</p>
+<a class="btn" href="https://www.mediafire.com/file/561xej9tlddqdqb/OptiStumble+Guys+0.37+Offline+BETA+1.7z/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+
+<div id="modal-narut" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('narut')">×</span>
+<h2>Naruto Senki</h2>
+<p>Naruto Senki é um popular jogo de luta e estratégia 2D para Android (mobile), no estilo "fan game" (criado por fãs) ou MOBA (Multiplayer Online Battle Arena) simples, onde o objetivo principal é destruir a torre do adversário enquanto defende a sua. Focado em batalhas rápidas, o jogo permite controlar diversos personagens do anime com técnicas especiais únicas. </p>
+<a class="btn" href="https://cdn700.onehost.io/2023/NSV2_2.1.6-fix_1712913022_latestmodapks.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-sixg" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('sixg')">×</span>
+<h2>SixGuns</h2>
+<p>Six-Guns é um jogo de ação e aventura em terceira pessoa, de mundo aberto, ambientado no Velho Oeste com elementos sobrenaturais, desenvolvido pela Gameloft. O jogador assume o papel de Buck Crosshaw, um foragido que explora Arizona e Oregon, lutando contra bandidos, vampiros e criaturas antigas, completando missões e aprimorando equipamentos. </p>
+<a class="btn" href="https://cdn446.onehost.io/2023/[Installer]_Six_Guns_1.0_1763303920_latestmodapks.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-gt" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('gt')">×</span>
+<h2>GTA SAN ANDREAS</h2>
+<p>Em breve lançarei para todos despositivos. (android 8,9,10,11,12,13,14,15...)</p>
+<a class="btn" href="https://file.gtsamod.com/grand-theft-auto-san-andreas-v2.11.311-mod.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-pojav" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('pojav')">×</span>
+<h2>PojavLauncher</h2>
+<p>Já imaginou jogar minecraft java sem ter pc? Faça isso direto do seu celular.</p>
+<a class="btn" href="https://github.com/PojavLauncherTeam/PojavLauncher/releases/download/gladiolus/PojavLauncher.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-win7g" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('win7g')">×</span>
+<h2>Windows 7 Games</h2>
+<p>Lembra dos clássicos jogos de windows 7? Rejogue todos eles!</p>
+<a class="btn" href="https://www.mediafire.com/file/woteuzbdsro40fw/Windows7Games_para_Windows_11_10_8.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-und" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('und')">×</span>
+<h2>Undetale</h2>
+<p>Divirta-se.</p>
+<a class="btn" href="https://apkdownloader.cc/storage/files/2025/05/undertale.apk.v2.0.1.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-papaan" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('papaan')">×</span>
+<h2>Papa´s Collection ANDROID</h2>
+<p>Uma série de jogos da franquia Papa´s para celular.</p>
+<a class="btn" href="https://www.mediafire.com/file/70x2r1dtskut99o/Papa%25C2%25B4s_Collection_%2528ANDROID%2529.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-transmission" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('transmission')">×</span>
+<h2>Transmission</h2>
+<p>O melhor mais leve download de torrents.</p>
+<a class="btn" href="https://www.mediafire.com/file/l0hcvgcj3vxt5pc/Transmission+(Torrent).zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bullyan" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bullyan')">×</span>
+<h2>Bully</h2>
+<p>Faça a maior desgraça na escola!</p>
+<a class="btn" href="https://cdn903.onehost.io/2023/Bully_Anniversary_Edition_1.4.311_1769156485_latestmodapks.com.apk" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-doom1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('doom1')">×</span>
+<h2>DOOM 1</h2>
+<p>Mate os tinhoso em marte!</p>
+<a class="btn" href="https://www.mediafire.com/file/9i7gg4t8qgqrg36/Doom_1.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-doom2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('doom2')">×</span>
+<h2>DOOM 2</h2>
+<p>Mate os tinhoso em marte!</p>
+<a class="btn" href="https://www.mediafire.com/file/jcjeuu1e58dtz0d/Doom_2.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-codmw3" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('codmw3')">×</span>
+<h2>CALL OF DUTY MODERN WARFARE 3</h2>
+<p>Ultimo jogo da franquia MW, jogue depois da desgraça que aconteceu no MW2! (BAIXE O FDM PARA BAIXAR TORRENTS RÁPIDOS!)</p>
+<a class="btn" href="https://www.mediafire.com/file/supc4f6ahh6ck7m/Call_of_Duty_Modern_Warfare_3_%2528v1.9.461_%252B_DLCs%2529_-_%255BDODI_Repack%255D.torrent/file" target="_blank">BAIXAR</a>
+<a class="btn" href="https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe" target="_blank">FDM</a>
+</div>
+</div>
+
+<div id="modal-codmw2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('codmw2')">×</span>
+<h2>CALL OF DUTY MODERN WARFARE 2</h2>
+<p>Continuação direta do MW1! (BAIXE O FDM PARA BAIXAR TORRENTS RÁPIDOS!)</p>
+<a class="btn" href="https://www.mediafire.com/file/ep17lc8bv8tyh5x/Call_of_Duty_Modern_Warfare_2_%2528v1.0%2529_%255BDarck_Repack%255D.torrent/file" target="_blank">BAIXAR</a>
+<a class="btn" href="https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe" target="_blank">FDM</a>
+</div>
+</div>
+
+<div id="modal-re4" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('re4')">×</span>
+<h2>Resident Evil 4</h2>
+<p>Um dos melhores jogos de zumbis!</p>
+<a class="btn" href="https://www.mediafire.com/file/7icues177t7rpke/Resident+Evil+4.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-midnight2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('midnight2')">×</span>
+<h2>Midnight Ckub 2</h2>
+<p>Um clássico jogo de corrida da Rockstar!</p>
+<a class="btn" href="https://www.mediafire.com/file/kqwhtqybnyva2rr/Midnight+Club+2.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-autopower" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('autopower')">×</span>
+<h2>ApowerEdit</h2>
+<p>Um editor "completo" pro seu pc igual o meu (batata).</p>
+<a class="btn" href="https://www.mediafire.com/file/8jvij0kbj07omw2/ApowerEdit.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-youmd" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('youmd')">×</span>
+<h2>Youtube Movie Downloder</h2>
+<p>Um dos melhores apps de baixar vídeos e musicas de alta qualidade do youtube.</p>
+<a class="btn" href="https://www.mediafire.com/file/hkdn1redstjtye1/Youtube+Movie+Downloader.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-AutoHotKey" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('AutoHotKey')">×</span>
+<h2>AutoHotKey</h2>
+<p>Remap, faça teclas escrever palavras e etc!</p>
+<a class="btn" href="https://www.mediafire.com/file/ciu035grqnxi4iv/AutoHotkey_2.0.19_setup.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-everthing" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('everthing')">×</span>
+<h2>Everthing</h2>
+<p>Caçe todos arquivos do seu pc mais rápido possivel!</p>
+<a class="btn" href="https://www.mediafire.com/file/da0i1grxcc9q7gx/Everything-1.4.1.1032.x64-Setup.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-popt" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('popt')">×</span>
+<h2>Prince of Persia The Sands of Time</h2>
+<p>Um dos clássicos da franquia POP! Use o FDM para baixar o arquivo torrent. (ele está aqui no site)</p>
+<a class="btn" href="https://www.mediafire.com/file/gyynlu7tv97vkif/Prince+of+Persia+The+Sands+of+Time+(Goodies)+–+[DODI+Repack].torrent/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fnaf4" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fnaf4')">×</span>
+<h2>FNAF 4</h2>
+<p>Sobreviva 5 noites com o Freddy!</p>
+<a class="btn" href="https://www.mediafire.com/file/ubyufqld8frzp93/Five_Nights_At_Freddys_4.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-gtasan" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('gtasan')">×</span>
+<h2>GTA SAN</h2>
+<p>Mundo aberto com diversas missões.</p>
+<a class="btn" href="https://drive.usercontent.google.com/download?id=1N7bM4fMGPpI6oo-s-e-lhzoSD0uOd3Oj&export=download&authuser=0" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-undertale" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('undertale')">×</span>
+<h2>Undertale</h2>
+<p>RPG incrivel!</p>
+<a class="btn" href="https://www.mediafire.com/file/t7ijhnxsovjf68r/Undertale.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-depe" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('depe')">×</span>
+<h2>Instalador de Depedências.</h2>
+<p>Baixou um jogo deu erro de DLL ou não abriu? Instale as dependencias.</p>
+<a class="btn" href="https://www.mediafire.com/file/03ejofbwahqmr3k/Dependencies.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-adobe" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('adobe')">×</span>
+<h2>Adobe Flash PLayer</h2>
+<p>Baixou um jogo e é flash? Execute ele no adobe!</p>
+<a class="btn" href="https://www.mediafire.com/file/ncwfehqev3rl4uk/Adobe_Flash_Player_32.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-occ1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('occ1')">×</span>
+<h2>Occupation 1</h2>
+<p>INSTALE AÍ!</p>
+<a class="btn" href="https://www.mediafire.com/file/1clf3dos6np4bav/Occupation+1.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-mcpe1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('mcpe1')">×</span>
+<h2>Minecraft Bedrock</h2>
+<p>As versões mais atuais do MCPE!</p>
+<a class="btn" href="https://mcpedl.org/downloading/" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-terrarian" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('terrarian')">×</span>
+<h2>Terraria Android</h2>
+<p>Clássico terraria para android!</p>
+<a class="btn" href="https://www.mediafire.com/file/ajb66wswprs49ce/TERRARIA_1.4.4.9_ByHT.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ppc1an" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ppc1an')">×</span>
+<h2>Poppy Play Time Chapter 1</h2>
+<p>Um porte desse jogo para celular!</p>
+<a class="btn" href="https://www.mediafire.com/file/pewai4sfmdxq1iy/Poppy+Playtime+Chapter+1.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-kickthebuddy1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('kickthebuddy1')">×</span>
+<h2>Kick the buddy</h2>
+<p>Desça a porrada no Buddy safado com dinheiro infinito!</p>
+<a class="btn" href="https://www.mediafire.com/file/4entvw13i6nzu2y/Kick+the+Buddy+-+v2.15.1.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-flatzombiesdefense" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('flatzombiesdefense')">×</span>
+<h2>Flat Zombies Defense</h2>
+<p>Um jogo 2d insano de zumbis com dinheiro infinito!</p>
+<a class="btn" href="https://www.mediafire.com/file/n02dagzwxjssvit/flat+zombies+defense+-+v2.0.8.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-swampattack" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('swampattack')">×</span>
+<h2>SWAMP ATTACK</h2>
+<p>Proteja sua casa das desgraças enquanto você tem dinheiro infinito!</p>
+<a class="btn" href="https://www.mediafire.com/file/grvneslczi8zx6v/Swamp+Attack+-+v4.6.9.0.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cmagic" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cmagic')">×</span>
+<h2>Combact Magic</h2>
+<p>Batalhas com mágia! Lembre-se que só da para jogar Offiline com bots!</p>
+<a class="btn" href="https://www.mediafire.com/file/1fge06u9x0fekmo/CombatMagic+-+v2.69.64+(Offiline).apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-rhv" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('rhv')">×</span>
+<h2>ROPE HERO VICE</h2>
+<p>Um tipo de Gta com super-héroi.</p>
+<a class="btn" href="https://www.mediafire.com/file/flkq7av8oy1vkoa/RopeHeroVice+-+v7.0.4.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-svz1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('svz1')">×</span>
+<h2>Stickman Vs Zombies</h2>
+<p>Apocalipse zumbi, mas com dinheiro infinito!</p>
+<a class="btn" href="https://www.mediafire.com/file/yoq6two6zy9kiep/Stick+vs+Zombies+-+1.6.0.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-occ2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('occ2')">×</span>
+<h2>Occupation 2.5</h2>
+<p>Continuação do 1.</p>
+<a class="btn" href="https://www.mediafire.com/file/0kjf1ksnzjz8q7d/Occupation+2.5.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-nfs" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('nfs')">×</span>
+<h2>Need For Speed Most Wanted</h2>
+<p>Corrida e historia na versão Black Edition.</p>
+<a class="btn" href="https://mega.nz/file/PlwUGS6S#Im-VfZLtbXXg0if-cf5Jj2mAndX2hBsa0tfjMARjjWQ" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-balde" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('balde')">×</span>
+<h2>Baldi's Basics</h2>
+<p>Tente fugir da escola enquanto todos estão contra você. Créditos do jogo: OpitiJuegos!</p>
+<a class="btn" href="https://www.mediafire.com/file/z2n5ix2ev1klfh8/Baldis+Basic+-+By+OpitiJuegos.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-powerdirector" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('powerdirector')">×</span>
+<h2>PowerDirector</h2>
+<p>Editor de vídeo!</p>
+<a class="btn" href="https://mega.nz/file/2kx2nISA#_GOcFAux65_Wx5mSMx39oiGwCdirLTmMcI9nP6TcNXI" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-capo" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('capo')">×</span>
+<h2>CapCut</h2>
+<p>Um dos editores de vídeo mais usados atualmente. Versão 16.6.0 MOD.</p>
+<a class="btn" href="https://mega.nz/file/6wY2yQzQ#UrvoV_foP8yW3P1GXsyMOv_9rtz0ZBR4vHEcxFg7JaM" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cod2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cod2')">×</span>
+<h2>Call Of Duty 2</h2>
+<p>COD 2 um jogo de guerra frenético.</p>
+<a class="btn" href="https://mega.nz/file/qgJgCSgL#N1w1uRuPTWoKOT5nwiNI6KaOp6jKEhn-MR8HP2RvMRw" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-winaero" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('winaero')">×</span>
+<h2>Winaero Tweaker</h2>
+<p>O melhor personalizador pro seu Windows!</p>
+<a class="btn" href="https://www.mediafire.com/file/ki6r6e65qi1g5g9/WinaeroTweaker.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cdspc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cdspc')">×</span>
+<h2>CDisplayEx</h2>
+<p>O melhor leitor de HQs etc de pc e celular!</p>
+<a class="btn" href="https://www.cdisplayex.com/files/CDXWin64v1.10.33.exe" target="_blank">PC (64bits)</a>
+<a class="btn" href="https://www.cdisplayex.com/files/CDXWin32v1.10.33.exe" target="_blank">PC (32bits)</a>
+<a class="btn" href="https://play.google.com/store/apps/details?id=com.progdigy.cdisplay.free" target="_blank">Android (GooglePlay)</a>
+</div>
+</div>
+
+<div id="modal-farcry2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('farcry2')">×</span>
+<h2>FarCry 2</h2>
+<p>FPS insano com muitas missões e leve.</p>
+<a class="btn" href="https://www.mediafire.com/file/fk1j2vibzvf3yh3/FarCry+2+(Edition+Fourtune).zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bandicam" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bandicam')">×</span>
+<h2>BandiCam</h2>
+<p>Grave sua tela em um app otimiziado e sem marca d´agua.</p>
+<a class="btn" href="https://www.mediafire.com/file/ulhbtkxo7vvygnj/Bandicam+Portable.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-inkagames" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('inkagames')">×</span>
+<h2>InkaGames Pack</h2>
+<p>Vários Saw games e etc...</p>
+<a class="btn" href="https://www.mediafire.com/file/fpjeu0qirjmi9gy/InkaGames+-+Collection.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-deepclean" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('deepclean')">×</span>
+<h2>DeepClean</h2>
+<p>O melhor app para limpar seu windows!</p>
+<a class="btn" href="https://www.mediafire.com/file/y24fl8iiiffa07d/DeepClean+-+Unistall+Tool.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-photo" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('photo')">×</span>
+<h2>IrFanView</h2>
+<p>O vizualizador de fotos mais leve.</p>
+<a class="btn" href="https://www.mediafire.com/file/6becnhsj50ic788/Viwer+de+fotos+x64.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-winrar" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('winrar')">×</span>
+<h2>WinRar</h2>
+<p>Extraia seus arquivos.</p>
+<a class="btn" href="https://www.mediafire.com/file/7offp2f10hmlv65/winrar-x64-713br.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ventoy" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ventoy')">×</span>
+<h2>Ventoy</h2>
+<p>Deixe seu pendrive bootavel.</p>
+<a class="btn" href="https://www.mediafire.com/file/0rfiy6fstxth6cv/ventoy-1.1.07-windows.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-vlc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('vlc')">×</span>
+<h2>VLC</h2>
+<p>Player de vídeos e musicas.</p>
+<a class="btn" href="https://www.mediafire.com/file/ldn7lkkavsv7my0/vlc-3.0.21-win32.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-you2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('you2')">×</span>
+<h2>You2Mate Downlod</h2>
+<p>Baixe vídeos e musicas do youtube.</p>
+<a class="btn" href="https://www.mediafire.com/file/tcum83qunj0gysy/You2Mate+Donwload.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-hddr" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('hddr')">×</span>
+<h2>HDD RAW TOOL COPY</h2>
+<p>Copie sistemas de video-games portateis, backups, ssd, hd, etc.. A melhor alternativa pro Win32disk Imager!</p>
+<a class="btn" href="https://www.mediafire.com/file/3he69zmar2dwypo/HDDRawCopy1.10Setup.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-control" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('control')">×</span>
+<h2>Xbox Controller Driver</h2>
+<p>Comprou um controle xbox e ele não reconheceu no PC? Instale essa ferramenta e use normalmente..</p>
+<a class="btn" href="https://www.mediafire.com/file/9y184mv1wcfq55l/microsoft-xbox-360-controller-driver-6-2-29-0.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-tq" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('tq')">×</span>
+<h2>Troll face quests</h2>
+<p>Coleção troll.</p>
+<a class="btn" href="https://www.mediafire.com/file/g8ox7uuye3k9lp4/Trollface_Quests.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-sonic12" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('sonic12')">×</span>
+<h2>Sonic Classic 1 e 2</h2>
+<p>Os clássicos sonics!</p>
+<a class="btn" href="https://www.mediafire.com/file/g3t1h0eu09ip8tb/Sonic+Classic.7z/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-subwaypc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('subwaypc')">×</span>
+<h2>SubWay Surfers</h2>
+<p>Deslize!</p>
+<a class="btn" href="https://www.mediafire.com/file/doyzg3wk06glto7/Subway+Surfers.7z/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-tb" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('tb')">×</span>
+<h2>TIAB</h2>
+<p>Esconda-se do açogueiro.</p>
+<a class="btn" href="https://www.mediafire.com/file/pf52akxbco3djhr/Theres_a_Butcher_Around.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-twd1" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('twd1')">×</span>
+<h2>TWD: Season 1</h2>
+<p>Faça as escolhas certas.</p>
+<a class="btn" href="https://www.mediafire.com/file/57qwxissr07njpj/The_Walking_Dead_Season_1_%255B400_days_%252B_patch1%255D_-_%255BDODI_Repack%255D.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-an" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('an')">×</span>
+<h2>ARBS</h2>
+<p>Faça brigas.</p>
+<a class="btn" href="https://www.mediafire.com/file/v484zduwwlhdolf/Animal+Revolt+Battle+Simulator.7z/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ti" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ti')">×</span>
+<h2>TTI</h2>
+<p>Fuja do siri-cascudo.</p>
+<a class="btn" href="https://www.mediafire.com/file/yygs5i3efxplvgk/The_True_Ingredients.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-sv" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('sv')">×</span>
+<h2>Stardew Valley</h2>
+<p>Fazendinha.</p>
+<a class="btn" href="https://www.mediafire.com/file/ptylw7gv6xgm5w4/Stardew_Valley.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-sf" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('sf')">×</span>
+<h2>Sally Face</h2>
+<p>Descubra por si mesmo.</p>
+<a class="btn" href="https://www.mediafire.com/file/lljs1ikrlfzpgsn/Sally_Face.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-rb" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('rb')">×</span>
+<h2>Red Ball coleção</h2>
+<p>Coleção do red ball.</p>
+<a class="btn" href="https://www.mediafire.com/file/4bul22sxk33yz11/Red_Ball.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-pm" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('pm')">×</span>
+<h2>Pac-Man Clássico</h2>
+<p>Fuja e coma.</p>
+<a class="btn" href="https://www.mediafire.com/file/e0eszcsz7878ope/Pac_Man.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-mkt" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('mkt')">×</span>
+<h2>MKT</h2>
+<p>Lute com seus amigos em 1 pc!</p>
+<a class="btn" href="https://www.mediafire.com/file/qb306wlku8drh0p/Mortal_Kombat_Trilogy.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-db" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('db')">×</span>
+<h2>Diablo Setup</h2>
+<p>Lute e vença o mal!</p>
+<a class="btn" href="https://www.mediafire.com/file/c0ajhehm199exhl/Diablo.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cs" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cs')">×</span>
+<h2>CS 1.6 Setup</h2>
+<p>Um fps classico.</p>
+<a class="btn" href="https://www.mediafire.com/file/ef4z3pyjpht22mg/CS16_Setup.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cc" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cc')">×</span>
+<h2>Cookie Clicker</h2>
+<p>Clique muito.</p>
+<a class="btn" href="https://www.mediafire.com/file/6pw44z3b6c020au/Cookie_Clicker.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-br" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('br')">×</span>
+<h2>Buckshot Roulette</h2>
+<p>Roleta russa com o capeta.</p>
+<a class="btn" href="https://www.mediafire.com/file/ij30091srvodo0q/Buckshot_Roulette.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fcr" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fcr')">×</span>
+<h2>Format Factory</h2>
+<p>MP4 para MP3 e etc.</p>
+<a class="btn" href="https://www.mediafire.com/file/50no8svjlihqxua/FormatFactory+(5.21.0.0).exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-alcm" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('alcm')">×</span>
+<h2>Alice de American Mcgee</h2>
+<p>Quando tudo começou...</p>
+<a class="btn" href="https://www.mediafire.com/file/cuwofn5etthw2qu/American+McGee's+Alice.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cph" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cph')">×</span>
+<h2>Cuphead</h2>
+<p>Um jogo completo com mais uma DLC!</p>
+<a class="btn" href="https://www.mediafire.com/file/3clx9l8r4tfdzlw/Cuphead_%2528v1.3.4%2529.apk/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-cfg" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('cfg')">×</span>
+<h2>CFG</h2>
+<p>Uma coleção de jogos da Carmel.</p>
+<a class="btn" href="https://www.mediafire.com/file/6m64pdxt009d3ut/CarmelFlashGames.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-df2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('df2')">×</span>
+<h2>Delta Force 2 installer</h2>
+<p>Guerras e porradaria.</p>
+<a class="btn" href="https://www.mediafire.com/file/9otwrqzneerkv45/DeltaForce+2+(Setup).zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-stl" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('stl')">×</span>
+<h2>StoryTeller</h2>
+<p>Faça historias.</p>
+<a class="btn" href="https://www.mediafire.com/file/tfwtj6wq5l08nf3/Storyteller.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-carn" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('carn')">×</span>
+<h2>Carnivoros</h2>
+<p>Antigo jogo de caça a Dinossauros.</p>
+<a class="btn" href="https://www.mediafire.com/file/c2aq8091d6kvu08/Carnivores.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-warp" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('warp')">×</span>
+<h2>1.1.1 Warp VPN</h2>
+<p>Mude sua localizade.</p>
+<a class="btn" href="https://www.mediafire.com/file/wk42juz27vtcji2/CloudFlare+Warp+(Setup).msi/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-legacy" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('legacy')">×</span>
+<h2>Launcher Legacy Minecraft Java</h2>
+<p>Jogue Minecraft Java mais atualizado possivel.</p>
+<a class="btn" href="https://www.mediafire.com/file/g263i7d7ti4n0vj/LegacyLauncher_Installer_legacy.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+
+<div id="modal-driveboost" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('driveboost')">×</span>
+<h2>DriverBoost</h2>
+<p>Dê um UP em seus drivers.</p>
+<a class="btn" href="https://www.mediafire.com/file/vwztzks3ucccfpd/Driver+Boost.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-auci" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('auci')">×</span>
+<h2>AudaCity</h2>
+<p>Maker e editor de audio.</p>
+<a class="btn" href="https://www.mediafire.com/file/u7n8rivmsyrufsv/AudaCity+(3.7.7).exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-auto" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('auto')">×</span>
+<h2>Auto Clicker</h2>
+<p>Cliques automaticos.</p>
+<a class="btn" href="https://www.mediafire.com/file/zryyv6zwq8rtkuq/Op+Auto+Clicker.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ab" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ab')">×</span>
+<h2>Angry Birds</h2>
+<p>Pássaros vs porcos.</p>
+<a class="btn" href="https://www.mediafire.com/file/9zzpd92fqndt7n7/Angry_Birds.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-bf2" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('bf2')">×</span>
+<h2>BattleField 2</h2>
+<p>Tiro, porrada e bomba.</p>
+<a class="btn" href="https://mega.nz/file/HlpnUYDT#sIb3mb_JTC9DLIVOun9H4vHMxgk80FMDct78tVHIi_I" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-coj" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('coj')">×</span>
+<h2>Call Of Juarez Gunslinger</h2>
+<p>Um "COD" do velho oeste.</p>
+<a class="btn" href="https://drive.google.com/file/d/1RsrKNxc1V1DTiSCa5LDoJBA8fIOUEMV9/view?usp=sharing" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-mcpe" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('mcpe')">×</span>
+<h2>Unlocked Minecraft</h2>
+<p>Sabe quando você baixa o minecraft bedrock for windows e ele tem aquele tempo? Remova ele usando essa ferramenta.</p>
+<a class="btn" href="https://www.mediafire.com/file/xlhtwkwjf8gy3lw/MCPE+UNLOCKED.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-fraps" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('fraps')">×</span>
+<h2>Fraps</h2>
+<p>Confira a quantos FPS o seu jogo roda.</p>
+<a class="btn" href="https://www.mediafire.com/file/472grt7yilllwf5/Fraps.exe/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-boost" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('boost')">×</span>
+<h2>SoundBooster</h2>
+<p>Aumente o audio de seu computador em %500.</p>
+<a class="btn" href="https://www.mediafire.com/file/v3edym2br37u6sl/SoundBooster.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-worldbox" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('worldbox')">×</span>
+<h2>WorldBox</h2>
+<p>Simulador de um deus.</p>
+<a class="btn" href="https://www.mediafire.com/file/s7k5givy04taape/WorldBox_v0.22.9.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-farcry" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('farcry')">×</span>
+<h2>Far Cry 1</h2>
+<p>FPS clássico.</p>
+<a class="btn" href="https://www.mediafire.com/file/6oyae42tu6qc154/Far+Cry+1.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-camtasia" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('camtasia')">×</span>
+<h2>Camtasia 8.4</h2>
+<p>Editor de vídeo para computadores de baixessimo recurso.</p>
+<a class="btn" href="https://www.mediafire.com/file/ehviz08gnpayj0e/Camtasia+Studio+8+MingPlay+Games.zip/file" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-pstouch" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('pstouch')">×</span>
+<h2>PS Touch</h2>
+<p>O melhor editor de fotos/designer mobile na sua versão 9.9.9!</p>
+<a class="btn" href="https://mega.nz/file/1V8wQDIT#o_rcg5FRecSNfNQv1BPTWhXkHvonwTA6gtkIBn5M8JI" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-ads" class="modal">
+<div class="modal-box">
+<span class="close" onclick="closeModal('ads')">×</span>
+<h2>Remover anúncios</h2>
+<p>Tutorial de como remover anuncios de jogos/apps para Android.</p>
+<a class="btn" href="https://noadsandroid.blogspot.com/2026/02/portugues-agora-irei-te-mostrar-o-passo.html" target="_blank">BAIXAR</a>
+</div>
+</div>
+
+<div id="modal-update" class="modal">
+  <div class="modal-box">
+    <span class="close" onclick="document.getElementById('modal-update').style.display='none'">×</span>
+    <h2>Última Atualização - 17/02/2026</h2>
+    <p style="margin:15px 0;">Novidades dessa versão: (V0.9.6)</p>
+    <ul style="text-align:left; padding-left:20px; color:#ccc;">
+      <li><h2 style="color: rgb(0, 38, 255);">Novos jogos PC:</h2> Prince of Persia The Sands of Time, MidnightClub 2, Resident evil 4 </li>
+      ------------
+      <li><h2 style="color: rgb(0, 38, 255);">Ferramentas adicionadas(PC):</h2>Everthing, AutoHotKey, Youtube Movie Downloader, ApowerEdit, </li>
+      ------------
+      <li><h2 style="color: rgb(0, 38, 255);">Jogos/Apps adicionados(Android):</h2>...</li>
+       ------------
+      <li><h2 style="color: rgb(0, 38, 255);">Atualização geral:</h2>Reparos...</li>
+    </ul>
+    <button class="btn" onclick="document.getElementById('modal-update').style.display='none'">Fechar</button>
+  </div>
+</div>
+
+
+<div style="text-align:center; margin: 40px 0; padding: 25px; background: #0f0000; border-top: 5px solid #ff0000; border-bottom: 5px solid #ff0000;">
+  <h3 style="color: #ff4444; font-family: Orbitron; font-size: 1.8rem; margin-bottom: 15px;">
+    Quer pedir um jogo ou app? Peça em nosso discord!
+  </h3>
+  <div></div>-
+  <div></div>
+  <a href="https://discord.gg/8G7TensUAp" target="_blank"
+     style="background: #ff0000; color: white; padding: 16px 45px; font-size: 1.4rem; font-weight: bold; text-decoration: none; border-radius: 50px; box-shadow: 0 0 25px #ff0000aa; transition: all .3s;">
+     🚀 JUNTAR-SE AO DISCORD AGORA!
+  </a>
+</div>
+
+
+
+<script>
+// MODAL
+function openModal(id){
+  document.getElementById("modal-"+id).style.display="flex";
+}
+function closeModal(id){
+  document.getElementById("modal-"+id).style.display="none";
+}
+window.onclick=e=>{
+  if(e.target.classList.contains("modal")){
+    e.target.style.display="none";
+  }
+};
+
+// SEARCH
+document.getElementById("search").addEventListener("input",e=>{
+  const v=e.target.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display=c.innerText.toLowerCase().includes(v)?"block":"none";
+  });
+});
+
+// TAG FILTER
+document.querySelectorAll(".tag").forEach(tag=>{
+  tag.onclick=()=>{
+    document.querySelectorAll(".tag").forEach(t=>t.classList.remove("active"));
+    tag.classList.add("active");
+    const t=tag.dataset.tag;
+    document.querySelectorAll(".card").forEach(c=>{
+      c.style.display=(t==="all"||c.dataset.tag===t)?"block":"none";
+    });
+  };
+});
+</script>
+
+</body>
+</html>
