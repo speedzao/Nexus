@@ -6,7 +6,7 @@ Atualizações semanais, com jogos e aplicativos em alta!
 
 --------------------------------
 
-Versão Atual: V2.6 — 23.05.2026
+Versão Atual: V2.6.1 — 24.05.2026
 
 Site Oficial:
 https://speedzao.github.io/Nexus/
@@ -22,11 +22,6 @@ https://forms.gle/bBiSF1qo8itQkEQA6
 
 Novidades Da Atualização
 
-- Saga Sillent Hill
-- Jogos reparados
-- Level Devil
-- Novos Jogos de PC
-- Downloads de fontes reparaveis
-- Adicionei mais jogos, só entrar e verificar.
+- Minecraft Bedrock Reparado
 
 - Jogo Ofline por hora: Bowmaster
