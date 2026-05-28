@@ -6,7 +6,7 @@ Atualizações semanais, com jogos e aplicativos em alta!
 
 --------------------------------
 
-Versão Atual: V2.6.1 — 24.05.2026
+Versão Atual: V2.6.1 — 28.05.2026
 
 Site Oficial:
 https://speedzao.github.io/Nexus/
@@ -22,6 +22,7 @@ https://forms.gle/bBiSF1qo8itQkEQA6
 
 Novidades Da Atualização
 
-- Minecraft Bedrock Reparado
-
-- Jogo Ofline por hora: Bowmaster
+- Reparo de Bugs
+- Adiconei novos icones
+- Banner
+- Mortal Kombat 3
