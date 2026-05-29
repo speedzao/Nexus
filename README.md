@@ -6,7 +6,7 @@ Atualizações semanais, com jogos e aplicativos em alta!
 
 --------------------------------
 
-Versão Atual: V2.6.1 — 28.05.2026
+Versão Atual: V2.6.2 — 29.05.2026
 
 Site Oficial:
 https://speedzao.github.io/Nexus/
@@ -22,7 +22,6 @@ https://forms.gle/bBiSF1qo8itQkEQA6
 
 Novidades Da Atualização
 
-- Reparo de Bugs
-- Adiconei novos icones
-- Banner
-- Mortal Kombat 3
+- Call Of Duty: Black Ops 1
+- Call Of Duty: Black Ops 2
+
