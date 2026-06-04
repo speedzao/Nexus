@@ -584,7 +584,7 @@
             width: 100%; /* Estica perfeitamente junto com a grade */
             height: 400px;
             background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0.2) 100%), 
-                        url('https://knect365.imgix.net/uploads/guitar2-704b515eb6419dfbe97aefcf8aebf2d5.jpg?auto=format&fit=max&w=412&dpr=5') no-repeat center center;
+                        url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/218640/header.jpg?t=1758742661') no-repeat center center;
             background-size: cover;
             border-radius: 8px;
             display: flex;
@@ -662,6 +662,36 @@
             transform: translateY(-2px);
         }   
 
+.botao-vhs-glitch {
+  position: relative;
+  background-color: #111;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+  padding: 12px 30px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 2px;
+}
+
+.botao-vhs-glitch::before {
+  content: '▶ ';
+  color: #ff3333;
+}
+
+.botao-vhs-glitch:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); text-shadow: -2px 0 #ff007f, 2px 0 #00ffff; }
+  50% { transform: translate(-2px, 2px); text-shadow: 2px 0 #ff007f, -2px 0 #00ffff; }
+  100% { transform: translate(0); }
+}
+
+
     </style>
 </head>
 <body>
@@ -689,7 +719,7 @@
 
 <li>
     <a href="javascript:void(0);" onclick="playRandomGame()">
-        <i class="fas fa-dice"></i> Aleatório
+        <i class="fas fa-dice"></i> Estou com sorte
     </a>
 </li>
             </ul>
@@ -708,16 +738,16 @@
 <main class="main-content"> <div class="hero-banner">
         <div class="hero-content">
             <span class="hero-tag">Indicações</span>
-            <h1 class="hero-title">Guitar Hero III</h1>
+            <h1 class="hero-title">LUCIUS</h1>
             <p class="hero-description">
-                Um jogo incrivel e dificl, seja um Rockstar! Além de testar seu nível de velcidade e capacidade!
+Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. Nascido em 6 de junho de 1966, o garoto completa 6 anos e descobre sua verdadeira identidade demoníaca. Ele usa poderes de telecinese e controle mental para assassinar membros de sua família e empregados na Mansão Dante, fazendo tudo parecer acidentes.
             </p>
             <div class="hero-buttons">
-<a>
-<button style="padding: 20px 40px; font-size: 20px;" onclick="window.location.href='https://www.mediafire.com/file/aonzdmt6t511smh'">
-    JOGAR
-</button>
+
+<a href="https://www.mediafire.com/file/ajvcw1lkdyegwcs/lucius.zip/file" target="_blank" style="text-decoration: none;">
+  <button class="botao-vhs-glitch">BAIXAR</button>
 </a>
+
 
             </div>
         </div>
@@ -1028,7 +1058,7 @@
               img: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220240/capsule_616x353.jpg?t=1752169206",
                tags: ["FPS", "Ação" ],
                 desc: "Voce e seus amigos foram sequestrados por piratas e agora terá de matar para viver!",
-                 link: "https://cdn1.trashbytes.to/Far.Cry.3.v1.05.rar?verify=1779487646-cOaftp4AGk7q75U1Lr0Z%2F%2FqfInUS7VpcZz%2FENduKcww%3D" },
+                 link: "https://www.mediafire.com/file/y44iuesi5lei3p7" },
 
             { id: 34, category: "jogos-pc",
              title: "Five Nights At Freddy",
@@ -1144,7 +1174,8 @@
                 desc: "Lucius é um jogo de terror e aventura onde você controla o Anticristo na pele de um menino de 6 anos. Seu objetivo é usar habilidades sobrenaturais, como telecinese e controle mental, para assassinar os membros da sua própria família e os empregados da Mansão Dante, transformando os assassinatos em acidentes trágicos.",
                  link: "https://www.mediafire.com/file/ajvcw1lkdyegwcs/lucius.zip/file" },
 
-            { id: 323, category: "jogos-pc",
+
+                 { id: 323, category: "jogos-pc",
              title: "MyVoiceZoo",
               img: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4015530/efa2e94af1d2e95199ae3da5217ea59e37f8230a/page_bg_raw.jpg?t=1771245843",
                tags: ["Casual", "2D",],
@@ -1497,6 +1528,12 @@
                 desc: "Um classico underground, skatista de rua, vire um skatista profissional!",
                  link: "https://www.mediafire.com/file/55xs071ns5k1evt/Tony+Hawk's+Pro+Skater+HD.zip/file" },
 
+            { id: 51817821, category: "jogos-pc",
+             title: "Troll Face Quests",
+              img: "https://m.media-amazon.com/images/I/91+2tuNIXTL.jpg",
+               tags: ["Puzzle", "Casual" ],
+                desc: "9 Jogos da Franquia Troll Face Quests! O bagulho é trollar e ser trollado!",
+                 link: "https://www.mediafire.com/file/n5w5fqrzz6558dd" },
 
                  { id: 60, category: "jogos-pc",
              title: "UNO",
@@ -1525,20 +1562,6 @@
                tags: ["Estratégia", "Casual" ],
                 desc: "Tipo um Among Us, só que no Chat!",
                  link: "https://www.wolvesville.com/" },
-
-            { id: 63, category: "jogos-pc",
-             title: "Win7 Games",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMXl6_9x1xTAkNZ11ECOV42tMfEi8eW48gfg&s",
-               tags: ["Classic", ],
-                desc: "Classicos jogos do Windows 7!",
-                 link: "https://www.mediafire.com/file/woteuzbdsro40fw/Windows7Games_para_Windows_11_10_8.exe/file" },
-
-            { id: 0, category: "jogos-pc",
-             title: "",
-              img: "",
-               tags: ["", "" ],
-                desc: "",
-                 link: "" },
 
 
                  // APPS PC
@@ -1576,6 +1599,13 @@
                tags: ["Editor", ],
                 desc: "O melhor quando o assunto é editores leves para computadores batatas. Versão: 8.4",
                  link: "https://www.mediafire.com/file/ehviz08gnpayj0e/Camtasia+Studio+8+MingPlay+Games.zip/file" },
+
+            { id: 50031, category: "apps-pc",
+             title: "Capcut",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1qGOO69NsSH1pEnw8w16fGVUhMNTShwuzFQ&s",
+               tags: ["Editor", ],
+                desc: "Editor de vídeo, fácil de usar e leve. Versão: 3.8.0 Versão Pro",
+                 link: "https://www.mediafire.com/file/jwi0n4my5kab9cr" },
 
             { id: 5004, category: "apps-pc",
              title: "DeepClean",
@@ -1631,7 +1661,14 @@
               img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSV1nSgXN-fL6IfKIkO5M8Y1PM_wNsBLGRgA&s",
                tags: ["Ajudante", ],
                 desc: "Copie sistemas de video-games portateis, backups, ssd, hd, etc.. A melhor alternativa pro Win32disk Imager!",
-                 link: "https://www.mediafire.com/file/3he69zmar2dwypo/HDDRawCopy1.10Setup.exe/file" },   
+                 link: "https://www.mediafire.com/file/3he69zmar2dwypo/HDDRawCopy1.10Setup.exe/file" },
+                 
+            { id: 50111, category: "apps-pc",
+             title: "Libre Office",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh26dwP8PS57gEV7mZull2oapv8VwKzk6OVQ&s",
+               tags: ["Ajudante", ],
+                desc: "Superior ao microsfot office, gratuito e leve: Word, PowerPoint, Excel, etc.",
+                 link: "https://download.documentfoundation.org/libreoffice/stable/26.2.3/win/x86_64/LibreOffice_26.2.3_Win_x86-64.msi" },
 
             { id: 5012, category: "apps-pc",
              title: "IrFanView",
@@ -1654,6 +1691,13 @@
                 desc: "Aumente o volume do seu PC em 500%!!",
                  link: "https://www.mediafire.com/file/v3edym2br37u6sl/SoundBooster.zip/file" },  
 
+            { id: 50114, category: "apps-pc",
+             title: "Spotify",
+              img: "https://variety.com/wp-content/uploads/2026/05/Spotify-Disco-Ball-Logo.png",
+               tags: ["Player", ],
+                desc: "Tire os anuncios insuportáveis do spotify com ele, o melhor método.",
+                 link: "https://www.mediafire.com/file/mffto7jmczkt1si/Spotify+NO+AD.zip/file" },  
+                 
             { id: 5015, category: "apps-pc",
              title: "Transmission",
               img: "https://cdn.neowin.com/news/images/uploaded/2025/11/1762446349_transmission.webp",
@@ -1712,19 +1756,41 @@
                 desc: "Sobreviva com escolhas inteligentes!",
                  link: "https://www.mediafire.com/file/mzruxdd8vqeemz9/60+Seconds.apk/file" },
 
+            { id: 100111111111111, category: "jogos-android",
+             title: "Angry Birds 1",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJqMz_UeyiHVYb2BbMvl6eI0Scn3iH5Cisug&s",
+               tags: ["Casual", "Estratégia"],
+                desc: "Com Dinheiro Infinito! Roubaram seus ovos, agora vá embusca de volta!",
+                 link: "https://files.an1.net/angry-birds-mod_8.0.3-android-1.com.apk" },
+
+            { id: 1001111111111111, category: "jogos-android",
+             title: "Angry Birds 2",
+              img: "https://play-lh.googleusercontent.com/WsLY24pzKw_bCkMt3aiCpXQCmMbPbxY83JZEIxLE9-ljm8f4O7zGucBPw7YAOVsONhg",
+               tags: ["Casual", "Estratégia"],
+                desc: "Com Dinheiro Infinito! No entanto, aquele jogo era coisa do passado, então agora ele voltou ao mercado com um novo nome, Angry Birds 2 – um jogo para todas as plataformas, incluindo móveis. Em ambos os jogos, há um enredo semelhante sobre a jornada de pássaros com personalidades diferentes na recuperação de ovos roubados por Piggies. Com o novo jogo, os jogadores terão uma experiência de jogo completamente nova, com muitas melhorias, recursos e modos de jogo emocionantes. Não só isso, mas seu entretenimento também é levado a um novo nível, junto com uma jornada sem fim para os jogadores desfrutarem em seu tempo livre.",
+                 link: "https://www.mediafire.com/file_premium/kmsdyisvdwzaylv/angry-birds-2-mod_10.0.0-Tekmods.com.apk/file" },
+
+
             { id: 1001, category: "jogos-android",
              title: "Bully",
-              img: "https://rockstarintel.com/wp-content/uploads/2025/10/bully-online-thumbnail.jpeg",
+              img: "https://images.launchbox-app.com/bd44ab02-a354-465b-b6e1-89cd96bdc41d.jpg",
                tags: ["Casual", "Estratégia"],
                 desc: "Faça as maiores barbaridades na escola em Bully!",
                  link: "https://cdn903.onehost.io/2023/Bully_Anniversary_Edition_1.4.311_1769156485_latestmodapks.com.apk" },
+
+            { id: 10011, category: "jogos-android",
+             title: "Bendy and the Dark Revival",
+              img: "https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/bendyandthedarkrevival/2x1_BendyAndTheDarkRevival.jpg",
+               tags: ["Terror", "Estratégia"],
+                desc: "Bendy and the Dark Revival é um jogo de terror e sobrevivência em primeira pessoa que acompanha Audrey, uma animadora que é puxada para dentro do macabro estúdio da Joey Drew Studios. Presa nessa dimensão distorcida e perigosa, ela precisa resolver enigmas, lutar contra criaturas de tinta e fugir do temido Demônio de Tinta para sobreviver e voltar ao mundo real.",
+                 link: "https://www.mediafire.com/file_premium/mgkp1op0msb7ea2/Dark_Revival_Completo_-_v1.0.1_Tekmods.com.apk/file" },
 
             { id: 1021, category: "jogos-android",
              title: "BOWMASTERS",
               img: "https://m.media-amazon.com/images/I/81H-w-fHMWL.png",
                tags: ["Casual", "Estratégia"],
                 desc: "Sabugue os safados com tiro! — Dinheiro Infinito",
-                 link: "https://s4-filecr.xyz/d2a50d4479ef0da6?ref=8228458f09878a68fc824eb915c50467" },  
+                 link: "https://www.mediafire.com/file_premium/u3r1yb3ksixiu6s/bowmasters-mod_11.2.0-Tekmods.com.apk/file" },  
 
             { id: 1002, category: "jogos-android",
              title: "Cuphead",
@@ -1735,24 +1801,45 @@
 
             { id: 1003, category: "jogos-android",
              title: "Combact magic",
-              img: "https://play-lh.googleusercontent.com/ZfCp9S3Czee_JHt8kHvF0HqA7xaW2OwOHjgurR5C9-IeCXiQZxGmHd1YSLZ2aZVlUA=w240-h480-rw",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvjhEZRAexgv2u60v8L-YjDXcqvhUaot1dTg&s",
                tags: ["Magia", "Casual", ],
                 desc: "Batalhas com mágia! Lembre-se que só da para jogar Offiline com bots!",
                  link: "https://www.mediafire.com/file/1fge06u9x0fekmo/CombatMagic+-+v2.69.64+(Offiline).apk/file" },
 
+            { id: 10032, category: "jogos-android",
+             title: "Evil Nun",
+              img: "https://i.pinimg.com/736x/b0/b1/79/b0b179caa2fc830e609d994c8969bf4b.jpg",
+               tags: ["Magia", "Casual", ],
+                desc: "Com Dinheiro Infinito! Mod Menu! Evil Nun é uma franquia de jogos de terror em primeira pessoa onde o jogador é atraído para um acampamento de verão religioso que se revela uma armadilha. Trancado na Eagle Junior High School, você deve resolver enigmas, criar itens e explorar rotas de fuga para escapar da Irmã Madeline, uma freira aterrorizante",
+                 link: "https://www.mediafire.com/file/c3arnovpdr1uoo8/Evil+Nun_Adfree+-+v1.9.8806_Tekmods.com.apk/file" },
+
             { id: 1004, category: "jogos-android",
              title: "Flat Zombies",
-              img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8lgj.jpg",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9ArXQrav4sCVO026ONzbYxXKHTb2ZM3a01w&s",
                tags: ["Casual", "Zumbis", ],
                 desc: "Um jogo 2d insano de zumbis com dinheiro infinito!",
                  link: "https://www.mediafire.com/file/n02dagzwxjssvit/flat+zombies+defense+-+v2.0.8.apk/file" },
 
-            { id: 1005, category: "jogos-android",
-             title: "Papa´s Collection",
-              img: "https://i.pinimg.com/736x/8e/91/8a/8e918a7865c47459a9f733c87e87a9a7.jpg",
-               tags: ["Casual", "PointClicker", ],
-                desc: "Uma série de jogos da franquia Papa´s para celular.",
-                 link: "https://www.mediafire.com/file/70x2r1dtskut99o/Papa%25C2%25B4s_Collection_%2528ANDROID%2529.zip/file" },
+            { id: 10044, category: "jogos-android",
+             title: "FNAF INTO THE PIT",
+              img: "https://imgs.search.brave.com/sk4EhBK5XDqqDYaL-6P2MfX4BHjHjX8JJH3xVr07ajc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zaGFy/ZWQuZmFzdGx5LnN0/ZWFtc3RhdGljLmNv/bS9zdG9yZV9pdGVt/X2Fzc2V0cy9zdGVh/bS9hcHBzLzI2Mzgz/NzAvaGVhZGVyLmpw/Zz90PTE3NDYxNzI1/ODk",
+               tags: ["Terror", "Casual", ],
+                desc: "Five Nights at Freddy's: Into the Pit é um jogo de terror em 2D que expande a primeira história da série de livros Fazbear Frights.  A narrativa segue Oswald, um garoto que se muda para uma nova cidade e considera sua vida entediante. Durante as férias de verão, ele começa a frequentar a decadente Pizzaria do Jeff" ,
+                 link: "https://www.mediafire.com/file/i5cfr42ri7cpoa2/FNaF-Into-the-Pit-v1.0.15-full-game-Tekmods.com.apk/file" },
+
+            { id: 100444, category: "jogos-android",
+             title: "Farming Simulator 18",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUM9WujD3BFsYs8ZlOQ7OzvTBGGo0Z4iS3OA&s",
+               tags: ["Casual", "Simulador", ],
+                desc: "Dinheiro Infinito — Farming Simulator 18 é um simulador de agricultura que coloca o jogador no comando de sua própria fazenda. O objetivo é gerenciar plantações (como trigo, milho e os inéditos girassóis), criar animais (vacas, ovelhas e porcos), e administrar a silvicultura, vendendo os produtos em um mercado dinâmico para expandir as terras e a frota de maquinários." ,
+                 link: "https://www.mediafire.com/file/zicchtnwrtmqs44/farming-simulator-18-mod-1.5.0.4-Tekmods.com.apk/file" },
+
+            { id: 1016, category: "jogos-android",
+             title: "GTA San Andreas",
+              img: "https://cdn.dlcompare.com/game_tetiere/upload/gameimage/file/grand-theft-auto-san-andreas-file-51754b60.jpeg.webp",
+               tags: ["Mundo Aberto", "Aventura", ],
+                desc: "Um classico de mundo aberto e historia!",
+                 link: "https://file.gtsamod.com/grand-theft-auto-san-andreas-v2.11.311-mod.apk" },
 
             { id: 1006, category: "jogos-android",
              title: "Hollow Knight Silksong",
@@ -1760,6 +1847,20 @@
                tags: ["Casual", "Plataforma", ],
                 desc: "Hollow Knight: Silksong é a aguardada sequência do aclamado jogo indie de ação e aventura estilo Metroidvania, Hollow Knight, onde os jogadores controlam a personagem Hornet em uma nova jornada por um reino desconhecido chamado Pharloom, explorando, combatendo mais de 150 inimigos, descobrindo novos poderes e desvendando mistérios, sendo lançado em setembro de 2025 para diversas plataformas e recebendo aclamação da crítica por sua arte, música e jogabilidade.",
                  link: "https://download2390.mediafire.com/k12p342c8x7gwTZ5TUVmOCGx8qgncNzl1f1FnmsOb3FAME5sAWP1h71RKgnKPSYXGzsOD3CO7vv8EnxPxM-d6IVq8mjbjF_65P3-rF3lnmuR9-aHj5dv-QqBzS6GT0wxQEdj6AV3Z68TQqIf4DyUQ0fgEXOGsBAKIDM3x4Ft_N_vDDQ/9klgapg7aakp2j8/Hollow+Knight+Silksong+-+v1.0-Beta+10%5BFreddy%5C%27s%5D_Tekmods.com.apk" },
+
+            { id: 10106, category: "jogos-android",
+             title: "Hungry Shark World",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTftuz57Qsr28Zq8XTb_dsrE9SycXlArGzFlA&s",
+               tags: ["Casual", "Simulador", ],
+                desc: "Com MOD MENU e DINHEIRO INFINITO! Você é um tubarão e vai ferrar todo mundo!",
+                 link: "https://www.mediafire.com/file_premium/v4yispferr1j2x5/hungry-shark-world-mod_7.8.1-Tekmods.com.apk/file" },
+
+            { id: 101061, category: "jogos-android",
+             title: "Hill Climb Racing",
+              img: "https://store-images.microsoft.com/image/apps.18483.9007199266379485.0000ad5a-1400-4539-b79a-62b2b9248545.0ac4e475-8d4b-42bb-8723-14576cb8e50a?h=1280",
+               tags: ["Casual", "Estrategia", ],
+                desc: "Com Dinheiro Infinito! Sobreviva ao maximo de tempo na suas latas!",
+                 link: "https://www.mediafire.com/file_premium/qxbwr61nyu0kvoz/hill-climb-racing-mod_1.69.1-Tekmods.com.apk/file" },
 
             { id: 1007, category: "jogos-android",
              title: "Kick The Buddy",
@@ -1777,7 +1878,7 @@
 
             { id: 1010, category: "jogos-android",
              title: "Minecraft Java - PojavLauncher",
-              img: "https://avatars.githubusercontent.com/u/69146964?v=4",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6W3YEDdnXr5Z3xQ3vH94weU83HjXzQC09qA&s",
                tags: ["Plataforma", "Aventura", ],
                 desc: "Mundo aberto e sobrevivencia!",
                  link: "https://github.com/PojavLauncherTeam/PojavLauncher/releases/download/gladiolus/PojavLauncher.apk" },
@@ -1788,6 +1889,20 @@
                tags: ["Plataforma", "Aventura", ],
                 desc: "Mundo aberto e sobrevivencia!",
                  link: "https://mcpedl.org/downloading/" },
+
+            { id: 106511, category: "jogos-android",
+             title: "Magic Tiles 3",
+              img: "https://static.wikia.nocookie.net/southeast-asia-game/images/5/56/Magic-tiles-3.jpg/revision/latest?cb=20231001124332",
+               tags: ["Clicker", "Estrategia", ],
+                desc: "Dinheiro Infinito! Treine suas habilidades no piano mobile!",
+                 link: "https://www.mediafire.com/file_premium/75zgaq6l27fqu2v/magic-tiles-3-mod_13.052.105-Tekmods.com.apk/file" },
+
+            { id: 1065112, category: "jogos-android",
+             title: "Toca Life World",
+              img: "https://img.utdstc.com/screen/20b/bd7/20bbd7a0be84eab9dc182ad6771fee50112bf001dad3a7a819302bde3ce23b8c:600",
+               tags: ["Simulador", "Casual", ],
+                desc: "Tudo desbloqueado! Dinheiro Infinito! Toca Life World MOD APK é um RPG altamente educativo e divertido que é ótimo para crianças. Aqui, você pode criar um mundo com sua própria série de histórias",
+                 link: "https://www.mediafire.com/file_premium/lvxiy6obmt23gdm/toca-life-world-mod_1.131-Tekmods.com.apk/file" },
 
             { id: 1012, category: "jogos-android",
              title: "Naruto Senki",
@@ -1810,12 +1925,34 @@
                 desc: "Apocalipse zumbi começou, sobreviva!",
                  link: "https://www.mediafire.com/file/0kjf1ksnzjz8q7d/Occupation+2.5.apk/file" },
 
+
+            { id: 1005, category: "jogos-android",
+             title: "Papa´s Collection",
+              img: "https://papas-games.io/themes/papas-games.io_v2/rs/imgs/papas-games.io.webp",
+               tags: ["Casual", "PointClicker", ],
+                desc: "Uma série de jogos da franquia Papa´s para celular.",
+                 link: "https://www.mediafire.com/file/70x2r1dtskut99o/Papa%25C2%25B4s_Collection_%2528ANDROID%2529.zip/file" },
+
             { id: 10122224, category: "jogos-android",
              title: "Poppy Play Time Chapter 1",
               img: "https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000075091/266a2c89eff8ee813d172a684eae776c00d950d69bc99926064ed2cb5b527bdd",
                tags: ["Terror", "Puzzles", ],
                 desc: "Voce esta em uma fabrica abondonada, sobreviva se puder!",
                  link: "https://www.mediafire.com/file/pewai4sfmdxq1iy/Poppy+Playtime+Chapter+1.apk/file" },
+
+            { id: 101222241, category: "jogos-android",
+             title: "Plants vs Zombies 2",
+              img: "https://i.ytimg.com/vi/0c_iMGs3ehY/maxresdefault.jpg",
+               tags: ["Estrategia", "Casual", ],
+                desc: "Dinheiro Infinito! Salve seu local dos monstros!",
+                 link: "https://www.mediafire.com/file_premium/0b52wa4j9hony1x/plants-vs-zombies-2-mod_13.1.1-Tekmods.com.apk/file" },
+
+            { id: 101222124, category: "jogos-android",
+             title: "Red Dead Redemption LITE",
+              img: "https://gaming-cdn.com/images/products/6085/616x353/red-dead-redemption-switch-nintendo-eshop-cover.jpg?v=1757078529",
+               tags: ["Aventura", "Mundo aberto", ],
+                desc: "A história de Red Dead Redemption acompanha John Marston, um ex-criminoso que é chantageado por agentes do governo. Para salvar sua esposa e filho mantidos como reféns, Marston é forçado a rastrear e eliminar os membros de sua antiga gangue, incluindo seu ex-líder Dutch van der Linde.",
+                 link: "https://www.mediafire.com/file/34n6siopu4oclpj/RDR-MOBILE-LOW-GRAPHICS.7z/file" },
 
             { id: 1009, category: "jogos-android",
              title: "SWAMP ATTACK",
@@ -1838,16 +1975,45 @@
                 desc: "Apocalipse zumbi, mas com dinheiro infinito!",
                  link: "https://www.mediafire.com/file/yoq6two6zy9kiep/Stick+vs+Zombies+-+1.6.0.apk/file" },
 
-            { id: 1016, category: "jogos-android",
-             title: "GTA San Andreas",
-              img: "https://cdn.dlcompare.com/game_tetiere/upload/gameimage/file/grand-theft-auto-san-andreas-file-51754b60.jpeg.webp",
-               tags: ["Mundo Aberto", "Aventura", ],
-                desc: "Um classico de mundo aberto e historia!",
-                 link: "https://file.gtsamod.com/grand-theft-auto-san-andreas-v2.11.311-mod.apk" },
+            { id: 10181, category: "jogos-android",
+             title: "Subway Surfers",
+              img: "https://static.wikia.nocookie.net/subwaysurf/images/3/35/Promote_Subway.png/revision/latest/scale-to-width-down/820?cb=20130114122353",
+               tags: ["Correr", "Estrategia", ],
+                desc: "Com dinheiro Infinito! — Fuja do carcereiro pelos trens!",
+                 link: "https://www.mediafire.com/file_premium/w7mrumbedzeskbf/subway-surfers-mod-3.63.10-Tekmods.com.apk/file" },
+
+            { id: 101811, category: "jogos-android",
+             title: "Sniper 3D Assassin",
+              img: "https://play-lh.googleusercontent.com/8gHksx7nW7IK09ThtTM_f1Pgjblh5to4-q9pdsJQMb2zxDZ7VnFObxaihhAr-_HBf6E",
+               tags: ["Correr", "Estrategia", ],
+                desc: "Com dinheiro Infinito! (Ele aumenta ao gastar) — Fuja do carcereiro pelos trens!",
+                 link: "https://www.mediafire.com/file_premium/tw100uif250kmfz/sniper-3d-mod_6.33.2-Tekmods.com.apk/file" },
+
+            { id: 1018131, category: "jogos-android",
+             title: "Stick War: Legacy",
+              img: "https://imgs.crazygames.com/games/stick-war/cover-1659084995039.jpg?metadata=none&quality=100&width=1200&height=630&fit=crop",
+               tags: ["Plataforma", "Estrategia", ],
+                desc: "Com dinheiro Infinito! Guerra de stickmans!",
+                 link: "https://www.mediafire.com/file_premium/1ua92chh4ru4va3/stick-war-legacy-mod-2026.1.787-Tekmods.com.apk/file" },
+
+            { id: 10181314, category: "jogos-android",
+             title: "Supreme Duelist Stickman",
+              img: "https://cdn-www.bluestacks.com/bs-images/Banner_Supreme-Duelist-Stickman.jpg",
+               tags: ["Plataforma", "Estrategia", ],
+                desc: "Tudo Desbloqueado - Faça PVP do lado do seu amigo! ",
+                 link: "https://www.mediafire.com/file_premium/a3th1dviqdzgc5j/Supreme_Duelist_Stickman_Mod_-_v4.0.5_Tekmods.com.apk/file" },
+
+            { id: 101813141, category: "jogos-android",
+             title: "Solar Smash",
+              img: "https://hotgames.io/data/image/game/SolarSmash.png",
+               tags: ["Simulador", "Estrategia", ],
+                desc: "Tudo Desbloqueado - Destrua planetas inteiros de varias formas cabulosas! ",
+                 link: "https://www.mediafire.com/file_premium/xch9bykqz3phv5f/solar-smash-mod_2.6.9-Tekmods.com.apk/file" },
+
 
             { id: 1017, category: "jogos-android",
              title: "ROPE HERO VICE",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf-TmiyEL7BuPaF0GcTdabXSopoGZbidh93w&s",
+              img: "https://i.ytimg.com/vi/SS4qeMKLPXY/maxresdefault.jpg",
                tags: ["Mundo Aberto", "Aventura", ],
                 desc: "Um tipo de Gta com super-héroi. Com dinheiro infinito!",
                  link: "https://www.mediafire.com/file/flkq7av8oy1vkoa/RopeHeroVice+-+v7.0.4.apk/file" },
@@ -1859,6 +2025,13 @@
                 desc: "Clássico terraria para android!",
                  link: "https://www.mediafire.com/file/ajb66wswprs49ce/TERRARIA_1.4.4.9_ByHT.apk/file" },
 
+            { id: 10191, category: "jogos-android",
+             title: "Tomb Raider I-III Remastered",
+              img: "https://play-lh.googleusercontent.com/pKhHnlLIueVbmw-dAlF740ys1rQhIwoj4pxp-r6WPla8RdCJXOHi1RbqMjE5pWH9o_NrCzsZvp5Qb5dDE_MT",
+               tags: ["Plataforma", "Aventura", ],
+                desc: "Agora o mundo de Tomp Raider Resmasterizado direto do seu Smartphone!",
+                 link: "https://www.mediafire.com/file/zay7tax4h89ml9d/Tomb-Raider-I-III-Remastered-v1.0.3-Desbloqueado-Tekmods.com.apk/file" },
+
             { id: 1020, category: "jogos-android",
              title: "Undertale",
               img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg?t=1757349115",
@@ -1866,7 +2039,21 @@
                 desc: "Clássico RPG - Undertale",
                  link: "https://apkdownloader.cc/storage/files/2025/05/undertale.apk.v2.0.1.apk" },
 
+            { id: 10201, category: "jogos-android",
+             title: "Vegas Crime Simulator",
+              img: "https://play-lh.googleusercontent.com/0Bk7jyKPyzOuoev277cGCYKbfZ15b12HEj3VfQNKtKqv_q7qfvu4x3ZNvtmQJCp3GQ",
+               tags: ["Aventura", "Mundo Aberto", ],
+                desc: "Dinheiro Infinito! Um incrivel mundo aberto estilo GTA com diversas missões!",
+                 link: "https://www.mediafire.com/file_premium/sswjph29etrm3ol/vegas-crime-simulator-mod-6.6.5-Tekmods.com.apk/file" },
+
             // APPS ANDROID
+
+            { id: 200145453, category: "apps-android",
+             title: "ES File Explorer",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWg6blzoFXW10qFKR4OfYpT5SVkLEHWnQv0w&s",
+               tags: ["Ajudante", ],
+                desc: "Premuim! Um dos melhores gerenciador de arquivos!",
+                 link: "https://www.mediafire.com/file_premium/z60qia3wjx70qpj/ES_File_Explorer_Premium_-_v4.4.3.6_Tekmods.com.apk/file" },
 
             { id: 2003, category: "apps-android",
              title: "Kinemaster",
@@ -1874,6 +2061,13 @@
                tags: ["Editor", ],
                 desc: "Um editor de vídeo completo para smartphones!",
                  link: "https://cdn901.onehost.io/2023/KineMaster_8.1.9.36502.GP_1778132249_latestmodapks.com.apk" },
+
+            { id: 2003333333333, category: "apps-android",
+             title: "Octopus",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGu9ekrVlYuQYEMeF_6-pBKqnsbCGqE0vHhQ&s",
+               tags: ["Ajudante", ],
+                desc: "Desbloqueado! Mapeie Gamepads e Keyboards!",
+                 link: "https://www.mediafire.com/file_premium/dm6sdbcxk0v68g3/Octopus_Pro_-_v7.2.8_Tekmods.com.apk/file" },
 
             { id: 2000, category: "apps-android",
              title: "Ps Touch",
@@ -1896,6 +2090,12 @@
                 desc: "Assista filmes e séries gratuito! Lembre-se de tirar os anuncios, tem tutorial aqui no site :)",
                  link: "https://www.mediafire.com/file/j1zenw2pwkbgg7a/smart-play-1.16.apk/file" },
 
+            { id: 2002, category: "apps-android",
+             title: "Snaptube",
+              img: "https://static.wixstatic.com/media/450148_4488bf4f216d42b8bf0bd1d8a32f2ade~mv2.png/v1/fill/w_568,h_352,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/450148_4488bf4f216d42b8bf0bd1d8a32f2ade~mv2.png",
+               tags: ["Assistir", ],
+                desc: "Baixe vídeos de redes sociais em alta qualidade, como Youtube, instagram... Sem anuncio e grátis!",
+                 link: "https://www.mediafire.com/file_premium/dw3b7rtt30jyked/Snaptube_Vip_Final_-_v7.60.1.76001001_Tekmods.com.apk/file" },
 
             // EMULADORES
 
@@ -1964,7 +2164,12 @@
                 desc: "Baixou um jogo deu erro de DLL ou não abriu? Instale as dependencias.",
                  link: "https://www.mediafire.com/file/03ejofbwahqmr3k/Dependencies.zip/file" },
    
-
+            { id: 63, category: "extras",
+             title: "Win7 Games",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMXl6_9x1xTAkNZ11ECOV42tMfEi8eW48gfg&s",
+               tags: ["Classic", ],
+                desc: "Classicos jogos do Windows 7!",
+                 link: "https://www.mediafire.com/file/woteuzbdsro40fw/Windows7Games_para_Windows_11_10_8.exe/file" },
 
 
 
@@ -2091,18 +2296,77 @@
         });
 
 /* === FUNÇÃO PARA SORTEAR JOGO ALEATÓRIO === */
+
+
+
 function playRandomGame() {
-    // Verifica se a sua lista gamesDB existe e tem itens
-    if (typeof gamesDB !== 'undefined' && gamesDB.length > 0) {
-        // Sorteia um índice aleatório baseado no tamanho do seu banco de dados
+    if (typeof gamesDB === 'undefined' || gamesDB.length === 0) {
+        alert("Nenhum sistema encontrado no banco de dados.");
+        return;
+    }
+
+    const botao = document.querySelector('[onclick="playRandomGame()"]');
+
+    botao.style.pointerEvents = "none";
+
+    // Cria overlay
+    const overlay = document.createElement("div");
+    overlay.id = "luckOverlay";
+    overlay.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:#000;
+        color:#fff;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:50px;
+        font-weight:bold;
+        z-index:999999;
+        font-family:Arial;
+    `;
+    document.body.appendChild(overlay);
+
+    let contador = 0;
+
+    const efeito = setInterval(() => {
+        const jogo = gamesDB[Math.floor(Math.random() * gamesDB.length)];
+
+        overlay.innerHTML = `
+            <div style="
+                animation:pulse .1s infinite;
+                text-shadow:0 0 20px #fff,0 0 40px #fff;
+            ">
+                🎲 ${jogo.title || jogo.name}
+            </div>
+        `;
+
+        contador++;
+    }, 80);
+
+    setTimeout(() => {
+        clearInterval(efeito);
+
         const indiceAleatorio = Math.floor(Math.random() * gamesDB.length);
         const jogoSorteado = gamesDB[indiceAleatorio];
-        
-        // Abre o modal do jogo sorteado usando a sua função nativa
-        openGameModal(jogoSorteado.id);
-    } else {
-        alert("Nenhum sistema encontrado no banco de dados.");
-    }
+
+        overlay.innerHTML = `
+            <div style="
+                font-size:70px;
+                color:gold;
+                text-shadow:0 0 30px gold;
+            ">
+                🏆 ${jogoSorteado.title || jogoSorteado.name}
+            </div>
+        `;
+
+        setTimeout(() => {
+            overlay.remove();
+            botao.style.pointerEvents = "auto";
+            openGameModal(jogoSorteado.id);
+        }, 1000);
+
+    }, 3000);
 }
 
     </script>
