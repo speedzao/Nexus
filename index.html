@@ -691,17 +691,183 @@
   100% { transform: translate(0); }
 }
 
+/* Se o seu outro site não tiver essas fontes, inclua essa linha no topo do CSS ou no head:
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@600;800&display=swap');
+*/
+
+#loader {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-color: #050505; /* Preto profundo */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Garante que vai ficar na frente de TUDO */
+    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+}
+
+.load-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.4); /* Branco com 40% de opacidade (efeito apagado) */
+    letter-spacing: 1px;
+    margin-top: 25px; /* Dá uma distância estilosa do spinner */
+    text-transform: uppercase;
+    font-weight: 600;
+    animation: fadeInDate 1s ease-in-out forwards;
+}
+
+/* Animação suave para a data aparecer junto com o resto */
+@keyframes fadeInDate {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 0.4; transform: translateY(0); }
+}
+
+.load-title {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    color: #d90429; /* Vermelho insano */
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    animation: pulse 1.5s infinite alternate;
+    text-shadow: 0 0 20px rgba(217, 4, 41, 0.5);
+    margin-bottom: 20px;
+}
+
+.spinner {
+    width: 50px; 
+    height: 50px;
+    border: 3px solid transparent;
+    border-top-color: #d90429;
+    border-bottom-color: #d90429;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Animação do texto pulsando (aumentando e brilhando) */
+@keyframes pulse { 
+    to { 
+        transform: scale(1.05); 
+        opacity: 0.8; 
+    } 
+}
+
+/* Animação do círculo girando */
+@keyframes spin { 
+    to { 
+        transform: rotate(360deg); 
+    } 
+}
+
+/* Container que cobre a tela inteira */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(5, 5, 5, 0.75); /* Fundo escuro semitransparente */
+    backdrop-filter: blur(10px);          /* O efeito de borrão insano */
+    -webkit-backdrop-filter: blur(10px);   /* Suporte para Safari */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;                       /* Fica na frente de absolutamente tudo */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Quando o modal estiver ativo */
+.search-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Caixa interna da busca */
+.search-modal-content {
+    width: 90%;
+    max-width: 650px;
+    text-align: center;
+    animation: zoomIn 0.3s ease forwards;
+}
+
+/* Wrapper para alinhar o input e o ícone da lupa */
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* O input estilizado da NEXUS centralizado */
+.search-input-wrapper input {
+    width: 100%;
+    padding: 18px 60px 18px 25px;
+    font-size: 1.3rem;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: #111111;
+    border: 2px solid #d90429; /* Borda vermelha marcante */
+    border-radius: 40px;
+    outline: none;
+    box-shadow: 0 0 25px rgba(217, 4, 41, 0.4);
+}
+
+/* Ícone da lupa dentro do input */
+.modal-search-icon {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d90429;
+    font-size: 1.4rem;
+}
+
+/* Botão para fechar o overlay */
+.close-search-btn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.close-search-btn:hover {
+    color: #d90429;
+}
+
+/* Animação suave de entrada do input */
+@keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
 
     </style>
 </head>
 <body>
+
+
+<div id="loader">
+    <h1 class="load-title">Nexus</h1> 
+    <div class="spinner"></div>
+    <p class="load-date">Última atualização: 04/06/2026</p>
+</div>
 
     <div class="vhs-overlay"></div>
 
     <header>
         <div class="logo glitch" data-text="NEXUS">NEXUS</div>
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar no sistema...">
+            <input type="text" id="searchInput" placeholder="Buscar no sist1ema...">
             <i class="fas fa-search"></i>
         </div>
     </header>
@@ -826,6 +992,24 @@ Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. 
         </div>
     </div>
 
+<div class="search-overlay" id="searchOverlay">
+    <div class="search-modal-content">
+        <div class="search-input-wrapper">
+            <input
+                type="text"
+                id="modalSearchInput"
+                placeholder="Buscar jogo ou aplicativo..."
+            >
+            <i class="fas fa-search modal-search-icon"></i>
+        </div>
+
+        <button class="close-search-btn" id="closeSearchBtn">
+            <i class="fas fa-times"></i>
+            Fechar
+        </button>
+    </div>
+</div>
+    
     <div class="modal-overlay" id="dmcaModal">
         <div class="modal-content dmca-content modal-body">
             <i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i>
@@ -1309,6 +1493,13 @@ Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. 
                tags: ["Terror", "Casual", ],
                 desc: "Você, um jornalista, sobrevive a uma queda de Helicoptero, mas uma seita está atras de voce!",
                  link: "https://1fichier.com/?miev64vxx5rir8pqvde8" },
+
+            { id: 288886416, category: "jogos-pc",
+             title: "Occupation 2.5",
+              img: "https://i.ytimg.com/vi/xJs3qrxX9Fc/maxresdefault.jpg",
+               tags: ["Terror", "Zumbis", ],
+                desc: "O apocalipse começou e você precisar sobreviver!!",
+                 link: "https://www.mediafire.com/file/3kxjeu2dbppbikg/Occupation.2.5.rar/file" },
 
             { id: 47, category: "jogos-pc",
              title: "Portal",
@@ -1876,6 +2067,13 @@ Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. 
                 desc: "Desça a porrada no Buddy safado, com dinheiro infinito!",
                  link: "https://files.modyolo.com/Kick%20The%20Buddy%20Second%20Kick/Kick_The_Buddy_Second_Kick_v1.14.1526_MOD.apk" },
 
+            { id: 1011111111111110, category: "jogos-android",
+             title: "Naruto Ultimate Ninja Storm",
+              img: "https://naruto-storm-mobile.bn-ent.net/en/images/ogp.png",
+               tags: ["Plataforma", "Aventura", "Luta" ],
+                desc: "A versão mobile foi projetada para aproveitar a tela de toque dos smartphones, permitindo que os jogadores utilizem controles intuitivos. Isso inclui um novo modo de controle para batalhas, com opções casual e manual, além de uma assistência durante as lutas.",
+                 link: "https://www.mediafire.com/file_premium/gpruw1uxw73sbuh/Ultimate_Ninja_STORM_Completo_-_v1.2.9_Tekmods.com.apk/file" },
+
             { id: 1010, category: "jogos-android",
              title: "Minecraft Java - PojavLauncher",
               img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6W3YEDdnXr5Z3xQ3vH94weU83HjXzQC09qA&s",
@@ -2010,6 +2208,12 @@ Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. 
                 desc: "Tudo Desbloqueado - Destrua planetas inteiros de varias formas cabulosas! ",
                  link: "https://www.mediafire.com/file_premium/xch9bykqz3phv5f/solar-smash-mod_2.6.9-Tekmods.com.apk/file" },
 
+            { id: 1018131141, category: "jogos-android",
+             title: "Stardew Valley",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/413150/capsule_616x353.jpg?t=1754692865",
+               tags: ["Simulador", "Aventura", ],
+                desc: "Tudo Desbloqueado - Destrua planetas inteiros de varias formas cabulosas! ",
+                 link: "https://www.mediafire.com/file_premium/w6ci4a820nlz1te/Stardew_Valley_-_v1.6.15.2_Tekmods.com.apk/file" },
 
             { id: 1017, category: "jogos-android",
              title: "ROPE HERO VICE",
@@ -2045,6 +2249,13 @@ Lucius é um jogo de terror e aventura onde você controla o filho de Lúcifer. 
                tags: ["Aventura", "Mundo Aberto", ],
                 desc: "Dinheiro Infinito! Um incrivel mundo aberto estilo GTA com diversas missões!",
                  link: "https://www.mediafire.com/file_premium/sswjph29etrm3ol/vegas-crime-simulator-mod-6.6.5-Tekmods.com.apk/file" },
+
+            { id: 102989898001, category: "jogos-android",
+             title: "Zombie Tsunami",
+              img: "https://i.ytimg.com/vi/P2Bx9VmgjqU/hqdefault.jpg",
+               tags: ["Plataforma", "Zumbis", ],
+                desc: "Com dinheiro infinito! Um mundo cheio de monstros temíveis aparece diante dos olhos do jogador e dá a eles um papel fascinante em Zombie Tsunami. Os jogadores serão os invasores e tentarão sobreviver o maior tempo possível para espalhar o medo entre outros humanos. Ao mesmo tempo, ao jogar, você não irá ignorar a jogabilidade emocionante que o jogo traz junto com os eventos em andamento.",
+                 link: "https://www.mediafire.com/file_premium/a1kgpoe1il73adx/zombie-tsunami-mod-4.7.2-Tekmods.com.apk/file" },
 
             // APPS ANDROID
 
@@ -2368,6 +2579,95 @@ function playRandomGame() {
 
     }, 3000);
 }
+
+// Remove a tela de load assim que o site carregar completamente
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+        }, 1200); // 1.2 segundos para dar tempo do usuário ver o nome brilhando
+    });
+
+const searchModal = document.getElementById('searchModal');
+const modalInput = document.getElementById('modalSearchInput');
+
+function openSearch() {
+    searchModal.classList.add('active');
+    // Foca automaticamente no campo de texto para o usuário já sair digitando
+    setTimeout(() => modalInput.focus(), 100); 
+}
+
+function closeSearch() {
+    searchModal.classList.remove('active');
+    modalInput.value = ''; // Limpa o campo ao fechar
+}
+
+// Fecha automaticamente se o usuário apertar a tecla ESC do teclado
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeSearch();
+    }
+});
+
+const searchBar = document.querySelector(".search-bar");
+const searchOverlay = document.getElementById("searchOverlay");
+const modalSearchInput = document.getElementById("modalSearchInput");
+const closeSearchBtn = document.getElementById("closeSearchBtn");
+
+searchBar.addEventListener("click", () => {
+    searchOverlay.classList.add("active");
+
+    setTimeout(() => {
+        modalSearchInput.focus();
+    }, 200);
+});
+
+closeSearchBtn.addEventListener("click", () => {
+    searchOverlay.classList.remove("active");
+});
+
+searchOverlay.addEventListener("click", (e) => {
+    if (e.target === searchOverlay) {
+        searchOverlay.classList.remove("active");
+    }
+});
+
+modalSearchInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+
+        const termo = this.value.toLowerCase().trim();
+
+        document.querySelectorAll(".game-card").forEach(card => {
+
+            const titulo = card
+                .querySelector(".game-title")
+                .textContent
+                .toLowerCase();
+
+            if (titulo.includes(termo)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        searchOverlay.classList.remove("active");
+
+        window.scrollTo({
+            top: document.querySelector(".category-section").offsetTop - 80,
+            behavior: "smooth"
+        });
+    }
+});
+
+function resetarCards() {
+    document.querySelectorAll(".game-card").forEach(card => {
+        card.style.display = "";
+    });
+}
+
+
 
     </script>
 </body>
