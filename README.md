@@ -22,4 +22,8 @@ https://forms.gle/bBiSF1qo8itQkEQA6
 
 Novidades Da Atualização
 
-- 7+ jogos de PC
+- 18+ jogos de PC
+- 5+ apps de PC
+- Novos Downloads
+- Downloads reparados
+- Novo Banner
