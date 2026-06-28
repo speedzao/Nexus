@@ -6,7 +6,7 @@ Atualizações semanais, com jogos e aplicativos em alta!
 
 --------------------------------
 
-Versão Atual: V2.9.4 — 28.06.2026
+Versão Atual: V2.9.9 — 28.06.2026
 
 Site Oficial:
 https://speedzao.github.io/Nexus/
