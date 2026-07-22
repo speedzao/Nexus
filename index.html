@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - Downloder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>NEXUS - Downloader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* === VARIÁVEIS HDR E CORES === */
         :root {
             --bg-color: #050505;
             --surface-color: #111111;
@@ -17,1007 +15,170 @@
             --text-main: #f0f0f0;
             --text-muted: #888;
             --hdr-glow: 0 0 15px rgba(255, 0, 60, 0.6), 0 0 30px rgba(255, 0, 60, 0.4);
-            --hdr-glow-intense: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.6), 0 0 60px rgba(255, 0, 60, 0.4);
+            --hdr-glow-intense: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.6);
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Rajdhani', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-color); } ::-webkit-scrollbar-thumb { background: var(--dark-red); border-radius: 5px; border: 1px solid var(--primary-red); }
 
-        /* === RESET & BASE === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        #loader { position: fixed; inset: 0; width: 100vw; height: 100vh; background: #050505; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .load-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: #ff003c; letter-spacing: 12px; font-weight: 900; animation: pulse-loader 1s infinite alternate; text-shadow: var(--hdr-glow-intense); cursor: pointer; }
+        .spinner { width: 56px; height: 56px; margin-top: 18px; border: 3px solid transparent; border-top-color: #ff003c; border-bottom-color: #ff003c; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .load-sub { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.3); letter-spacing: 3px; margin-top: 20px; text-transform: uppercase; }
+        @keyframes pulse-loader { to { transform: scale(1.05); text-shadow: 0 0 40px #ff003c, 0 0 80px #ff003c; } } @keyframes spin { to { transform: rotate(360deg); } }
 
-        html {
-            scroll-behavior: smooth; /* Rolagem suave ao clicar nos links */
-        }
+        .vhs-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; z-index: 9998; pointer-events: none; opacity: 0.4; }
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* Scrollbar Customizada */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--dark-red); 
-            border-radius: 5px; 
-            border: 1px solid var(--primary-red);
-        }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
-
-        /* === EFEITO VHS & SCANLINES === */
-        .vhs-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        /* Animação de Glitch no Texto */
-        .glitch {
-            position: relative;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--surface-color);
-        }
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 red;
-            clip: rect(24px, 550px, 90px, 0);
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 blue;
-            clip: rect(85px, 550px, 140px, 0);
-            animation: glitch-anim 2.5s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-anim {
-            0% { clip: rect(10px, 9999px, 44px, 0); }
-            20% { clip: rect(80px, 9999px, 12px, 0); }
-            40% { clip: rect(30px, 9999px, 90px, 0); }
-            60% { clip: rect(90px, 9999px, 50px, 0); }
-            80% { clip: rect(20px, 9999px, 80px, 0); }
-            100% { clip: rect(60px, 9999px, 10px, 0); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(20px, 9999px, 90px, 0); }
-            20% { clip: rect(50px, 9999px, 30px, 0); }
-            40% { clip: rect(80px, 9999px, 10px, 0); }
-            60% { clip: rect(10px, 9999px, 70px, 0); }
-            80% { clip: rect(90px, 9999px, 20px, 0); }
-            100% { clip: rect(40px, 9999px, 60px, 0); }
-        }
-
-        /* === HEADER === */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 50px;
-            background: var(--surface-color);
-            border-bottom: 2px solid var(--primary-red);
-            box-shadow: var(--hdr-glow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 2.5rem;
-            color: var(--primary-red);
-            letter-spacing: 4px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: #000;
-            border: 1px solid var(--primary-red);
-            padding: 5px 15px;
-            border-radius: 20px;
-            box-shadow: inset 0 0 10px rgba(255,0,60,0.2);
-            transition: all 0.3s ease;
-        }
-
-        .search-bar:focus-within {
-            box-shadow: var(--hdr-glow);
-            transform: scale(1.05);
-        }
-
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px;
-            outline: none;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.2rem;
-            width: 250px;
-        }
-
+        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--surface-color); border-bottom: 2px solid var(--primary-red); box-shadow: var(--hdr-glow); position: sticky; top: 0; z-index: 100; gap: 15px; }
+        .header-left { display: flex; align-items: center; gap: 14px; }
+        .hamburger { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); width: 42px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
+        .hamburger:hover { background: var(--primary-red); color: white; box-shadow: var(--hdr-glow); }
+        .logo { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 2rem; color: var(--primary-red); letter-spacing: 4px; cursor: pointer; user-select: none; }
+        .logo:hover { text-shadow: var(--hdr-glow); }
+        .search-bar { display: flex; align-items: center; background: #000; border: 1px solid var(--primary-red); padding: 4px 14px; border-radius: 20px; cursor: pointer; min-width: 200px; transition: all 0.25s; }
+        .search-bar:hover { box-shadow: var(--hdr-glow); }
+        .search-bar input { background: transparent; border: none; color: white; padding: 7px; outline: none; font-family: 'Rajdhani', sans-serif; font-size: 1rem; width: 180px; cursor: pointer; pointer-events: none; }
         .search-bar i { color: var(--primary-red); }
 
-        /* === LAYOUT PRINCIPAL === */
-        .container {
-            display: flex;
-            min-height: calc(100vh - 80px);
-            width: 100%;
-        }
+        .container { display: flex; min-height: calc(100vh - 68px); width: 100%; }
+        aside { width: 220px; min-width: 220px; background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%); border-right: 1px solid #222; padding: 20px 14px; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 90; }
+        body.sidebar-collapsed aside { transform: translateX(-100%); margin-left: -220px; opacity: 0; }
+        aside h3 { font-family: 'Orbitron', sans-serif; color: var(--text-muted); margin-bottom: 14px; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-menu { list-style: none; } .nav-menu li { margin-bottom: 8px; }
+        .nav-menu a { text-decoration: none; color: var(--text-main); font-size: 1rem; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 5px; transition: all 0.25s ease; font-weight: 700; }
+        .nav-menu a i { color: var(--primary-red); font-size: 1rem; width: 18px; text-align: center; }
+        .nav-menu a:hover { color: white; background: rgba(255, 0, 60, 0.08); border-left: 3px solid var(--primary-red); transform: translateX(4px); }
+        .nav-menu li a.random-btn { background: rgba(0, 240, 255, 0.06) !important; border-left: 3px solid #00f0ff !important; color: #00f0ff !important; }
+        .nav-menu li a.random-btn:hover { background: rgba(0, 240, 255, 0.14) !important; color: #fff !important; }
+        .nav-menu li a.random-btn i { color: #00f0ff !important; }
+        .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 89; backdrop-filter: blur(2px); }
 
-        /* SIDEBAR */
-        aside {
-            width: 280px;
-            min-width: 280px;
-            background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%);
-            border-right: 1px solid #333;
-            padding: 30px 20px;
-            /* Deixa a sidebar grudada na tela */
-            position: sticky;
-            top: 85px; /* Altura do header aproximada */
-            height: calc(100vh - 85px);
-            overflow-y: auto;
-        }
+        /* CARROSSEL CORRIGIDO - SETAS NÃO FICAM EM CIMA DO NOME */
+        .hero-carousel { position: relative; width: 100%; height: 400px; border-radius: 10px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,0,60,0.15); background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+        .carousel-slide { flex: 0 0 100%; min-width: 100%; height: 100%; position: relative; cursor: pointer; display: flex; align-items: center; background-size: cover; background-position: center; }
+        .carousel-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 100%); }
+        .hero-content { max-width: 520px; padding: 32px 32px 70px 32px; z-index: 2; position: relative; }
+        .hero-tag { background: #ff0055; color: #fff; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 2px; display: inline-block; margin-bottom: 10px; }
+        .hero-title { color: #fff; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.1; }
+        .hero-description { color: #bbb; font-size: 0.9rem; line-height: 1.45; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .btn-hero-play { background: #ff0055; border: none; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 12px rgba(255,0,85,0.4); transition: all 0.25s; }
+        .btn-hero-play:hover { background: #fff; color: #000; transform: translateY(-2px); }
+        
+        /* SETAS AGORA EMBAIXO, LONGE DO TITULO */
+        .carousel-nav { position: absolute; bottom: 18px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; transition: all 0.25s; backdrop-filter: blur(6px); }
+        .carousel-nav:hover { background: var(--primary-red); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+        .carousel-nav.prev { right: 66px; } 
+        .carousel-nav.next { right: 18px; }
+        .carousel-dots { position: absolute; bottom: 22px; left: 32px; display: flex; gap: 6px; z-index: 3; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.25s; }
+        .dot.active { background: var(--primary-red); width: 22px; border-radius: 4px; box-shadow: var(--hdr-glow); }
 
-        aside h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .nav-menu { list-style: none; }
-        .nav-menu li { margin-bottom: 15px; }
-        .nav-menu a {
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .nav-menu a i {
-            color: var(--primary-red);
-            font-size: 1.4rem;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: white;
-            background: rgba(255, 0, 60, 0.1);
-            text-shadow: 0 0 8px var(--primary-red);
-            border-left: 4px solid var(--primary-red);
-            transform: translateX(5px);
-        }
-
-        .nav-menu a:hover i {
-            transform: rotate(15deg) scale(1.2);
-            text-shadow: var(--hdr-glow);
-        }
-
-        .dmca-link {
-            color: #ff3333 !important;
-            animation: pulse-red 2s infinite;
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 0, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); }
-        }
-
-        /* GRID DE JOGOS E MAIN (CORRIGIDO PARA IR ATÉ O LIMITE DIREITO E DAR ESPAÇO NA ESQUERDA) */
-        main {
-            flex: 1;
-            padding: 40px 40px 40px 40px; /* Cria um espaço confortável nas laterais e no topo */
-            width: 100%;
-        }
-
-        .category-section {
-            margin-bottom: 80px;
-            scroll-margin-top: 100px; /* Evita que o header cubra o título ao rolar */
-        }
-
-        .grid-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--dark-red);
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .grid-header h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #fff, var(--primary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 0px 15px rgba(255,0,60,0.3);
-        }
-
-        .grid-header h2 i {
-            margin-right: 15px;
-            color: var(--primary-red);
-            -webkit-text-fill-color: var(--primary-red);
-        }
-
-        /* SISTEMA DE FILTRO */
+        main { flex: 1; padding: 22px 20px; width: 100%; min-width: 0; }
+        .category-section { margin-bottom: 50px; scroll-margin-top: 90px; }
+        .grid-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; border-bottom: 2px solid var(--dark-red); padding-bottom: 10px; }
+        .grid-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: white; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(90deg, #fff, var(--primary-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .grid-header h2 i { margin-right: 8px; color: var(--primary-red); -webkit-text-fill-color: var(--primary-red); }
         .filter-container { position: relative; }
+        .filter-btn { background: var(--surface-color); border: 1px solid var(--primary-red); color: white; padding: 6px 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
+        .filter-menu { position: absolute; top: 115%; right: 0; background: #151515; border: 1px solid var(--primary-red); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 6px; width: 280px; z-index: 50; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        .filter-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .filter-tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 4px 10px; cursor: pointer; border: 1px solid var(--dark-red); border-radius: 4px; font-weight: bold; font-size: 0.78rem; }
+        .filter-tag:hover, .filter-tag.active { background: var(--primary-red); color: white; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; width: 100%; }
+        .game-card { background: var(--surface-color); border: 1px solid #1e1e1e; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+        .game-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+        .game-img { width: 100%; height: 135px; object-fit: cover; border-bottom: 1px solid #1e1e1e; }
+        .game-info { padding: 10px; }
+        .game-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 6px; color: white; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .game-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 2px 5px; font-size: 0.6rem; border-radius: 3px; border: 1px solid #2a0a14; font-weight: bold; text-transform: uppercase; }
+        .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 16px; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: #0a0a0a; width: 760px; max-width: 100%; border: 2px solid var(--primary-red); box-shadow: var(--hdr-glow-intense); border-radius: 10px; transform: scale(0.9) translateY(20px); transition: all 0.35s; position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .close-btn { position: absolute; top: 10px; right: 14px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; }
+        .close-btn:hover { color: var(--primary-red); transform: rotate(90deg); }
+        .modal-header-img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary-red); }
+        .modal-body { padding: 20px; }
+        .modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; text-shadow: 0 0 20px var(--primary-red); margin-bottom: 10px; color: white; }
+        .modal-desc { font-size: 0.95rem; line-height: 1.5; color: #ccc; margin-bottom: 18px; background: rgba(0,0,0,0.5); padding: 10px; border-left: 3px solid var(--primary-red); border-radius: 0 4px 4px 0; }
+        .btn-download { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: linear-gradient(45deg, var(--dark-red), var(--primary-red)); color: white; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-transform: uppercase; box-shadow: var(--hdr-glow); }
+        .search-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.96); backdrop-filter: blur(16px); z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.3s; overflow-y: auto; }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+        .search-modal-content { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px 18px 50px; min-height: 100vh; }
+        .search-top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; position: sticky; top: 0; background: rgba(5,5,5,0.96); padding: 16px 0 12px; z-index: 2; }
+        .search-input-wrapper { position: relative; flex: 1; }
+        .search-input-wrapper input { width: 100%; padding: 16px 50px 16px 18px; font-size: 1.2rem; font-family: 'Montserrat', sans-serif; color: white; background: #111; border: 2px solid var(--primary-red); border-radius: 40px; outline: none; }
+        .modal-search-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-red); }
+        .close-search-btn { background: rgba(255,255,255,0.07); border: 1px solid #333; color: #aaa; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; cursor: pointer; padding: 10px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
+        .search-results-info { color: var(--text-muted); margin-bottom: 14px; font-size: 0.95rem; } .search-results-info span { color: var(--primary-red); font-weight: bold; }
 
-        .filter-btn {
-            background: var(--surface-color);
-            border: 1px solid var(--primary-red);
-            color: white;
-            padding: 10px 20px;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-size: 1rem;
+        @media (max-width: 900px) {
+            aside { position: fixed; left: 0; top: 0; height: 100vh; z-index: 99; transform: translateX(-100%); margin-left: 0 !important; padding-top: 70px; width: 240px; min-width: 240px; }
+            body:not(.sidebar-collapsed) aside { transform: translateX(0); opacity: 1; margin-left: 0 !important; }
+            body:not(.sidebar-collapsed) .sidebar-backdrop { display: block; }
+            header { padding: 10px 12px; }
+            .logo { font-size: 1.5rem; }
+            .search-bar { min-width: 0; flex: 1; max-width: 200px; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+            .hero-carousel { height: 320px; }
+            .hero-title { font-size: 1.6rem; }
         }
-
-        .filter-btn:hover {
-            background: rgba(255, 0, 60, 0.2);
-            box-shadow: var(--hdr-glow);
-        }
-
-        .filter-menu {
-            position: absolute;
-            top: 120%;
-            right: 0;
-            background: var(--surface-color);
-            border: 1px solid var(--primary-red);
-            border-radius: 5px;
-            padding: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            width: 320px;
-            z-index: 50;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        }
-
-        .filter-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .filter-tag {
-            background: rgba(255, 0, 60, 0.1);
-            color: var(--primary-red);
-            padding: 6px 14px;
-            cursor: pointer;
-            border: 1px solid var(--dark-red);
-            border-radius: 4px;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-
-        .filter-tag:hover, .filter-tag.active {
-            background: var(--primary-red);
-            color: white;
-            box-shadow: var(--hdr-glow);
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 30px;
-            width: 100%;
-        }
-
-        /* CARDS DE JOGO */
-        .game-card {
-            background: var(--surface-color);
-            border: 1px solid #222;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-
-        .game-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
-            transform: skewX(-25deg);
-            transition: 0.5s;
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        .game-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary-red);
-            box-shadow: var(--hdr-glow);
-        }
-
-        .game-card:hover::after { left: 150%; }
-
-        .game-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-bottom: 2px solid #222;
-            transition: filter 0.3s;
-        }
-
-        .game-card:hover .game-img {
-            filter: contrast(130%) saturate(120%);
-            border-bottom-color: var(--primary-red);
-        }
-
-        .game-info { padding: 20px; }
-        
-        .game-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            color: white;
-            text-transform: uppercase;
-        }
-
-        .game-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            background: rgba(255, 0, 60, 0.1);
-            color: var(--primary-red);
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            border: 1px solid var(--dark-red);
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* === MODAIS === */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: #0a0a0a;
-            width: 800px;
-            max-width: 90%;
-            border: 2px solid var(--primary-red);
-            box-shadow: var(--hdr-glow-intense);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.8) translateY(50px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 2.5rem;
-            color: var(--text-main);
-            cursor: pointer;
-            z-index: 10;
-            text-shadow: 0 0 10px black;
-            transition: all 0.2s;
-        }
-
-        .close-btn:hover { 
-            color: var(--primary-red); 
-            transform: rotate(90deg);
-        }
-
-        .modal-header-img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-bottom: 2px solid var(--primary-red);
-            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-        }
-
-        .modal-body {
-            padding: 30px;
-            margin-top: -100px; 
-            position: relative;
-            z-index: 5;
-        }
-
-        .modal-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 10px black, 0 0 20px var(--primary-red);
-            margin-bottom: 15px;
-            color: white;
-        }
-
-        .modal-desc {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #ccc;
-            margin-bottom: 30px;
-            background: rgba(0,0,0,0.6);
-            padding: 15px;
-            border-left: 4px solid var(--primary-red);
-            border-radius: 0 5px 5px 0;
-        }
-
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(45deg, var(--dark-red), var(--primary-red));
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: var(--hdr-glow);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-download::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-download:hover {
-            transform: scale(1.02);
-            box-shadow: var(--hdr-glow-intense);
-        }
-
-        .btn-download:hover::before { left: 100%; }
-        
-        .btn-download i { animation: bounce-down 1s infinite; }
-
-        @keyframes bounce-down {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(5px); }
-        }
-
-        /* Modal DMCA Específico */
-        .dmca-content { padding-top: 50px; text-align: center; }
-        .dmca-content h2 { color: #ff3333; font-size: 3rem; margin-bottom: 20px; }
-        .dmca-content i { font-size: 5rem; color: #ff3333; margin-bottom: 20px; text-shadow: 0 0 20px red; }
-
-        /* === BOTÃO ALEATÓRIO DESTACADO (SEMPRE ACESO) === */
-        .nav-menu li a[onclick="playRandomGame()"] {
-            background: rgba(0, 240, 255, 0.05) !important; 
-            border-left: 4px solid #00f0ff !important; 
-            color: #00f0ff !important; 
-            font-weight: bold;
-            box-shadow: inset 5px 0 10px rgba(0, 240, 255, 0.1), 0 0 10px rgba(0, 240, 255, 0.2) !important;
-            transition: all 0.3s ease-in-out !important;
-        }
-
-        /* === EFEITO AO PASSAR O MOUSE (SUPER NEON) === */
-        .nav-menu li a[onclick="playRandomGame()"]:hover {
-            background: rgba(0, 240, 255, 0.15) !important;
-            color: #fff !important;
-            box-shadow: inset 5px 0 15px rgba(0, 240, 255, 0.3), 0 0 20px rgba(0, 240, 255, 0.6) !important;
-            transform: translateX(3px);
-        }
-
-        /* Força o ícone do dado a seguir o ciano */
-        .nav-menu li a[onclick="playRandomGame()"] i {
-            color: #00f0ff !important;
-        }
-        .nav-menu li a[onclick="playRandomGame()"]:hover i {
-            color: #fff !important;
-        }
-
-        /* === HERO BANNER AJUSTADO PARA OCUPAR 100% DO CONTAINER DE JOGOS === */
-        .hero-banner {
-            position: relative;
-            width: 100%; /* Estica perfeitamente junto com a grade */
-            height: 400px;
-            background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0.2) 100%), 
-                        url('https://www.memoriabit.com.br/wp-content/uploads/2013/09/gta-v-banner.webp') no-repeat center center;
-            background-size: cover;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 40px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 0, 85, 0.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Conteúdo interno do banner */
-        .hero-content {
-            max-width: 550px;
-            padding: 40px;
-            z-index: 2;
-        }
-
-        /* Tag pequena acima do título */
-        .hero-tag {
-            background: #ff0055;
-            color: #fff;
-            font-size: 0.75rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 3px;
-            letter-spacing: 2px;
-            display: inline-block;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-        }
-
-        /* Título do Jogo */
-        .hero-title {
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin: 0 0 15px 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Descrição do Jogo */
-        .hero-description {
-            color: #cccccc;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        /* Botão de Jogar do Banner */
-        .btn-hero-play {
-            background: #ff0055;
-            border: none;
-            color: #fff;
-            padding: 14px 28px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            font-size: 1rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn-hero-play:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
-            transform: translateY(-2px);
-        }   
-
-.botao-vhs-glitch {
-  position: relative;
-  background-color: #111;
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 18px;
-  padding: 12px 30px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 2px;
-}
-
-.botao-vhs-glitch::before {
-  content: '▶ ';
-  color: #ff3333;
-}
-
-.botao-vhs-glitch:hover {
-  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
-}
-
-@keyframes glitch {
-  0% { transform: translate(0); text-shadow: -2px 0 #ff007f, 2px 0 #00ffff; }
-  50% { transform: translate(-2px, 2px); text-shadow: 2px 0 #ff007f, -2px 0 #00ffff; }
-  100% { transform: translate(0); }
-}
-
-/* Se o seu outro site não tiver essas fontes, inclua essa linha no topo do CSS ou no head:
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@600;800&display=swap');
-*/
-
-#loader {
-    position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh;
-    background-color: #050505; /* Preto profundo */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Garante que vai ficar na frente de TUDO */
-    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
-}
-
-.load-date {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.4); /* Branco com 40% de opacidade (efeito apagado) */
-    letter-spacing: 1px;
-    margin-top: 25px; /* Dá uma distância estilosa do spinner */
-    text-transform: uppercase;
-    font-weight: 600;
-    animation: fadeInDate 1s ease-in-out forwards;
-}
-
-/* Animação suave para a data aparecer junto com o resto */
-@keyframes fadeInDate {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 0.4; transform: translateY(0); }
-}
-
-.load-title {
-    font-family: 'Cinzel', serif;
-    font-size: 3rem;
-    color: #d90429; /* Vermelho insano */
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    animation: pulse 1.5s infinite alternate;
-    text-shadow: 0 0 20px rgba(217, 4, 41, 0.5);
-    margin-bottom: 20px;
-}
-
-.spinner {
-    width: 50px; 
-    height: 50px;
-    border: 3px solid transparent;
-    border-top-color: #d90429;
-    border-bottom-color: #d90429;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-/* Animação do texto pulsando (aumentando e brilhando) */
-@keyframes pulse { 
-    to { 
-        transform: scale(1.05); 
-        opacity: 0.8; 
-    } 
-}
-
-/* Animação do círculo girando */
-@keyframes spin { 
-    to { 
-        transform: rotate(360deg); 
-    } 
-}
-
-/* Container que cobre a tela inteira */
-.search-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(5, 5, 5, 0.75); /* Fundo escuro semitransparente */
-    backdrop-filter: blur(10px);          /* O efeito de borrão insano */
-    -webkit-backdrop-filter: blur(10px);   /* Suporte para Safari */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;                       /* Fica na frente de absolutamente tudo */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-/* Quando o modal estiver ativo */
-.search-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Caixa interna da busca */
-.search-modal-content {
-    width: 90%;
-    max-width: 650px;
-    text-align: center;
-    animation: zoomIn 0.3s ease forwards;
-}
-
-/* Wrapper para alinhar o input e o ícone da lupa */
-.search-input-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-/* O input estilizado da NEXUS centralizado */
-.search-input-wrapper input {
-    width: 100%;
-    padding: 18px 60px 18px 25px;
-    font-size: 1.3rem;
-    font-family: 'Montserrat', sans-serif;
-    color: white;
-    background-color: #111111;
-    border: 2px solid #d90429; /* Borda vermelha marcante */
-    border-radius: 40px;
-    outline: none;
-    box-shadow: 0 0 25px rgba(217, 4, 41, 0.4);
-}
-
-/* Ícone da lupa dentro do input */
-.modal-search-icon {
-    position: absolute;
-    right: 25px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #d90429;
-    font-size: 1.4rem;
-}
-
-/* Botão para fechar o overlay */
-.close-search-btn {
-    background: transparent;
-    border: none;
-    color: #aaa;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.close-search-btn:hover {
-    color: #d90429;
-}
-
-/* Animação suave de entrada do input */
-@keyframes zoomIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
     </style>
 </head>
 <body>
-
+    <div id="loader"><div class="load-title" onclick="location.reload()">NEXUS</div><div class="spinner"></div><div class="load-sub">Inicializando...</div></div>
     <div class="vhs-overlay"></div>
-
+    <div class="search-overlay" id="searchOverlay"><div class="search-modal-content"><div class="search-top-bar"><div class="search-input-wrapper"><input type="text" id="modalSearchInput" placeholder="Buscar jogo, app, tag..."><i class="fas fa-search modal-search-icon"></i></div><button class="close-search-btn" id="closeSearchBtn"><i class="fas fa-times"></i> Fechar</button></div><div class="search-results-info" id="searchResultsInfo"></div><div class="games-grid" id="searchResultsGrid"></div></div></div>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <header>
-        <div class="logo glitch" data-text="NEXUS">NEXUS</div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar no sist1ema...">
-            <i class="fas fa-search"></i>
+        <div class="header-left">
+            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+            <div class="logo" onclick="location.reload()">NEXUS</div>
         </div>
+        <div class="search-bar" id="headerSearchTrigger"><input type="text" id="searchInput" placeholder="Buscar no sistema..." readonly><i class="fas fa-search"></i></div>
     </header>
-
     <div class="container">
-        <aside>
-            <h3><i class="fas fa-database"></i> CATEGORIAS</h3>
+        <aside id="sidebar">
+            <h3><i class="fas fa-database"></i> Categorias</h3>
             <ul class="nav-menu">
-                <li><a href="#section-jogos-pc"><i class="fas fa-gamepad"></i> Jogos PC</a></li> 
-                <li><a href="#section-apps-pc"><i class="fa-solid fa-desktop"></i> Apps PC</a></li>
-                <li><a href="#section-jogos-android"><i class="fa-brands fa-android"></i> Jogos ANDROID</a></li>
-                <li><a href="#section-apps-android"><i class="fa-solid fa-mobile-screen"></i> Apps ANDROID</a></li>
-                <li><a href="#section-emuladores"><i class="fa fa-keyboard"></i> Emuladores</a></li>
-                <li><a href="#section-extras"><i class="fa fa-coffee"></i> Extras</a></li>
-
-<li>
-    <a href="javascript:void(0);" onclick="playRandomGame()">
-        <i class="fas fa-dice"></i> Estou com sorte
-    </a>
-</li>
+                <li><a href="#section-jogos-pc" class="nav-link"><i class="fas fa-gamepad"></i> Jogos PC</a></li>
+                <li><a href="#section-apps-pc" class="nav-link"><i class="fa-solid fa-desktop"></i> Apps PC</a></li>
+                <li><a href="#section-jogos-android" class="nav-link"><i class="fa-brands fa-android"></i> Jogos Android</a></li>
+                <li><a href="#section-apps-android" class="nav-link"><i class="fa-solid fa-mobile-screen"></i> Apps Android</a></li>
+                <li><a href="#section-emuladores" class="nav-link"><i class="fa fa-keyboard"></i> Emuladores</a></li>
+                <li><a href="#section-extras" class="nav-link"><i class="fa fa-coffee"></i> Extras</a></li>
+                <li><a href="javascript:void(0);" onclick="playRandomGame()" class="random-btn"><i class="fas fa-dice"></i> Estou com sorte</a></li>
             </ul>
-
-            <h3 style="margin-top: 40px;"><i class="fas fa-server"></i> Outros</h3>
+            <h3 style="margin-top: 22px;"><i class="fas fa-server"></i> Outros</h3>
             <ul class="nav-menu">
-                <li><a href="#" onclick="openDmcaModal()" class="dmca-link"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
-<li>
-  <a href="" target="_blank" class="link">
-    <i class="fa-brands fa-discord"></i> Discord - Offline
-  </a>
-</li>
+                <li><a href="#" onclick="openDmcaModal()" style="color:#ff3333 !important;"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
+                <li><a href="#"><i class="fa-brands fa-discord"></i> Discord - Offline</a></li>
             </ul>
         </aside>
-
-<main class="main-content"> <div class="hero-banner">
-        <div class="hero-content">
-            <span class="hero-tag">Indicações</span>
-            <h1 class="hero-title">GTA V</h1>
-            <p class="hero-description">
-Em Grand Theft Auto V (GTA V), a história acompanha três protagonistas criminosos em Los Santos: Michael, um ex-ladrão de bancos vivendo em proteção a testemunhas; Franklin, um jovem malandro de rua; e Trevor, um psicopata violento. Eles se unem para realizar assaltos arriscados sob pressão de agências governamentais corruptas.",
-            <div class="hero-buttons">
-
-<a href="https://gofile.io/d/TDabIh" target="_blank" style="text-decoration: none;">
-  <button class="botao-vhs-glitch">BAIXAR</button>
-</a>
-
-
-            </div>
-        </div>
-    </div>
-
-    <div class="secao-jogos-container"> 
-        <div class="jogos-grid">
-            </div>
-    </div>
-        
         <main id="mainContent">
-            
-            <div class="category-section" id="section-jogos-pc">
-                <div class="grid-header">
-                    <h2><i class="fas fa-gamepad"></i> Jogos - PC</h2>
-                    <div class="filter-container">
-                        <button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> Filtrar Tags</button>
-                        <div class="filter-menu" id="filterMenu"></div>
-                    </div>
-                </div>
-                <div class="games-grid" id="container-jogos-pc"></div>
+            <div class="hero-carousel" id="heroCarousel">
+                <div class="carousel-track" id="carouselTrack"></div>
+                <button class="carousel-nav prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-nav next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+                <div class="carousel-dots" id="carouselDots"></div>
             </div>
-
-            <div class="category-section" id="section-apps-pc">
-                <div class="grid-header">
-                    <h2><i class="fa-solid fa-desktop"></i> Aplicativos - PC</h2>
-                </div>
-                <div class="games-grid" id="container-apps-pc"></div>
-            </div>
-
-            <div class="category-section" id="section-jogos-android">
-                <div class="grid-header">
-                    <h2><i class="fa-brands fa-android"></i> Jogos - ANDROID</h2>
-                </div>
-                <div class="games-grid" id="container-jogos-android"></div>
-            </div>
-
-            <div class="category-section" id="section-apps-android">
-                <div class="grid-header">
-                    <h2><i class="fa-solid fa-mobile-screen"></i> Aplicativos - ANDROID</h2>
-                </div>
-                <div class="games-grid" id="container-apps-android"></div>
-            </div>
-
-            <div class="category-section" id="section-emuladores">
-                <div class="grid-header">
-                    <h2><i class="fa fa-keyboard"></i> Emuladores</h2>
-                </div>
-                <div class="games-grid" id="container-emuladores"></div>
-            </div>
-
-            <div class="category-section" id="section-extras">
-                <div class="grid-header">
-                    <h2><i class="fa fa-coffee"></i> Extras</h2>
-                </div>
-                <div class="games-grid" id="container-extras"></div>
-            </div>
-
+            <div class="category-section" id="section-jogos-pc"><div class="grid-header"><h2><i class="fas fa-gamepad"></i> Jogos - PC</h2><div class="filter-container"><button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> Filtrar Tags</button><div class="filter-menu" id="filterMenu"></div></div></div><div class="games-grid" id="container-jogos-pc"></div></div>
+            <div class="category-section" id="section-apps-pc"><div class="grid-header"><h2><i class="fa-solid fa-desktop"></i> Apps - PC</h2></div><div class="games-grid" id="container-apps-pc"></div></div>
+            <div class="category-section" id="section-jogos-android"><div class="grid-header"><h2><i class="fa-brands fa-android"></i> Jogos - Android</h2></div><div class="games-grid" id="container-jogos-android"></div></div>
+            <div class="category-section" id="section-apps-android"><div class="grid-header"><h2><i class="fa-solid fa-mobile-screen"></i> Apps - Android</h2></div><div class="games-grid" id="container-apps-android"></div></div>
+            <div class="category-section" id="section-emuladores"><div class="grid-header"><h2><i class="fa fa-keyboard"></i> Emuladores</h2></div><div class="games-grid" id="container-emuladores"></div></div>
+            <div class="category-section" id="section-extras"><div class="grid-header"><h2><i class="fa fa-coffee"></i> Extras</h2></div><div class="games-grid" id="container-extras"></div></div>
         </main>
     </div>
-
-    <div class="modal-overlay" id="gameModal">
-        <div class="modal-content">
-            <i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i>
-            <img src="" alt="Game Banner" class="modal-header-img" id="modalImg">
-            
-            <div class="modal-body">
-                <h2 class="modal-title" id="modalTitle">Nome do Jogo</h2>
-                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="modalTags"></div>
-                <p class="modal-desc" id="modalDesc"></p>
-
-                <a href="#" class="btn-download" id="modalDownloadBtn" target="_blank">
-                    <i class="fas fa-download"></i> Baixar
-                </a>
-            </div>
-        </div>
-    </div>
-
-<div class="search-overlay" id="searchOverlay">
-    <div class="search-modal-content">
-        <div class="search-input-wrapper">
-            <input
-                type="text"
-                id="modalSearchInput"
-                placeholder="Buscar jogo ou aplicativo..."
-            >
-            <i class="fas fa-search modal-search-icon"></i>
-        </div>
-
-        <button class="close-search-btn" id="closeSearchBtn">
-            <i class="fas fa-times"></i>
-            Fechar
-        </button>
-    </div>
-</div>
-    
-    <div class="modal-overlay" id="dmcaModal">
-        <div class="modal-content dmca-content modal-body">
-            <i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i>
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <h2 style="font-family: 'Orbitron', sans-serif; text-transform: uppercase;">Aviso de Direitos Autorais (DMCA)</h2>
-            <p class="modal-desc" style="text-align: left; background: rgba(255,0,0,0.1); border-left-color: red;">
-                O NEXUS funciona apenas como um indexador. Não hospedamos nenhum arquivo em nossos servidores. Todos os links são criados e disponibilizados por terceiros na internet.
-                Se você é dono de algum conteúdo e deseja que ele seja removido, entre em contato conosco com as provas de autoria e o removeremos imediatamente de nosso diretório. <br><br>
-                Entre em Contato: nexushope31@gmail.com
-            </p>
-            <button class="btn-download" style="background: #333;" onclick="closeModal('dmcaModal')">ENTENDIDO</button>
-        </div>
-    </div>
-
+    <div class="modal-overlay" id="gameModal"><div class="modal-content"><i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i><img src="" class="modal-header-img" id="modalImg"><div class="modal-body"><h2 class="modal-title" id="modalTitle"></h2><div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;" id="modalTags"></div><p class="modal-desc" id="modalDesc"></p><a href="#" class="btn-download" id="modalDownloadBtn" target="_blank"><i class="fas fa-download"></i> Baixar</a></div></div></div>
+    <div class="modal-overlay" id="dmcaModal"><div class="modal-content" style="padding:30px; text-align:center;"><i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i><i class="fa-solid fa-triangle-exclamation" style="font-size:3.5rem; color:#ff3333; margin-bottom:12px;"></i><h2 style="font-family:Orbitron; color:#ff3333; margin-bottom:12px;">Aviso DMCA</h2><p class="modal-desc" style="text-align:left;">O NEXUS funciona apenas como indexador. Não hospedamos arquivos. Contato: nexushope31@gmail.com</p><button class="btn-download" style="background:#222;" onclick="closeModal('dmcaModal')">ENTENDIDO</button></div></div>
     <script>
-        /* === BANCO DE DADOS (Categorias Ajustadas) === */
+        if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+        window.scrollTo(0,0);
         const gamesDB = [
             // JOGOS PC
             { id: 1, category: "jogos-pc",
@@ -1404,6 +565,13 @@ Em Grand Theft Auto V (GTA V), a história acompanha três protagonistas crimino
                tags: ["Suspense", "Casual", "Estratégia" ],
                 desc: "Em Limbo, você controla um garoto sem nome nem rosto que acorda em uma floresta escura e hostil. Em busca de descobrir o que aconteceu com sua irmã desaparecida, ele deve desbravar um mundo monocromático de sombras e resolver enigmas para sobreviver a criaturas perigosas e armadilhas mortais.",
                  link: "https://download142.uploadhaven.com/1/application/zip/7lggYDmGcrBLz6q3xBpNe5wHhEnoKwFRyMsjJ0Bz.zip?key=Pb6bQqgAZRefSKgixr7i7A&expire=1782740763&filename=LIMBO.v2025.05.29.zip" },
+
+            { id: 23181347534, category: "jogos-pc",
+             title: "Little Nightmares",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQdFB4MvQM5TZuaSeK89753X57xoOKmrwtpfZzTBaRi7I8XbNRwcFOw2HQ&s=10",
+               tags: ["Suspense", "Casual", "Estratégia", "Plataforma" ],
+                desc: "Little Nightmares acompanha a jornada de Six, uma garotinha faminta de capa de chuva amarela. Ela deve escapar de The Maw (As Fauces), uma vasta e misteriosa embarcação subaquática habitada por adultos corrompidos e monstros grotescos, explorando temas sombrios como a ganância e o consumismo infantil",
+                 link: "https://www.mediafire.com/file/5af2eugmhnolwun/Litle.Nightmres.MULTi12-ElAmigos.rar/file" },
 
                  { id: 323, category: "jogos-pc",
              title: "MyVoiceZoo",
@@ -1840,6 +1008,13 @@ Em Grand Theft Auto V (GTA V), a história acompanha três protagonistas crimino
                tags: ["Estratégia", "Casual" ],
                 desc: "Tipo um Among Us, só que no Chat!",
                  link: "https://www.wolvesville.com/" },
+
+            { id: 55555555555555555555555533355, category: "jogos-pc",
+             title: "World Of Craft",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOWAinqHvvaeI1VC9qVjjENNQr34jFCxh0TGQH5OxlVPyf2hoU3CrbksA&s=10",
+               tags: ["Estratégia", "Casual", "RPG" ],
+                desc: "Conversa no Modo IA: o'que é wow gameo'que é wow gameWoW é a sigla para World of Warcraft, um dos jogos de computador mais famosos e influentes do mundo, lançado pela Blizzard Entertainment em 2004. Ele pertence ao gênero MMORPG (Massively Multiplayer Online Role-Playing Game), o que significa que é um jogo de interpretação de papéis onde milhares de jogadores interagem simultaneamente em um mundo virtual persistente.",
+                 link: "https://drive.google.com/u/6/uc?id=1FqGzR-HNPK789AAFDZ2QY87ObR6pSVMF&export=download" },
 
 
                  // APPS PC
@@ -2461,52 +1636,7 @@ Em Grand Theft Auto V (GTA V), a história acompanha três protagonistas crimino
 
             // EMULADORES
 
-            { id: 3000, category: "emuladores",
-             title: "PC - ADOBE FLASH PLAYER",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfi95OWEVjVcoN_WUAfHlo6Bwmhi2dbBltA&s",
-               tags: ["Flash",],
-                desc: "Jogue jogos Flashs aqui!",
-                 link: "https://www.mediafire.com/file/ncwfehqev3rl4uk/Adobe_Flash_Player_32.exe/file" },
-
-            { id: 3001, category: "emuladores",
-             title: "PC - PPSSPP",
-              img: "https://ppsspp-psp-emulator.br.aptoide.com/_next/image?url=https%3A%2F%2Fcdn.aptoide.com%2Fimgs%2Fe%2F4%2F0%2Fe40478e7290071f2c152da5bfa2734ee_fgraphic.png&w=3840&q=60",
-               tags: ["PSP",],
-                desc: "Jogue jogos de PSP no PC!",
-                 link: "https://www.ppsspp.org/files/1_19_3/ppsspp_win.zip" },
-
-            { id: 3002, category: "emuladores",
-             title: "PC - SNES9X",
-              img: "https://upload.wikimedia.org/wikipedia/commons/b/bd/SNES9X_logo.png",
-              link: "https://www.mediafire.com/file/t8dgz09ahc4rtcq/snes9x.zip/file" },
-
-            { id: 3003, category: "emuladores",
-             title: "PC - PCSX2",
-              img: "https://www.notebookcheck.info/fileadmin/Notebooks/News/_nc4/PCSX2-emulator.jpg",
-               tags: ["PS2",],
-                desc: "Emule jogos de PS2 aqui!",
-                 link: "https://www.mediafire.com/file/3i9igefkbzcmh46/PCSX2.zip/file" },
-
-            { id: 3006, category: "emuladores",
-             title: "PC - Android 7",
-              img: "https://www.expressvpn.com/wp-ws-cache/uploads-expressvpn/2025/12/emulator-1.png",
-               tags: ["Android",],
-                desc: "cOM O OPITIDROID 7, VOCE EMULA ANDROID NO PC DE FORMA LEVE!  ",
-                 link: "https://www.mediafire.com/file/le2mlf2rtq0qksd" },
-
-            { id: 3004, category: "emuladores",
-             title: "ANDROID - AETHERSX2",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQB3RQ1MUUEJZLzCRnMsFNAAj_YNhlQjdSmg&s",
-               tags: ["PS2",],
-                desc: "Emule jogos de PS2 aqui!",
-                 link: "https://www.mediafire.com/file/da2mz76whh3hpns/aethersx2-v1-5-4248.apk/file" },
-
-            { id: 3005, category: "emuladores",
-             title: "Android - PPSSPP",
-              img: "https://media.pocketgamer.com/artwork/na-36372-1715870043/ppsspp-logo.jpg",
-               tags: ["PSP",],
-                desc: "Jogue jogos de PSP no Android!",
-                 link: "https://www.ppsspp.org/files/1_20_4/ppsspp.apk" },
+            { id: 4001, category: "emuladores", title: "Todos Emuladores", img: "https://static.vecteezy.com/ti/vetor-gratis/p1/9280138-emulador-escrita-design-em-fundo-de-rosa-gratis-vetor.jpg", tags: ["PC"], desc: "Neste blog está todos os principais emuladores, PC e Android!", link: "https://teste2222ada.blogspot.com/2026/07/emuladores-downloads.html" },
 
 
                  // Extras
@@ -2546,293 +1676,146 @@ Em Grand Theft Auto V (GTA V), a história acompanha três protagonistas crimino
                 desc: "O scrcpy serve para você espelhar e controlar a tela do seu celular Android diretamente pelo computador, permitindo que você use o mouse e o teclado para abrir aplicativos, digite mensagens com rapidez, transmita o áudio do aparelho para os alto-falantes do PC, grave vídeos de tudo o que acontece e ainda transfira arquivos ou copie textos entre os dois dispositivos de forma instantânea através de um cabo USB ou da rede Wi-Fi.  VERSÃO PRA COMPUTADORES de 32 BITS(86x): https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win32-v4.0.zip",
                  link: "https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win64-v4.0.zip" },
                  
-
         ];
 
-        /* === RENDERIZADOR UNIVERSAL === */
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
+        hamburgerBtn.addEventListener('click', toggleSidebar);
+        sidebarBackdrop.addEventListener('click', toggleSidebar);
+        document.querySelectorAll('.nav-link').forEach(link=>{
+            link.addEventListener('click', ()=>{ if(window.innerWidth <= 900){ document.body.classList.add('sidebar-collapsed'); } });
+        });
 
-        
-        function renderGames(gameList) {
-            // Mapeando os containers pelo ID correto
-            const containers = {
-                "jogos-pc": document.getElementById('container-jogos-pc'),
-                "apps-pc": document.getElementById('container-apps-pc'),
-                "jogos-android": document.getElementById('container-jogos-android'),
-                "apps-android": document.getElementById('container-apps-android'),
-                "emuladores": document.getElementById('container-emuladores'),
-                "extras": document.getElementById('container-extras'),
-            };
-
-            // Limpa todos os containers antes de preencher
-            Object.values(containers).forEach(container => {
-                if(container) container.innerHTML = '';
+        let currentSlide = 0, carouselInterval, carouselGames = [];
+        function initCarousel(){
+            const track = document.getElementById('carouselTrack');
+            const dots = document.getElementById('carouselDots');
+            const shuffled = [...gamesDB].sort(()=>0.5-Math.random());
+            carouselGames = shuffled.slice(0, 6);
+            track.innerHTML = ''; dots.innerHTML = '';
+            carouselGames.forEach((game, idx)=>{
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.style.backgroundImage = `url('${game.img}')`;
+                slide.onclick = ()=> openGameModal(game.id);
+                slide.innerHTML = `<div class="hero-content"><span class="hero-tag">DESTAQUE</span><h1 class="hero-title">${game.title}</h1><p class="hero-description">${game.desc}</p><button class="btn-hero-play" onclick="event.stopPropagation(); openGameModal(${game.id})"><i class="fas fa-play"></i> VER JOGO</button></div>`;
+                track.appendChild(slide);
+                const dot = document.createElement('div'); dot.className = 'dot'+(idx===0?' active':''); dot.onclick=(e)=>{ e.stopPropagation(); goToSlide(idx); }; dots.appendChild(dot);
             });
-
-            gameList.forEach(game => {
-                const tagsHTML = game.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-                const cardHTML = `
-                    <div class="game-card" onclick="openGameModal(${game.id})">
-                        <img src="${game.img}" alt="${game.title}" class="game-img">
-                        <div class="game-info">
-                            <h3 class="game-title">${game.title}</h3>
-                            <div class="game-tags">${tagsHTML}</div>
-                        </div>
-                    </div>
-                `;
-                
-                // Joga o card dentro do container correspondente a sua categoria
-                if (containers[game.category]) {
-                    containers[game.category].innerHTML += cardHTML;
-                }
-            });
-
-            // Oculta seções vazias para deixar o site mais limpo
-            ['jogos-pc', 'apps-pc', 'jogos-android', 'apps-android'].forEach(cat => {
-                const section = document.getElementById(`section-${cat}`);
-                if(containers[cat] && containers[cat].innerHTML === '') {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = 'block';
-                }
-            });
+            goToSlide(0); startCarousel();
         }
+        function goToSlide(idx){ currentSlide = idx; document.getElementById('carouselTrack').style.transform = `translateX(-${idx * 100}%)`; document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===idx)); resetInterval(); }
+        function nextSlide(){ goToSlide((currentSlide+1)%carouselGames.length); }
+        function prevSlide(){ goToSlide((currentSlide-1+carouselGames.length)%carouselGames.length); }
+        function startCarousel(){ carouselInterval = setInterval(nextSlide, 4000); }
+        function resetInterval(){ clearInterval(carouselInterval); startCarousel(); }
+        document.getElementById('carouselNext').addEventListener('click', (e)=>{ e.stopPropagation(); nextSlide(); });
+        document.getElementById('carouselPrev').addEventListener('click', (e)=>{ e.stopPropagation(); prevSlide(); });
 
-        // Inicializa Renderização
-        renderGames(gamesDB);
-
-        /* === SISTEMA DE BUSCA (SEARCH BAR) === */
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const termo = e.target.value.toLowerCase();
-            const jogosFiltrados = gamesDB.filter(game => 
-                game.title.toLowerCase().includes(termo) || 
-                game.tags.some(tag => tag.toLowerCase().includes(termo))
-            );
-            renderGames(jogosFiltrados);
-        });
-
-        /* === SISTEMA DE FILTRO (TAGS) NO HEADER DE JOGOS PC === */
-        const filterBtn = document.getElementById('filterBtn');
-        const filterMenu = document.getElementById('filterMenu');
-        const todasTags = [...new Set(gamesDB.flatMap(g => g.tags))].sort();
-
-        filterMenu.innerHTML = `<div class="filter-tag active" onclick="filtrarPorTag('Todos', event)">Todos</div>`;
-        todasTags.forEach(tag => {
-            filterMenu.innerHTML += `<div class="filter-tag" onclick="filtrarPorTag('${tag}', event)">${tag}</div>`;
-        });
-
-        filterBtn.addEventListener('click', () => filterMenu.classList.toggle('active'));
-
-        function filtrarPorTag(tagSelecionada, event) {
-            document.querySelectorAll('.filter-tag').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
-            filterMenu.classList.remove('active');
-
-            if (tagSelecionada === 'Todos') {
-                renderGames(gamesDB);
+        function renderSingleGrid(containerId, games){
+            const el = document.getElementById(containerId);
+            if(!el) return;
+            if(games.length===0){
+                el.innerHTML = `<div style="grid-column:1/-1; color:#555; padding:18px; text-align:center; font-family:Orbitron; font-size:0.7rem; border:1px dashed #222; border-radius:6px;">Nenhum item aqui</div>`;
             } else {
-                const filtrados = gamesDB.filter(game => game.tags.includes(tagSelecionada));
-                renderGames(filtrados);
+                el.innerHTML = games.map(game=>{
+                    const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+                    return `<div class="game-card" onclick="openGameModal(${game.id})"><img src="${game.img}" class="game-img" loading="lazy"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
+                }).join('');
             }
         }
+        function renderGames(list){
+            const byCat = {"jogos-pc":[], "apps-pc":[], "jogos-android":[], "apps-android":[], "emuladores":[], "extras":[]};
+            list.forEach(g=>{ if(byCat[g.category]!==undefined) byCat[g.category].push(g); });
+            Object.entries(byCat).forEach(([cat, games])=>{ renderSingleGrid(`container-${cat}`, games); });
+        }
 
-        /* === GERENCIADOR DE MODAIS === */
-        function openGameModal(id) {
-            const game = gamesDB.find(g => g.id === id);
-            if (!game) return;
+        const searchOverlay = document.getElementById('searchOverlay');
+        const modalSearchInput = document.getElementById('modalSearchInput');
+        const headerSearchTrigger = document.getElementById('headerSearchTrigger');
+        const searchResultsGrid = document.getElementById('searchResultsGrid');
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        const closeSearchBtn = document.getElementById('closeSearchBtn');
+        function openSearchOverlay(){ searchOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; setTimeout(()=> modalSearchInput.focus(), 100); renderSearchResults(modalSearchInput.value); }
+        function closeSearchOverlay(){ searchOverlay.classList.remove('active'); if(!document.querySelector('.modal-overlay.active')) document.body.style.overflow = ''; modalSearchInput.value = ''; }
+        function renderSearchResults(term){
+            const q = term.toLowerCase().trim();
+            let filtered = gamesDB;
+            if(q) filtered = gamesDB.filter(g=> g.title.toLowerCase().includes(q) || g.tags.some(t=> t.toLowerCase().includes(q)));
+            searchResultsInfo.innerHTML = q ? `Encontrado <span>${filtered.length}</span> resultado(s) para "<span>${term}</span>"` : `Mostrando <span>${filtered.length}</span> arquivos`;
+            if(filtered.length===0){ searchResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#666; font-family:Orbitron;">Nenhum resultado</div>`; return; }
+            searchResultsGrid.innerHTML = filtered.map(game=>{
+                const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+                return `<div class="game-card" onclick="closeSearchOverlay(); setTimeout(()=>openGameModal(${game.id}),200)"><img src="${game.img}" class="game-img"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
+            }).join('');
+        }
+        headerSearchTrigger.addEventListener('click', openSearchOverlay);
+        modalSearchInput.addEventListener('input', e=> renderSearchResults(e.target.value));
+        closeSearchBtn.addEventListener('click', closeSearchOverlay);
+        searchOverlay.addEventListener('click', e=>{ if(e.target===searchOverlay) closeSearchOverlay(); });
 
+        const filterBtn = document.getElementById('filterBtn');
+        const filterMenu = document.getElementById('filterMenu');
+        const todasTags = [...new Set(gamesDB.filter(g=>g.category==='jogos-pc').flatMap(g=>g.tags))].sort();
+        filterMenu.innerHTML = `<div class="filter-tag active" onclick="filtrarPorTag('Todos', event)">Todos</div>`;
+        todasTags.forEach(tag=>{ filterMenu.innerHTML += `<div class="filter-tag" onclick="filtrarPorTag('${tag}', event)">${tag}</div>`; });
+        filterBtn.addEventListener('click', ()=> filterMenu.classList.toggle('active'));
+        function filtrarPorTag(tag, ev){
+            document.querySelectorAll('.filter-tag').forEach(el=> el.classList.remove('active'));
+            ev.target.classList.add('active');
+            filterMenu.classList.remove('active');
+            if(tag==='Todos'){
+                const pcs = gamesDB.filter(g=>g.category==='jogos-pc');
+                renderSingleGrid('container-jogos-pc', pcs);
+            } else {
+                const filtrados = gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(tag));
+                renderSingleGrid('container-jogos-pc', filtrados);
+            }
+        }
+        document.addEventListener('click', e=>{ if(!e.target.closest('.filter-container')) filterMenu.classList.remove('active'); });
+
+        function openGameModal(id){
+            const game = gamesDB.find(g=> g.id===id);
+            if(!game) return;
             document.getElementById('modalImg').src = game.img;
             document.getElementById('modalTitle').innerText = game.title;
             document.getElementById('modalDesc').innerText = game.desc;
-            document.getElementById('modalTags').innerHTML = game.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-            document.getElementById('modalDownloadBtn').href = game.link; 
-
+            document.getElementById('modalTags').innerHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+            document.getElementById('modalDownloadBtn').href = game.link;
             document.getElementById('gameModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function openDmcaModal(){ document.getElementById('dmcaModal').classList.add('active'); document.body.style.overflow='hidden'; }
+        function closeModal(id){ document.getElementById(id).classList.remove('active'); if(!searchOverlay.classList.contains('active')) document.body.style.overflow=''; }
+        window.addEventListener('click', e=>{ if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('active'); document.body.style.overflow=''; } });
+        window.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(searchOverlay.classList.contains('active')) closeSearchOverlay(); else document.querySelectorAll('.modal-overlay').forEach(m=>{ m.classList.remove('active'); }); document.body.style.overflow=''; } });
+        function playRandomGame(){
+            const btn = document.querySelector('.random-btn');
+            btn.style.pointerEvents='none';
+            const overlay = document.createElement('div');
+            overlay.style.cssText='position:fixed;inset:0;background:#000;color:#fff;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:bold;z-index:10002;font-family:Orbitron;text-align:center;padding:20px;';
+            document.body.appendChild(overlay);
+            const eff = setInterval(()=>{ const g=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`🎲 ${g.title}`; },80);
+            setTimeout(()=>{ clearInterval(eff); const final=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`<div style="color:gold;text-shadow:0 0 30px gold">🏆 ${final.title}</div>`; setTimeout(()=>{ overlay.remove(); btn.style.pointerEvents='auto'; openGameModal(final.id); },800); },1800);
         }
 
-        function openDmcaModal() {
-            document.getElementById('dmcaModal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Fechar ao clicar fora ou apertar ESC
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                e.target.classList.remove('active');
-            }
+        window.addEventListener('load', ()=>{
+            window.scrollTo(0,0);
+            setTimeout(()=>{
+                document.getElementById('loader').classList.add('hidden');
+                // Sidebar aberta por padrão no PC
+                if(window.innerWidth > 900){
+                    document.body.classList.remove('sidebar-collapsed');
+                } else {
+                    document.body.classList.add('sidebar-collapsed');
+                }
+                initCarousel();
+                renderGames(gamesDB);
+                renderSearchResults('');
+                window.scrollTo(0,0);
+            }, 2500);
         });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-            }
-        });
-
-/* === FUNÇÃO PARA SORTEAR JOGO ALEATÓRIO === */
-
-
-
-function playRandomGame() {
-    if (typeof gamesDB === 'undefined' || gamesDB.length === 0) {
-        alert("Nenhum sistema encontrado no banco de dados.");
-        return;
-    }
-
-    const botao = document.querySelector('[onclick="playRandomGame()"]');
-
-    botao.style.pointerEvents = "none";
-
-    // Cria overlay
-    const overlay = document.createElement("div");
-    overlay.id = "luckOverlay";
-    overlay.style.cssText = `
-        position:fixed;
-        inset:0;
-        background:#000;
-        color:#fff;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        font-size:50px;
-        font-weight:bold;
-        z-index:999999;
-        font-family:Arial;
-    `;
-    document.body.appendChild(overlay);
-
-    let contador = 0;
-
-    const efeito = setInterval(() => {
-        const jogo = gamesDB[Math.floor(Math.random() * gamesDB.length)];
-
-        overlay.innerHTML = `
-            <div style="
-                animation:pulse .1s infinite;
-                text-shadow:0 0 20px #fff,0 0 40px #fff;
-            ">
-                🎲 ${jogo.title || jogo.name}
-            </div>
-        `;
-
-        contador++;
-    }, 80);
-
-    setTimeout(() => {
-        clearInterval(efeito);
-
-        const indiceAleatorio = Math.floor(Math.random() * gamesDB.length);
-        const jogoSorteado = gamesDB[indiceAleatorio];
-
-        overlay.innerHTML = `
-            <div style="
-                font-size:70px;
-                color:gold;
-                text-shadow:0 0 30px gold;
-            ">
-                🏆 ${jogoSorteado.title || jogoSorteado.name}
-            </div>
-        `;
-
-        setTimeout(() => {
-            overlay.remove();
-            botao.style.pointerEvents = "auto";
-            openGameModal(jogoSorteado.id);
-        }, 1000);
-
-    }, 3000);
-}
-
-// Remove a tela de load assim que o site carregar completamente
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0';
-            loader.style.visibility = 'hidden';
-        }, 1200); // 1.2 segundos para dar tempo do usuário ver o nome brilhando
-    });
-
-const searchModal = document.getElementById('searchModal');
-const modalInput = document.getElementById('modalSearchInput');
-
-function openSearch() {
-    searchModal.classList.add('active');
-    // Foca automaticamente no campo de texto para o usuário já sair digitando
-    setTimeout(() => modalInput.focus(), 100); 
-}
-
-function closeSearch() {
-    searchModal.classList.remove('active');
-    modalInput.value = ''; // Limpa o campo ao fechar
-}
-
-// Fecha automaticamente se o usuário apertar a tecla ESC do teclado
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeSearch();
-    }
-});
-
-const searchBar = document.querySelector(".search-bar");
-const searchOverlay = document.getElementById("searchOverlay");
-const modalSearchInput = document.getElementById("modalSearchInput");
-const closeSearchBtn = document.getElementById("closeSearchBtn");
-
-searchBar.addEventListener("click", () => {
-    searchOverlay.classList.add("active");
-
-    setTimeout(() => {
-        modalSearchInput.focus();
-    }, 200);
-});
-
-closeSearchBtn.addEventListener("click", () => {
-    searchOverlay.classList.remove("active");
-});
-
-searchOverlay.addEventListener("click", (e) => {
-    if (e.target === searchOverlay) {
-        searchOverlay.classList.remove("active");
-    }
-});
-
-modalSearchInput.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-
-        const termo = this.value.toLowerCase().trim();
-
-        document.querySelectorAll(".game-card").forEach(card => {
-
-            const titulo = card
-                .querySelector(".game-title")
-                .textContent
-                .toLowerCase();
-
-            if (titulo.includes(termo)) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        searchOverlay.classList.remove("active");
-
-        window.scrollTo({
-            top: document.querySelector(".category-section").offsetTop - 80,
-            behavior: "smooth"
-        });
-    }
-});
-
-function resetarCards() {
-    document.querySelectorAll(".game-card").forEach(card => {
-        card.style.display = "";
-    });
-}
-
-
-
     </script>
 </body>
 </html>
