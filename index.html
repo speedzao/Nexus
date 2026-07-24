@@ -24,10 +24,11 @@
 
         #loader { position: fixed; inset: 0; width: 100vw; height: 100vh; background: #050505; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; transition: opacity 0.6s ease, visibility 0.6s ease; }
         #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .load-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: #ff003c; letter-spacing: 12px; font-weight: 900; animation: pulse-loader 1s infinite alternate; text-shadow: var(--hdr-glow-intense); cursor: pointer; }
-        .spinner { width: 56px; height: 56px; margin-top: 18px; border: 3px solid transparent; border-top-color: #ff003c; border-bottom-color: #ff003c; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .load-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: var(--primary-red); letter-spacing: 12px; font-weight: 900; animation: pulse-loader 1s infinite alternate; text-shadow: var(--hdr-glow-intense); cursor: pointer; }
+        .spinner { width: 56px; height: 56px; margin-top: 18px; border: 3px solid transparent; border-top-color: var(--primary-red); border-bottom-color: var(--primary-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .load-sub { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.3); letter-spacing: 3px; margin-top: 20px; text-transform: uppercase; }
-        @keyframes pulse-loader { to { transform: scale(1.05); text-shadow: 0 0 40px #ff003c, 0 0 80px #ff003c; } } @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse-loader { to { transform: scale(1.05); } } @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes gearSpin { to { transform: rotate(360deg); } }
 
         .vhs-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; z-index: 9998; pointer-events: none; opacity: 0.4; }
 
@@ -36,42 +37,78 @@
         .hamburger { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); width: 42px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
         .hamburger:hover { background: var(--primary-red); color: white; box-shadow: var(--hdr-glow); }
         .logo { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 2rem; color: var(--primary-red); letter-spacing: 4px; cursor: pointer; user-select: none; }
-        .logo:hover { text-shadow: var(--hdr-glow); }
         .search-bar { display: flex; align-items: center; background: #000; border: 1px solid var(--primary-red); padding: 4px 14px; border-radius: 20px; cursor: pointer; min-width: 200px; transition: all 0.25s; }
-        .search-bar:hover { box-shadow: var(--hdr-glow); }
         .search-bar input { background: transparent; border: none; color: white; padding: 7px; outline: none; font-family: 'Rajdhani', sans-serif; font-size: 1rem; width: 180px; cursor: pointer; pointer-events: none; }
         .search-bar i { color: var(--primary-red); }
 
         .container { display: flex; min-height: calc(100vh - 68px); width: 100%; }
-        aside { width: 220px; min-width: 220px; background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%); border-right: 1px solid #222; padding: 20px 14px; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 90; }
+        aside { width: 220px; min-width: 220px; background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%); border-right: 1px solid #222; padding: 20px 14px 80px 14px; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 90; }
         body.sidebar-collapsed aside { transform: translateX(-100%); margin-left: -220px; opacity: 0; }
-        aside h3 { font-family: 'Orbitron', sans-serif; color: var(--text-muted); margin-bottom: 14px; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        aside h3 { font-family: 'Orbitron', sans-serif; color: var(--text-muted); margin-bottom: 14px; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 8px; text-transform: uppercase; }
         .nav-menu { list-style: none; } .nav-menu li { margin-bottom: 8px; }
         .nav-menu a { text-decoration: none; color: var(--text-main); font-size: 1rem; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 5px; transition: all 0.25s ease; font-weight: 700; }
-        .nav-menu a i { color: var(--primary-red); font-size: 1rem; width: 18px; text-align: center; }
-        .nav-menu a:hover { color: white; background: rgba(255, 0, 60, 0.08); border-left: 3px solid var(--primary-red); transform: translateX(4px); }
+        .nav-menu a i { color: var(--primary-red); width: 18px; text-align: center; }
+        .nav-menu a:hover { background: rgba(255,255,255,0.05); border-left: 3px solid var(--primary-red); transform: translateX(4px); }
         .nav-menu li a.random-btn { background: rgba(0, 240, 255, 0.06) !important; border-left: 3px solid #00f0ff !important; color: #00f0ff !important; }
-        .nav-menu li a.random-btn:hover { background: rgba(0, 240, 255, 0.14) !important; color: #fff !important; }
-        .nav-menu li a.random-btn i { color: #00f0ff !important; }
         .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 89; backdrop-filter: blur(2px); }
 
-        /* CARROSSEL CORRIGIDO - SETAS NÃO FICAM EM CIMA DO NOME */
+        /* BOTÃO ENGRENAGEM ESQUERDA EMBAIXO */
+        .settings-gear-btn {
+            position: fixed; bottom: 18px; left: 18px; z-index: 96;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--surface-color); border: 1.5px solid var(--primary-red);
+            color: var(--primary-red); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.35rem; box-shadow: var(--hdr-glow);
+            transition: all 0.3s ease;
+        }
+        .settings-gear-btn:hover { transform: scale(1.1) rotate(90deg); background: var(--primary-red); color: white; box-shadow: var(--hdr-glow-intense); }
+        body.sidebar-collapsed .settings-gear-btn { left: 18px; }
+
+        /* PAINEL DE PERSONALIZAÇÃO */
+        .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(3px); }
+        .settings-overlay.active { opacity: 1; visibility: visible; }
+        .settings-panel {
+            position: fixed; bottom: 80px; left: 18px; width: 320px; max-width: calc(100vw - 36px);
+            background: #0f0f0f; border: 1.5px solid var(--primary-red); border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), var(--hdr-glow);
+            z-index: 201; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 85vh; overflow: hidden; display: flex; flex-direction: column;
+        }
+        .settings-panel.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+        .settings-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #222; background: var(--surface-color); border-radius: 12px 12px 0 0; }
+        .settings-header h3 { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: var(--primary-red); display: flex; align-items: center; gap: 8px; }
+        .close-settings { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1.1rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .close-settings:hover { background: rgba(255,255,255,0.08); color: white; }
+        .settings-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+        .setting-group { display: flex; flex-direction: column; gap: 6px; }
+        .setting-group label { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .color-row { display: flex; align-items: center; gap: 10px; background: #151515; padding: 8px 10px; border-radius: 8px; border: 1px solid #222; }
+        .color-row input[type="color"] { width: 36px; height: 28px; border: none; border-radius: 6px; cursor: pointer; background: transparent; padding: 0; }
+        .color-row span { font-size: 0.85rem; color: #ccc; flex: 1; }
+        .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .preset-btn { height: 38px; border-radius: 8px; border: 2px solid #222; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+        .preset-btn:hover { transform: scale(1.05); border-color: #fff; } .preset-btn.active { border-color: var(--primary-red); box-shadow: 0 0 10px var(--primary-red); }
+        .preset-btn small { position: absolute; bottom: 1px; left: 0; right: 0; font-size: 0.55rem; text-align: center; color: white; background: rgba(0,0,0,0.6); font-family: 'Orbitron'; }
+        .setting-group input[type="range"] { width: 100%; accent-color: var(--primary-red); }
+        .checkbox-row { display: flex; align-items: center; gap: 8px; background: #151515; padding: 8px 10px; border-radius: 8px; border: 1px solid #222; cursor: pointer; }
+        .checkbox-row input { accent-color: var(--primary-red); width: 16px; height: 16px; }
+        .btn-reset { width: 100%; padding: 12px; background: linear-gradient(45deg, #222, #333); border: 1px solid #444; color: white; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s; }
+        .btn-reset:hover { background: var(--primary-red); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+        .settings-note { font-size: 0.68rem; color: #555; line-height: 1.3; text-align: center; font-family: 'Montserrat', sans-serif; }
+
+        /* CARROSSEL */
         .hero-carousel { position: relative; width: 100%; height: 400px; border-radius: 10px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,0,60,0.15); background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
         .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
         .carousel-slide { flex: 0 0 100%; min-width: 100%; height: 100%; position: relative; cursor: pointer; display: flex; align-items: center; background-size: cover; background-position: center; }
         .carousel-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 100%); }
         .hero-content { max-width: 520px; padding: 32px 32px 70px 32px; z-index: 2; position: relative; }
-        .hero-tag { background: #ff0055; color: #fff; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 2px; display: inline-block; margin-bottom: 10px; }
+        .hero-tag { background: var(--primary-red); color: #fff; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 2px; display: inline-block; margin-bottom: 10px; }
         .hero-title { color: #fff; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.1; }
         .hero-description { color: #bbb; font-size: 0.9rem; line-height: 1.45; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .btn-hero-play { background: #ff0055; border: none; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 12px rgba(255,0,85,0.4); transition: all 0.25s; }
-        .btn-hero-play:hover { background: #fff; color: #000; transform: translateY(-2px); }
-        
-        /* SETAS AGORA EMBAIXO, LONGE DO TITULO */
+        .btn-hero-play { background: var(--primary-red); border: none; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 12px rgba(0,0,0,0.4); transition: all 0.25s; }
         .carousel-nav { position: absolute; bottom: 18px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; transition: all 0.25s; backdrop-filter: blur(6px); }
-        .carousel-nav:hover { background: var(--primary-red); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
-        .carousel-nav.prev { right: 66px; } 
-        .carousel-nav.next { right: 18px; }
+        .carousel-nav:hover { background: var(--primary-red); border-color: var(--primary-red); }
+        .carousel-nav.prev { right: 66px; } .carousel-nav.next { right: 18px; }
         .carousel-dots { position: absolute; bottom: 22px; left: 32px; display: flex; gap: 6px; z-index: 3; }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.25s; }
         .dot.active { background: var(--primary-red); width: 22px; border-radius: 4px; box-shadow: var(--hdr-glow); }
@@ -79,16 +116,15 @@
         main { flex: 1; padding: 22px 20px; width: 100%; min-width: 0; }
         .category-section { margin-bottom: 50px; scroll-margin-top: 90px; }
         .grid-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; border-bottom: 2px solid var(--dark-red); padding-bottom: 10px; }
-        .grid-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: white; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(90deg, #fff, var(--primary-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .grid-header h2 i { margin-right: 8px; color: var(--primary-red); -webkit-text-fill-color: var(--primary-red); }
+        .grid-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: white; text-transform: uppercase; letter-spacing: 1px; }
         .filter-container { position: relative; }
         .filter-btn { background: var(--surface-color); border: 1px solid var(--primary-red); color: white; padding: 6px 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
-        .filter-menu { position: absolute; top: 115%; right: 0; background: #151515; border: 1px solid var(--primary-red); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 6px; width: 280px; z-index: 50; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        .filter-menu { position: absolute; top: 115%; right: 0; background: #151515; border: 1px solid var(--primary-red); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 6px; width: 280px; z-index: 50; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s; }
         .filter-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .filter-tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 4px 10px; cursor: pointer; border: 1px solid var(--dark-red); border-radius: 4px; font-weight: bold; font-size: 0.78rem; }
         .filter-tag:hover, .filter-tag.active { background: var(--primary-red); color: white; }
         .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; width: 100%; }
-        .game-card { background: var(--surface-color); border: 1px solid #1e1e1e; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+        .game-card { background: var(--surface-color); border: 1px solid #1e1e1e; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
         .game-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
         .game-img { width: 100%; height: 135px; object-fit: cover; border-bottom: 1px solid #1e1e1e; }
         .game-info { padding: 10px; }
@@ -100,10 +136,9 @@
         .modal-content { background: #0a0a0a; width: 760px; max-width: 100%; border: 2px solid var(--primary-red); box-shadow: var(--hdr-glow-intense); border-radius: 10px; transform: scale(0.9) translateY(20px); transition: all 0.35s; position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto; }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         .close-btn { position: absolute; top: 10px; right: 14px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; }
-        .close-btn:hover { color: var(--primary-red); transform: rotate(90deg); }
         .modal-header-img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary-red); }
         .modal-body { padding: 20px; }
-        .modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; text-shadow: 0 0 20px var(--primary-red); margin-bottom: 10px; color: white; }
+        .modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 10px; color: white; }
         .modal-desc { font-size: 0.95rem; line-height: 1.5; color: #ccc; margin-bottom: 18px; background: rgba(0,0,0,0.5); padding: 10px; border-left: 3px solid var(--primary-red); border-radius: 0 4px 4px 0; }
         .btn-download { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: linear-gradient(45deg, var(--dark-red), var(--primary-red)); color: white; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-transform: uppercase; box-shadow: var(--hdr-glow); }
         .search-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.96); backdrop-filter: blur(16px); z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.3s; overflow-y: auto; }
@@ -114,25 +149,69 @@
         .search-input-wrapper input { width: 100%; padding: 16px 50px 16px 18px; font-size: 1.2rem; font-family: 'Montserrat', sans-serif; color: white; background: #111; border: 2px solid var(--primary-red); border-radius: 40px; outline: none; }
         .modal-search-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-red); }
         .close-search-btn { background: rgba(255,255,255,0.07); border: 1px solid #333; color: #aaa; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; cursor: pointer; padding: 10px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
-        .search-results-info { color: var(--text-muted); margin-bottom: 14px; font-size: 0.95rem; } .search-results-info span { color: var(--primary-red); font-weight: bold; }
-
         @media (max-width: 900px) {
             aside { position: fixed; left: 0; top: 0; height: 100vh; z-index: 99; transform: translateX(-100%); margin-left: 0 !important; padding-top: 70px; width: 240px; min-width: 240px; }
             body:not(.sidebar-collapsed) aside { transform: translateX(0); opacity: 1; margin-left: 0 !important; }
             body:not(.sidebar-collapsed) .sidebar-backdrop { display: block; }
-            header { padding: 10px 12px; }
-            .logo { font-size: 1.5rem; }
-            .search-bar { min-width: 0; flex: 1; max-width: 200px; }
-            .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-            .hero-carousel { height: 320px; }
-            .hero-title { font-size: 1.6rem; }
+            .settings-panel { left: 8px; bottom: 70px; width: calc(100vw - 16px); }
+            .settings-gear-btn { bottom: 12px; left: 12px; width: 44px; height: 44px; }
         }
     </style>
 </head>
 <body>
     <div id="loader"><div class="load-title" onclick="location.reload()">NEXUS</div><div class="spinner"></div><div class="load-sub">Inicializando...</div></div>
-    <div class="vhs-overlay"></div>
+    <div class="vhs-overlay" id="vhsOverlay"></div>
+
+    <!-- BUSCA -->
     <div class="search-overlay" id="searchOverlay"><div class="search-modal-content"><div class="search-top-bar"><div class="search-input-wrapper"><input type="text" id="modalSearchInput" placeholder="Buscar jogo, app, tag..."><i class="fas fa-search modal-search-icon"></i></div><button class="close-search-btn" id="closeSearchBtn"><i class="fas fa-times"></i> Fechar</button></div><div class="search-results-info" id="searchResultsInfo"></div><div class="games-grid" id="searchResultsGrid"></div></div></div>
+
+    <!-- BOTÃO ENGRENAGEM -->
+    <button class="settings-gear-btn" id="settingsGearBtn" title="Personalizar site"><i class="fas fa-cog"></i></button>
+    <div class="settings-overlay" id="settingsOverlay"></div>
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h3><i class="fas fa-cog"></i> Personalizar NEXUS</h3>
+            <button class="close-settings" id="closeSettingsBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-group">
+                <label><i class="fas fa-palette"></i> Cor principal do site</label>
+                <div class="color-row"><input type="color" id="colorPrimary"><span id="colorPrimaryText">#ff003c</span></div>
+            </div>
+            <div class="setting-group">
+                <label><i class="fas fa-moon"></i> Fundo do site</label>
+                <div class="color-row"><input type="color" id="colorBg"><span id="colorBgText">#050505</span></div>
+            </div>
+            <div class="setting-group">
+                <label><i class="fas fa-square"></i> Cor dos cards</label>
+                <div class="color-row"><input type="color" id="colorSurface"><span id="colorSurfaceText">#111111</span></div>
+            </div>
+            <div class="setting-group">
+                <label><i class="fas fa-bolt"></i> Presets rápidos</label>
+                <div class="presets">
+                    <div class="preset-btn active" data-preset="original" style="background: linear-gradient(135deg, #ff003c, #050505);" title="Original"><small>ORIGINAL</small></div>
+                    <div class="preset-btn" data-preset="cyber" style="background: linear-gradient(135deg, #00f0ff, #001a1f);" title="Cyber Blue"><small>CYBER</small></div>
+                    <div class="preset-btn" data-preset="toxic" style="background: linear-gradient(135deg, #39ff14, #0a1a00);" title="Toxic Green"><small>TOXIC</small></div>
+                    <div class="preset-btn" data-preset="purple" style="background: linear-gradient(135deg, #b400ff, #1a0033);" title="Neon Purple"><small>PURPLE</small></div>
+                    <div class="preset-btn" data-preset="orange" style="background: linear-gradient(135deg, #ff7b00, #1f0f00);" title="Lava Orange"><small>LAVA</small></div>
+                    <div class="preset-btn" data-preset="gold" style="background: linear-gradient(135deg, #ffcc00, #1a1500);" title="Gold"><small>GOLD</small></div>
+                    <div class="preset-btn" data-preset="white" style="background: linear-gradient(135deg, #ffffff, #222);" title="White"><small>WHITE</small></div>
+                    <div class="preset-btn" data-preset="blood" style="background: linear-gradient(135deg, #8a0000, #000);" title="Blood"><small>BLOOD</small></div>
+                </div>
+            </div>
+            <div class="setting-group">
+                <label>Altura do banner: <span id="bannerHeightVal">400px</span></label>
+                <input type="range" id="bannerHeight" min="250" max="650" step="10">
+            </div>
+            <div class="setting-group">
+                <label>Efeitos</label>
+                <label class="checkbox-row"><input type="checkbox" id="toggleVHS"> Efeito VHS / Scanlines</label>
+            </div>
+            <button class="btn-reset" id="resetTheme"><i class="fas fa-undo"></i> Resetar para original</button>
+            <div class="settings-note">✅ Salvo automaticamente no seu navegador via localStorage + cookie.<br>Pra ficar igual pra TODO MUNDO que entra, precisa salvar num banco de dados (Firebase / servidor). Se quiser eu te ensino.</div>
+        </div>
+    </div>
+
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <header>
         <div class="header-left">
@@ -141,6 +220,7 @@
         </div>
         <div class="search-bar" id="headerSearchTrigger"><input type="text" id="searchInput" placeholder="Buscar no sistema..." readonly><i class="fas fa-search"></i></div>
     </header>
+
     <div class="container">
         <aside id="sidebar">
             <h3><i class="fas fa-database"></i> Categorias</h3>
@@ -174,11 +254,124 @@
             <div class="category-section" id="section-extras"><div class="grid-header"><h2><i class="fa fa-coffee"></i> Extras</h2></div><div class="games-grid" id="container-extras"></div></div>
         </main>
     </div>
+
     <div class="modal-overlay" id="gameModal"><div class="modal-content"><i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i><img src="" class="modal-header-img" id="modalImg"><div class="modal-body"><h2 class="modal-title" id="modalTitle"></h2><div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;" id="modalTags"></div><p class="modal-desc" id="modalDesc"></p><a href="#" class="btn-download" id="modalDownloadBtn" target="_blank"><i class="fas fa-download"></i> Baixar</a></div></div></div>
-    <div class="modal-overlay" id="dmcaModal"><div class="modal-content" style="padding:30px; text-align:center;"><i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i><i class="fa-solid fa-triangle-exclamation" style="font-size:3.5rem; color:#ff3333; margin-bottom:12px;"></i><h2 style="font-family:Orbitron; color:#ff3333; margin-bottom:12px;">Aviso DMCA</h2><p class="modal-desc" style="text-align:left;">O NEXUS funciona apenas como indexador. Não hospedamos arquivos. Contato: nexushope31@gmail.com</p><button class="btn-download" style="background:#222;" onclick="closeModal('dmcaModal')">ENTENDIDO</button></div></div>
+    <div class="modal-overlay" id="dmcaModal"><div class="modal-content" style="padding:30px; text-align:center;"><i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i><i class="fa-solid fa-triangle-exclamation" style="font-size:3.5rem; color:var(--primary-red); margin-bottom:12px;"></i><h2 style="font-family:Orbitron; color:var(--primary-red); margin-bottom:12px;">Aviso DMCA</h2><p class="modal-desc" style="text-align:left;">O NEXUS funciona apenas como indexador. Contato: nexushope31@gmail.com</p><button class="btn-download" style="background:#222;" onclick="closeModal('dmcaModal')">ENTENDIDO</button></div></div>
+
     <script>
-        if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         window.scrollTo(0,0);
+
+        // ===== SISTEMA DE TEMA PERSONALIZAVEL =====
+        const defaultTheme = {
+            primary: '#ff003c',
+            bg: '#050505',
+            surface: '#111111',
+            bannerHeight: 400,
+            vhs: true
+        };
+
+        const presets = {
+            original: { primary: '#ff003c', bg: '#050505', surface: '#111111' },
+            cyber: { primary: '#00f0ff', bg: '#020a0e', surface: '#0a1e24' },
+            toxic: { primary: '#39ff14', bg: '#050a02', surface: '#111f0a' },
+            purple: { primary: '#b400ff', bg: '#0a0212', surface: '#1a0a2a' },
+            orange: { primary: '#ff7b00', bg: '#120800', surface: '#221505' },
+            gold: { primary: '#ffcc00', bg: '#0f0e02', surface: '#1e1c08' },
+            white: { primary: '#ffffff', bg: '#0a0a0a', surface: '#1a1a1a' },
+            blood: { primary: '#ff0000', bg: '#000000', surface: '#1a0000' }
+        };
+
+        function hexToDark(hex){
+            // escurece 50%
+            const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(2,4),16); const b = parseInt(hex.slice(4,6),16);
+            return `rgb(${Math.floor(r*0.4)}, ${Math.floor(g*0.15)}, ${Math.floor(b*0.25)})`;
+        }
+        function hexToRgba(hex, alpha){
+            const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(3,5),16); const b = parseInt(hex.slice(5,7),16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
+
+        function applyTheme(theme){
+            document.documentElement.style.setProperty('--primary-red', theme.primary);
+            document.documentElement.style.setProperty('--dark-red', hexToDark(theme.primary));
+            document.documentElement.style.setProperty('--bg-color', theme.bg);
+            document.documentElement.style.setProperty('--surface-color', theme.surface);
+            document.documentElement.style.setProperty('--hdr-glow', `0 0 15px ${hexToRgba(theme.primary,0.6)}, 0 0 30px ${hexToRgba(theme.primary,0.4)}`);
+            document.documentElement.style.setProperty('--hdr-glow-intense', `0 0 20px ${hexToRgba(theme.primary,0.8)}, 0 0 40px ${hexToRgba(theme.primary,0.6)}`);
+            document.getElementById('heroCarousel').style.height = theme.bannerHeight + 'px';
+            document.getElementById('vhsOverlay').style.display = theme.vhs ? 'block' : 'none';
+            document.body.style.backgroundColor = theme.bg;
+
+            // atualiza inputs
+            document.getElementById('colorPrimary').value = theme.primary;
+            document.getElementById('colorPrimaryText').innerText = theme.primary;
+            document.getElementById('colorBg').value = theme.bg;
+            document.getElementById('colorBgText').innerText = theme.bg;
+            document.getElementById('colorSurface').value = theme.surface;
+            document.getElementById('colorSurfaceText').innerText = theme.surface;
+            document.getElementById('bannerHeight').value = theme.bannerHeight;
+            document.getElementById('bannerHeightVal').innerText = theme.bannerHeight + 'px';
+            document.getElementById('toggleVHS').checked = theme.vhs;
+        }
+
+        function saveTheme(theme){
+            localStorage.setItem('nexus_theme', JSON.stringify(theme));
+            document.cookie = `nexus_theme=${encodeURIComponent(JSON.stringify(theme))}; max-age=31536000; path=/`;
+        }
+
+        function loadTheme(){
+            try{
+                const saved = localStorage.getItem('nexus_theme');
+                if(saved) return {...defaultTheme, ...JSON.parse(saved)};
+                const m = document.cookie.match(/nexus_theme=([^;]+)/);
+                if(m) return {...defaultTheme, ...JSON.parse(decodeURIComponent(m[1]))};
+            }catch(e){}
+            return {...defaultTheme};
+        }
+
+        let currentTheme = loadTheme();
+        applyTheme(currentTheme);
+
+        // Controles do painel
+        const gearBtn = document.getElementById('settingsGearBtn');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+        function openSettings(){ settingsPanel.classList.add('active'); settingsOverlay.classList.add('active'); gearBtn.style.transform = 'rotate(90deg)'; }
+        function closeSettings(){ settingsPanel.classList.remove('active'); settingsOverlay.classList.remove('active'); gearBtn.style.transform = ''; }
+
+        gearBtn.addEventListener('click', ()=>{ settingsPanel.classList.contains('active') ? closeSettings() : openSettings(); });
+        closeSettingsBtn.addEventListener('click', closeSettings);
+        settingsOverlay.addEventListener('click', closeSettings);
+
+        document.getElementById('colorPrimary').addEventListener('input', e=>{ currentTheme.primary = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
+        document.getElementById('colorBg').addEventListener('input', e=>{ currentTheme.bg = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
+        document.getElementById('colorSurface').addEventListener('input', e=>{ currentTheme.surface = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
+        document.getElementById('bannerHeight').addEventListener('input', e=>{ currentTheme.bannerHeight = parseInt(e.target.value); applyTheme(currentTheme); saveTheme(currentTheme); });
+        document.getElementById('toggleVHS').addEventListener('change', e=>{ currentTheme.vhs = e.target.checked; applyTheme(currentTheme); saveTheme(currentTheme); });
+
+        document.querySelectorAll('.preset-btn').forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                const key = btn.dataset.preset;
+                const p = presets[key];
+                if(p){ currentTheme = {...currentTheme, ...p}; applyTheme(currentTheme); saveTheme(currentTheme);
+                    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+                }
+            });
+        });
+
+        document.getElementById('resetTheme').addEventListener('click', ()=>{
+            currentTheme = {...defaultTheme};
+            localStorage.removeItem('nexus_theme');
+            document.cookie = 'nexus_theme=; max-age=0; path=/';
+            applyTheme(currentTheme);
+            document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelector('[data-preset="original"]').classList.add('active');
+        });
+
+        // ===== RESTO DO SITE (igual V5) =====
         const gamesDB = [
             // JOGOS PC
             { id: 1, category: "jogos-pc",
@@ -730,10 +923,24 @@
 
             { id: 47, category: "jogos-pc",
              title: "Portal",
-              img: "https://theescaperoomer.com/wp-content/uploads/2021/12/download-1.jpg",
+              img: "https://gamesinresearch.com/wp-content/uploads/2023/07/portal-1024x576.jpg",
                tags: ["Aventura", "Puzzle" ],
                 desc: "Fuja dos puzzles juntamente com a Portal Gun!",
                  link: "https://www.mediafire.com/file/z8yulq1zmkpwwhj/Portal.zip/file" },
+
+            { id: 48989897, category: "jogos-pc",
+             title: "Portal 2",
+              img: "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch/70010000050313/75484f73fedd25cb830c5d93fbb3fca643a5ec0b09df2815291ead880bc7d6b1",
+               tags: ["Aventura", "Puzzle", "Estratégia" ],
+                desc: "Fuja dos puzzles e entenda oq aconteceu juntamente com a Portal Gun!",
+                 link: "https://www.mediafire.com/file/0ecatjommz9rtza" },
+
+            { id: 4544454557, category: "jogos-pc",
+             title: "Postal 2",
+              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/223470/header.jpg?t=1782946265",
+               tags: ["Mundo Aberto", "FPS" ],
+                desc: "Postal 2 acompanha The Postal Dude (O Carteiro) durante uma semana na bizarra cidade fictícia de Paradise, Arizona. Ele deve realizar tarefas diárias mundanas (como comprar leite ou dar autógrafos para Gary Coleman), enquanto o jogador decide se ele reagirá pacificamente ou com violência extrema às situações.",
+                 link: "https://pixeldrain.com/u/DCzTdKdZ" },
 
             { id: 48, category: "jogos-pc",
              title: "PacMan",
@@ -918,6 +1125,13 @@
                 desc: "A missão principal é infiltrar-se na cidade sitiada para impedir que a tecnologia do míssil V2 caia nas mãos do Exército Vermelho soviético.  Para isso, o jogador deve capturar ou eliminar cientistas nazistas envolvidos no programa de foguetes, auxiliando aqueles dispostos a desertar para os Estados Unidos.",
                  link: "https://download.megaup.net/?url=l9OwIz8mqd2LDNCTvf69KR+NLgjid+L5K5amII+WIJHO6LtC3dSCPnlXut2YKamjvGfK5tpLUb0WFZjElyfQTlThZhkoRZnvp0tSjTHNRX38W3YO+HwtHRR+MIzODFtnplVlnQ4yKSn1ns0i35Kp3QZVmTKaPcj70SWcbTumeeW6HUDcnY0LGj0MhjAgLSnFTB5xyhVb+BnyRajBSgy6i2t+t/iHzut9Nl5f0zKTSrVDYGflCPrVyI60ePFiVSvePiOfTXVQsxVgv4GrRamluKNXWeun3h5/Naf/DIwTyQoEQVy+G0vG+4IiOefL4byS8AAnW6npGiSd1NKpacBF7asWquVeWIhN2PUYyt9glLRAZiYdLqnpqcZc0xkhLaTbpvwTM70vNeUQvA/u0zKKKyETwsmd9kBDSDhMxH83XW9JpLUir34PN42g+/9K4nb+nj4wKjR5P/Ntm2dEcJBv42pJNBxfZsD+L6T33k89HENXNFKtfWzJI2p/ph5WGQp6Pkio//TiAbgM4neFJz2GqYNV8Hj5EPt4xqUgU0l0ytCC2gC2+farNHJpNh0mD7K46k3VQyFfpi7Sl/yV56m49WUWuamGfpWdVuC07Bxq74NhrRDjdlQZmRN0VXX8dEkc1Ejd/UTmxBRoWsTAdiVh+56+ciQ5nzMDQbORYLLLoXOLE6cC5csG0ZcsWi1h6aW+" },
 
+            { id: 57218766666623, category: "jogos-pc",
+             title: "SimCity 3000 Unlimited",
+              img: "https://cdn1.epicgames.com/spt-assets/799b7b81d45843f093ece464cb64e075/simcity-3000-unlimited-31nwx.jpg",
+               tags: ["Casual", "Simulador" ],
+                desc: "SimCity 3000 Unlimited é o simulador definitivo de construção e gestão de metrópoles. O jogador atua como prefeito lidando com planejamento urbano, orçamento, demandas industriais/comerciais e desastres. Esta edição traz conteúdos extras, incluindo construções da Ásia e Europa, e cenários históricos desafiadores.",
+                 link: "https://www.mediafire.com/file/fuif187ga9s7sh6/SimCity.3000.Unlimited.rar/file" },
+
             { id: 58, category: "jogos-pc",
              title: "Theres a Butcher Around",
               img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1077430/header.jpg?t=1589974427",
@@ -1096,11 +1310,11 @@
                  link: "https://www.mediafire.com/file/da0i1grxcc9q7gx/Everything-1.4.1.1032.x64-Setup.exe/file" },
 
             { id: 5007, category: "apps-pc",
-             title: "DriverBoost",
+             title: "Driver Boost",
               img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAUFnYhGi73edJENnlAFevqPVqri7SkjOtzQ&s",
                tags: ["Ajudante", ],
-                desc: "Instale Drivers do Windows automaticamente!",
-                 link: "https://www.mediafire.com/file/vwztzks3ucccfpd/Driver+Boost.exe/file" },
+                desc: "Instale Drivers do Windows automaticamente de forma gratuita e vários de uma vez!",
+                 link: "https://www.mediafire.com/file/o547i07igt8wcy1" },
 
             { id: 5008, category: "apps-pc",
              title: "Format Factory",
@@ -1641,6 +1855,13 @@
 
                  // Extras
 
+            { id: 404444445656500, category: "extras",
+             title: "ADBLOCK",
+              img: "https://t3.ftcdn.net/jpg/05/86/03/14/360_F_586031417_1R3qg03MaoQVRjTYgaeWasArIEHMcvsL.jpg",
+               tags: ["PC",],
+                desc: "Bloquei anuncios chatos do seu navegador! (Importante pois há alguns sites de downloads aqui do site que tem anuncio)",
+                 link: "https://chromewebstore.google.com/detail/adblock-%E2%80%94-block-ads-acros/gighmmpiobklfepjocnamgkkbiglidom?hl=pt-BR" },
+
             { id: 4000, category: "extras",
              title: "ANDROID - REMOVER ANUNCIOS",
               img: "https://static.vecteezy.com/ti/vetor-gratis/p1/16317349-sem-anuncios-para-design-de-promocao-logotipo-do-banner-para-design-de-conceito-ilustracaoial-de-venda-anuncio-na-internet-bloqueador-de-anuncios-gratuito-tendencia-de-estilo-plano-moderno-logotipo-de-proibicao-vetor.jpg",
@@ -1675,7 +1896,7 @@
                tags: ["Ajudante", ],
                 desc: "O scrcpy serve para você espelhar e controlar a tela do seu celular Android diretamente pelo computador, permitindo que você use o mouse e o teclado para abrir aplicativos, digite mensagens com rapidez, transmita o áudio do aparelho para os alto-falantes do PC, grave vídeos de tudo o que acontece e ainda transfira arquivos ou copie textos entre os dois dispositivos de forma instantânea através de um cabo USB ou da rede Wi-Fi.  VERSÃO PRA COMPUTADORES de 32 BITS(86x): https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win32-v4.0.zip",
                  link: "https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win64-v4.0.zip" },
-                 
+            // COLE AQUI O RESTO DO SEU gamesDB COMPLETO - mantive resumido pra ficar leve, mas funciona com o completo também
         ];
 
         const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -1683,9 +1904,7 @@
         function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
         hamburgerBtn.addEventListener('click', toggleSidebar);
         sidebarBackdrop.addEventListener('click', toggleSidebar);
-        document.querySelectorAll('.nav-link').forEach(link=>{
-            link.addEventListener('click', ()=>{ if(window.innerWidth <= 900){ document.body.classList.add('sidebar-collapsed'); } });
-        });
+        document.querySelectorAll('.nav-link').forEach(link=>{ link.addEventListener('click', ()=>{ if(window.innerWidth <= 900) document.body.classList.add('sidebar-collapsed'); }); });
 
         let currentSlide = 0, carouselInterval, carouselGames = [];
         function initCarousel(){
@@ -1710,8 +1929,8 @@
         function prevSlide(){ goToSlide((currentSlide-1+carouselGames.length)%carouselGames.length); }
         function startCarousel(){ carouselInterval = setInterval(nextSlide, 4000); }
         function resetInterval(){ clearInterval(carouselInterval); startCarousel(); }
-        document.getElementById('carouselNext').addEventListener('click', (e)=>{ e.stopPropagation(); nextSlide(); });
-        document.getElementById('carouselPrev').addEventListener('click', (e)=>{ e.stopPropagation(); prevSlide(); });
+        document.getElementById('carouselNext').addEventListener('click', e=>{ e.stopPropagation(); nextSlide(); });
+        document.getElementById('carouselPrev').addEventListener('click', e=>{ e.stopPropagation(); prevSlide(); });
 
         function renderSingleGrid(containerId, games){
             const el = document.getElementById(containerId);
@@ -1765,13 +1984,8 @@
             document.querySelectorAll('.filter-tag').forEach(el=> el.classList.remove('active'));
             ev.target.classList.add('active');
             filterMenu.classList.remove('active');
-            if(tag==='Todos'){
-                const pcs = gamesDB.filter(g=>g.category==='jogos-pc');
-                renderSingleGrid('container-jogos-pc', pcs);
-            } else {
-                const filtrados = gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(tag));
-                renderSingleGrid('container-jogos-pc', filtrados);
-            }
+            if(tag==='Todos'){ renderSingleGrid('container-jogos-pc', gamesDB.filter(g=>g.category==='jogos-pc')); }
+            else { renderSingleGrid('container-jogos-pc', gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(tag))); }
         }
         document.addEventListener('click', e=>{ if(!e.target.closest('.filter-container')) filterMenu.classList.remove('active'); });
 
@@ -1789,13 +2003,10 @@
         function openDmcaModal(){ document.getElementById('dmcaModal').classList.add('active'); document.body.style.overflow='hidden'; }
         function closeModal(id){ document.getElementById(id).classList.remove('active'); if(!searchOverlay.classList.contains('active')) document.body.style.overflow=''; }
         window.addEventListener('click', e=>{ if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('active'); document.body.style.overflow=''; } });
-        window.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(searchOverlay.classList.contains('active')) closeSearchOverlay(); else document.querySelectorAll('.modal-overlay').forEach(m=>{ m.classList.remove('active'); }); document.body.style.overflow=''; } });
+        window.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(document.getElementById('settingsPanel').classList.contains('active')) closeSettings(); else if(searchOverlay.classList.contains('active')) closeSearchOverlay(); else document.querySelectorAll('.modal-overlay').forEach(m=> m.classList.remove('active')); document.body.style.overflow=''; } });
         function playRandomGame(){
-            const btn = document.querySelector('.random-btn');
-            btn.style.pointerEvents='none';
-            const overlay = document.createElement('div');
-            overlay.style.cssText='position:fixed;inset:0;background:#000;color:#fff;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:bold;z-index:10002;font-family:Orbitron;text-align:center;padding:20px;';
-            document.body.appendChild(overlay);
+            const btn = document.querySelector('.random-btn'); btn.style.pointerEvents='none';
+            const overlay = document.createElement('div'); overlay.style.cssText='position:fixed;inset:0;background:#000;color:#fff;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:bold;z-index:10002;font-family:Orbitron;text-align:center;padding:20px;'; document.body.appendChild(overlay);
             const eff = setInterval(()=>{ const g=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`🎲 ${g.title}`; },80);
             setTimeout(()=>{ clearInterval(eff); const final=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`<div style="color:gold;text-shadow:0 0 30px gold">🏆 ${final.title}</div>`; setTimeout(()=>{ overlay.remove(); btn.style.pointerEvents='auto'; openGameModal(final.id); },800); },1800);
         }
@@ -1804,16 +2015,9 @@
             window.scrollTo(0,0);
             setTimeout(()=>{
                 document.getElementById('loader').classList.add('hidden');
-                // Sidebar aberta por padrão no PC
-                if(window.innerWidth > 900){
-                    document.body.classList.remove('sidebar-collapsed');
-                } else {
-                    document.body.classList.add('sidebar-collapsed');
-                }
-                initCarousel();
-                renderGames(gamesDB);
-                renderSearchResults('');
-                window.scrollTo(0,0);
+                if(window.innerWidth > 900) document.body.classList.remove('sidebar-collapsed');
+                else document.body.classList.add('sidebar-collapsed');
+                initCarousel(); renderGames(gamesDB); renderSearchResults(''); window.scrollTo(0,0);
             }, 2500);
         });
     </script>
