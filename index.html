@@ -208,7 +208,7 @@
                 <label class="checkbox-row"><input type="checkbox" id="toggleVHS"> Efeito VHS / Scanlines</label>
             </div>
             <button class="btn-reset" id="resetTheme"><i class="fas fa-undo"></i> Resetar para original</button>
-            <div class="settings-note">✅ Salvo automaticamente no seu navegador via localStorage + cookie.<br>Pra ficar igual pra TODO MUNDO que entra, precisa salvar num banco de dados (Firebase / servidor). Se quiser eu te ensino.</div>
+            <div class="settings-note">✅ Salvo automaticamente no seu navegador.</div>
         </div>
     </div>
 
@@ -236,7 +236,7 @@
             <h3 style="margin-top: 22px;"><i class="fas fa-server"></i> Outros</h3>
             <ul class="nav-menu">
                 <li><a href="#" onclick="openDmcaModal()" style="color:#ff3333 !important;"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
-                <li><a href="#"><i class="fa-brands fa-discord"></i> Discord - Offline</a></li>
+                <li><a href="https://discord.gg/H7e8Z3AGkQ" style="color:#4733ff !important;"><i class="fa-brands fa-discord"></i>DISCORD</a></li>
             </ul>
         </aside>
         <main id="mainContent">
@@ -1918,7 +1918,7 @@
                 slide.className = 'carousel-slide';
                 slide.style.backgroundImage = `url('${game.img}')`;
                 slide.onclick = ()=> openGameModal(game.id);
-                slide.innerHTML = `<div class="hero-content"><span class="hero-tag">DESTAQUE</span><h1 class="hero-title">${game.title}</h1><p class="hero-description">${game.desc}</p><button class="btn-hero-play" onclick="event.stopPropagation(); openGameModal(${game.id})"><i class="fas fa-play"></i> VER JOGO</button></div>`;
+                slide.innerHTML = `<div class="hero-content"><span class="hero-tag">DESTAQUE</span><h1 class="hero-title">${game.title}</h1><p class="hero-description">${game.desc}</p><button class="btn-hero-play" onclick="event.stopPropagation(); openGameModal(${game.id})"><i class="fas fa-play"></i>CONFERIR</button></div>`;
                 track.appendChild(slide);
                 const dot = document.createElement('div'); dot.className = 'dot'+(idx===0?' active':''); dot.onclick=(e)=>{ e.stopPropagation(); goToSlide(idx); }; dots.appendChild(dot);
             });
