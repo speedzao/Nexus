@@ -6,7 +6,7 @@ Atualizações semanais, com jogos e aplicativos em alta!
 
 --------------------------------
 
-Versão Atual: V3.6 — 26.07.2026
+Versão Atual: V4.5 — 02.08.2026
 
 Site Oficial:
 https://speedzao.github.io/Nexus/
@@ -23,6 +23,6 @@ https://discord.gg/MSy5XsT4vW
 Novidades Da Atualização
 
 - Downloads Reparados
-- +10 novos jogos para PC
-- Alguns Bugs reparados
-- Novos Downloads
+- +5 jogos
+- Reparos de Bugs
+- Ultima atualização antes da versão final do site
