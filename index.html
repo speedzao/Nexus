@@ -1,378 +1,809 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - Downloader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #050505;
-            --surface-color: #111111;
-            --primary-red: #ff003c;
-            --dark-red: #8a0020;
-            --text-main: #f0f0f0;
-            --text-muted: #888;
-            --hdr-glow: 0 0 15px rgba(255, 0, 60, 0.6), 0 0 30px rgba(255, 0, 60, 0.4);
-            --hdr-glow-intense: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.6);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Rajdhani', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-color); } ::-webkit-scrollbar-thumb { background: var(--dark-red); border-radius: 5px; border: 1px solid var(--primary-red); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --bg-color: #050505;
+    --surface-color: #111111;
+    --primary-red: #ff003c;
+    --dark-red: #8a0020;
+    --text-main: #f0f0f0;
+    --text-muted: #888;
+    --lucky-bg: rgba(0,240,255,0.1);
+    --lucky-color: #00f0ff;
+    --lucky-border: #00f0ff;
+    --discord-bg: rgba(88,101,242,0.1);
+    --discord-color: #5865F2;
+    --discord-border: #5865F2;
+    --hdr-glow: 0 0 15px rgba(255, 0, 60, 0.6), 0 0 30px rgba(255, 0, 60, 0.4);
+    --hdr-glow-intense: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.6);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Rajdhani', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; transition: background-color .3s; }
+::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-color); } ::-webkit-scrollbar-thumb { background: var(--dark-red); border-radius: 5px; border: 1px solid var(--primary-red); }
 
-        #loader { position: fixed; inset: 0; width: 100vw; height: 100vh; background: #050505; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; transition: opacity 0.6s ease, visibility 0.6s ease; }
-        #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .load-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: var(--primary-red); letter-spacing: 12px; font-weight: 900; animation: pulse-loader 1s infinite alternate; text-shadow: var(--hdr-glow-intense); cursor: pointer; }
-        .spinner { width: 56px; height: 56px; margin-top: 18px; border: 3px solid transparent; border-top-color: var(--primary-red); border-bottom-color: var(--primary-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        .load-sub { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.3); letter-spacing: 3px; margin-top: 20px; text-transform: uppercase; }
-        @keyframes pulse-loader { to { transform: scale(1.05); } } @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes gearSpin { to { transform: rotate(360deg); } }
+#siteBg { position: fixed; inset: 0; z-index: -2; background-size: cover; background-position: center; background-repeat: no-repeat; transition: all .6s ease; opacity: 0; }
+#siteBg.active { opacity: 1; }
+#siteBg::after { content: ''; position: absolute; inset: 0; background: var(--bg-color); opacity: var(--bg-overlay-opacity, 0.82); }
+body.has-bg { background-color: transparent !important; }
+body.has-bg aside, body.has-bg header, body.has-bg .game-card { backdrop-filter: blur(12px); }
+body.has-bg .game-card { background: color-mix(in srgb, var(--surface-color) 85%, transparent); }
+body.has-bg header { background: color-mix(in srgb, var(--surface-color) 85%, transparent); }
 
-        .vhs-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; z-index: 9998; pointer-events: none; opacity: 0.4; }
+#loader { position: fixed; inset: 0; width: 100vw; height: 100vh; background: #050505; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; transition: opacity 0.6s ease, visibility 0.6s ease; }
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.load-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: var(--primary-red); letter-spacing: 12px; font-weight: 900; animation: pulse-loader 1s infinite alternate; text-shadow: var(--hdr-glow-intense); cursor: pointer; }
+.spinner { width: 56px; height: 56px; margin-top: 18px; border: 3px solid transparent; border-top-color: var(--primary-red); border-bottom-color: var(--primary-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.load-sub { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.3); letter-spacing: 3px; margin-top: 20px; text-transform: uppercase; }
+@keyframes pulse-loader { to { transform: scale(1.05); } } @keyframes spin { to { transform: rotate(360deg); } }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--surface-color); border-bottom: 2px solid var(--primary-red); box-shadow: var(--hdr-glow); position: sticky; top: 0; z-index: 100; gap: 15px; }
-        .header-left { display: flex; align-items: center; gap: 14px; }
-        .hamburger { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); width: 42px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
-        .hamburger:hover { background: var(--primary-red); color: white; box-shadow: var(--hdr-glow); }
-        .logo { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 2rem; color: var(--primary-red); letter-spacing: 4px; cursor: pointer; user-select: none; }
-        .search-bar { display: flex; align-items: center; background: #000; border: 1px solid var(--primary-red); padding: 4px 14px; border-radius: 20px; cursor: pointer; min-width: 200px; transition: all 0.25s; }
-        .search-bar input { background: transparent; border: none; color: white; padding: 7px; outline: none; font-family: 'Rajdhani', sans-serif; font-size: 1rem; width: 180px; cursor: pointer; pointer-events: none; }
-        .search-bar i { color: var(--primary-red); }
+.vhs-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; z-index: 9998; pointer-events: none; opacity: 0.4; }
 
-        .container { display: flex; min-height: calc(100vh - 68px); width: 100%; }
-        aside { width: 220px; min-width: 220px; background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%); border-right: 1px solid #222; padding: 20px 14px 80px 14px; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 90; }
-        body.sidebar-collapsed aside { transform: translateX(-100%); margin-left: -220px; opacity: 0; }
-        aside h3 { font-family: 'Orbitron', sans-serif; color: var(--text-muted); margin-bottom: 14px; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 8px; text-transform: uppercase; }
-        .nav-menu { list-style: none; } .nav-menu li { margin-bottom: 8px; }
-        .nav-menu a { text-decoration: none; color: var(--text-main); font-size: 1rem; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 5px; transition: all 0.25s ease; font-weight: 700; }
-        .nav-menu a i { color: var(--primary-red); width: 18px; text-align: center; }
-        .nav-menu a:hover { background: rgba(255,255,255,0.05); border-left: 3px solid var(--primary-red); transform: translateX(4px); }
-        .nav-menu li a.random-btn { background: rgba(0, 240, 255, 0.06) !important; border-left: 3px solid #00f0ff !important; color: #00f0ff !important; }
-        .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 89; backdrop-filter: blur(2px); }
+header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--surface-color); border-bottom: 2px solid var(--primary-red); box-shadow: var(--hdr-glow); position: sticky; top: 0; z-index: 100; gap: 15px; }
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.hamburger { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); width: 42px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
+.hamburger:hover { background: var(--primary-red); color: white; box-shadow: var(--hdr-glow); }
+.logo { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 2rem; color: var(--primary-red); letter-spacing: 4px; cursor: pointer; user-select: none; }
+.search-bar { display: flex; align-items: center; background: #000; border: 1px solid var(--primary-red); padding: 4px 14px; border-radius: 20px; cursor: pointer; min-width: 200px; transition: all 0.25s; }
+.search-bar input { background: transparent; border: none; color: white; padding: 7px; outline: none; font-family: 'Rajdhani', sans-serif; font-size: 1rem; width: 180px; cursor: pointer; pointer-events: none; }
+.search-bar i { color: var(--primary-red); }
 
-        /* BOTÃO ENGRENAGEM ESQUERDA EMBAIXO */
-        .settings-gear-btn {
-            position: fixed; bottom: 18px; left: 18px; z-index: 96;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: var(--surface-color); border: 1.5px solid var(--primary-red);
-            color: var(--primary-red); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 1.35rem; box-shadow: var(--hdr-glow);
-            transition: all 0.3s ease;
-        }
-        .settings-gear-btn:hover { transform: scale(1.1) rotate(90deg); background: var(--primary-red); color: white; box-shadow: var(--hdr-glow-intense); }
-        body.sidebar-collapsed .settings-gear-btn { left: 18px; }
+.user-btn { display: flex; align-items: center; gap: 8px; background: #000; border: 1px solid #333; color: white; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: .75rem; font-weight: 700; transition: all .25s; }
+.user-btn:hover { border-color: var(--primary-red); color: var(--primary-red); }
+.user-btn.logged { border-color: var(--primary-red); background: var(--surface-color); }
+.fav-count { background: var(--primary-red); color: white; font-size: .65rem; padding: 2px 6px; border-radius: 10px; margin-left: 4px; }
 
-        /* PAINEL DE PERSONALIZAÇÃO */
-        .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(3px); }
-        .settings-overlay.active { opacity: 1; visibility: visible; }
-        .settings-panel {
-            position: fixed; bottom: 80px; left: 18px; width: 320px; max-width: calc(100vw - 36px);
-            background: #0f0f0f; border: 1.5px solid var(--primary-red); border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8), var(--hdr-glow);
-            z-index: 201; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 85vh; overflow: hidden; display: flex; flex-direction: column;
-        }
-        .settings-panel.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
-        .settings-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #222; background: var(--surface-color); border-radius: 12px 12px 0 0; }
-        .settings-header h3 { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: var(--primary-red); display: flex; align-items: center; gap: 8px; }
-        .close-settings { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1.1rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .close-settings:hover { background: rgba(255,255,255,0.08); color: white; }
-        .settings-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-        .setting-group { display: flex; flex-direction: column; gap: 6px; }
-        .setting-group label { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .color-row { display: flex; align-items: center; gap: 10px; background: #151515; padding: 8px 10px; border-radius: 8px; border: 1px solid #222; }
-        .color-row input[type="color"] { width: 36px; height: 28px; border: none; border-radius: 6px; cursor: pointer; background: transparent; padding: 0; }
-        .color-row span { font-size: 0.85rem; color: #ccc; flex: 1; }
-        .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .preset-btn { height: 38px; border-radius: 8px; border: 2px solid #222; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-        .preset-btn:hover { transform: scale(1.05); border-color: #fff; } .preset-btn.active { border-color: var(--primary-red); box-shadow: 0 0 10px var(--primary-red); }
-        .preset-btn small { position: absolute; bottom: 1px; left: 0; right: 0; font-size: 0.55rem; text-align: center; color: white; background: rgba(0,0,0,0.6); font-family: 'Orbitron'; }
-        .setting-group input[type="range"] { width: 100%; accent-color: var(--primary-red); }
-        .checkbox-row { display: flex; align-items: center; gap: 8px; background: #151515; padding: 8px 10px; border-radius: 8px; border: 1px solid #222; cursor: pointer; }
-        .checkbox-row input { accent-color: var(--primary-red); width: 16px; height: 16px; }
-        .btn-reset { width: 100%; padding: 12px; background: linear-gradient(45deg, #222, #333); border: 1px solid #444; color: white; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s; }
-        .btn-reset:hover { background: var(--primary-red); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
-        .settings-note { font-size: 0.68rem; color: #555; line-height: 1.3; text-align: center; font-family: 'Montserrat', sans-serif; }
+.container { display: flex; min-height: calc(100vh - 68px); width: 100%; }
+aside { width: 220px; min-width: 220px; background: linear-gradient(180deg, var(--surface-color) 0%, var(--bg-color) 100%); border-right: 1px solid #222; padding: 20px 14px 80px 14px; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 90; }
+body.sidebar-collapsed aside { transform: translateX(-100%); margin-left: -220px; opacity: 0; }
+aside h3 { font-family: 'Orbitron', sans-serif; color: var(--text-muted); margin-bottom: 14px; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 8px; text-transform: uppercase; }
+.nav-menu { list-style: none; } .nav-menu li { margin-bottom: 8px; }
+.nav-menu a { text-decoration: none; color: var(--text-main); font-size: 1rem; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 5px; transition: all 0.25s ease; font-weight: 700; cursor:pointer; }
+.nav-menu a i { width: 18px; text-align: center; }
+.nav-menu a.nav-link i { color: var(--primary-red); }
+.nav-menu a:hover { background: rgba(255,255,255,0.05); border-left: 3px solid var(--primary-red); transform: translateX(4px); }
+.nav-menu li a.random-btn { background: var(--lucky-bg) !important; border-left: 3px solid var(--lucky-border) !important; color: var(--lucky-color) !important; }
+.nav-menu li a.discord-btn { background: var(--discord-bg) !important; border-left: 3px solid var(--discord-border) !important; color: var(--discord-color) !important; }
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 89; backdrop-filter: blur(2px); }
 
-        /* CARROSSEL */
-        .hero-carousel { position: relative; width: 100%; height: 400px; border-radius: 10px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,0,60,0.15); background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
-        .carousel-slide { flex: 0 0 100%; min-width: 100%; height: 100%; position: relative; cursor: pointer; display: flex; align-items: center; background-size: cover; background-position: center; }
-        .carousel-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 100%); }
-        .hero-content { max-width: 520px; padding: 32px 32px 70px 32px; z-index: 2; position: relative; }
-        .hero-tag { background: var(--primary-red); color: #fff; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 2px; display: inline-block; margin-bottom: 10px; }
-        .hero-title { color: #fff; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.1; }
-        .hero-description { color: #bbb; font-size: 0.9rem; line-height: 1.45; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .btn-hero-play { background: var(--primary-red); border: none; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 12px rgba(0,0,0,0.4); transition: all 0.25s; }
-        .carousel-nav { position: absolute; bottom: 18px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; transition: all 0.25s; backdrop-filter: blur(6px); }
-        .carousel-nav:hover { background: var(--primary-red); border-color: var(--primary-red); }
-        .carousel-nav.prev { right: 66px; } .carousel-nav.next { right: 18px; }
-        .carousel-dots { position: absolute; bottom: 22px; left: 32px; display: flex; gap: 6px; z-index: 3; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.25s; }
-        .dot.active { background: var(--primary-red); width: 22px; border-radius: 4px; box-shadow: var(--hdr-glow); }
+.settings-gear-btn { position: fixed; bottom: 18px; left: 18px; z-index: 96; width: 48px; height: 48px; border-radius: 50%; background: var(--surface-color); border: 1.5px solid var(--primary-red); color: var(--primary-red); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.35rem; box-shadow: var(--hdr-glow); transition: all 0.3s ease; }
+.settings-gear-btn:hover { transform: scale(1.1) rotate(90deg); background: var(--primary-red); color: white; box-shadow: var(--hdr-glow-intense); }
 
-        main { flex: 1; padding: 22px 20px; width: 100%; min-width: 0; }
-        .category-section { margin-bottom: 50px; scroll-margin-top: 90px; }
-        .grid-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; border-bottom: 2px solid var(--dark-red); padding-bottom: 10px; }
-        .grid-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: white; text-transform: uppercase; letter-spacing: 1px; }
-        .filter-container { position: relative; }
-        .filter-btn { background: var(--surface-color); border: 1px solid var(--primary-red); color: white; padding: 6px 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
-        .filter-menu { position: absolute; top: 115%; right: 0; background: #151515; border: 1px solid var(--primary-red); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 6px; width: 280px; z-index: 50; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s; }
-        .filter-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .filter-tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 4px 10px; cursor: pointer; border: 1px solid var(--dark-red); border-radius: 4px; font-weight: bold; font-size: 0.78rem; }
-        .filter-tag:hover, .filter-tag.active { background: var(--primary-red); color: white; }
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; width: 100%; }
-        .game-card { background: var(--surface-color); border: 1px solid #1e1e1e; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
-        .game-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
-        .game-img { width: 100%; height: 135px; object-fit: cover; border-bottom: 1px solid #1e1e1e; }
-        .game-info { padding: 10px; }
-        .game-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 6px; color: white; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .game-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-        .tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 2px 5px; font-size: 0.6rem; border-radius: 3px; border: 1px solid #2a0a14; font-weight: bold; text-transform: uppercase; }
-        .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 16px; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: #0a0a0a; width: 760px; max-width: 100%; border: 2px solid var(--primary-red); box-shadow: var(--hdr-glow-intense); border-radius: 10px; transform: scale(0.9) translateY(20px); transition: all 0.35s; position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto; }
-        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
-        .close-btn { position: absolute; top: 10px; right: 14px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; }
-        .modal-header-img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary-red); }
-        .modal-body { padding: 20px; }
-        .modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 10px; color: white; }
-        .modal-desc { font-size: 0.95rem; line-height: 1.5; color: #ccc; margin-bottom: 18px; background: rgba(0,0,0,0.5); padding: 10px; border-left: 3px solid var(--primary-red); border-radius: 0 4px 4px 0; }
-        .btn-download { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: linear-gradient(45deg, var(--dark-red), var(--primary-red)); color: white; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-transform: uppercase; box-shadow: var(--hdr-glow); }
-        .search-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.96); backdrop-filter: blur(16px); z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.3s; overflow-y: auto; }
-        .search-overlay.active { opacity: 1; visibility: visible; }
-        .search-modal-content { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px 18px 50px; min-height: 100vh; }
-        .search-top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; position: sticky; top: 0; background: rgba(5,5,5,0.96); padding: 16px 0 12px; z-index: 2; }
-        .search-input-wrapper { position: relative; flex: 1; }
-        .search-input-wrapper input { width: 100%; padding: 16px 50px 16px 18px; font-size: 1.2rem; font-family: 'Montserrat', sans-serif; color: white; background: #111; border: 2px solid var(--primary-red); border-radius: 40px; outline: none; }
-        .modal-search-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-red); }
-        .close-search-btn { background: rgba(255,255,255,0.07); border: 1px solid #333; color: #aaa; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; cursor: pointer; padding: 10px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
-        @media (max-width: 900px) {
-            aside { position: fixed; left: 0; top: 0; height: 100vh; z-index: 99; transform: translateX(-100%); margin-left: 0 !important; padding-top: 70px; width: 240px; min-width: 240px; }
-            body:not(.sidebar-collapsed) aside { transform: translateX(0); opacity: 1; margin-left: 0 !important; }
-            body:not(.sidebar-collapsed) .sidebar-backdrop { display: block; }
-            .settings-panel { left: 8px; bottom: 70px; width: calc(100vw - 16px); }
-            .settings-gear-btn { bottom: 12px; left: 12px; width: 44px; height: 44px; }
-        }
-    </style>
+.settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(3px); }
+.settings-overlay.active { opacity: 1; visibility: visible; }
+.settings-panel { position: fixed; bottom: 80px; left: 18px; width: 400px; max-width: calc(100vw - 36px); background: #0f0f0f; border: 1.5px solid var(--primary-red); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.8), var(--hdr-glow); z-index: 201; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; }
+.settings-panel.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+.settings-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #222; background: var(--surface-color); border-radius: 12px 12px 0 0; }
+.settings-header h3 { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: var(--primary-red); display: flex; align-items: center; gap: 8px; }
+.close-settings { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1.1rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.close-settings:hover { background: rgba(255,255,255,0.08); color: white; }
+.settings-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.setting-group { display: flex; flex-direction: column; gap: 8px; }
+.setting-group label { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.preset-btn { height: 52px; border-radius: 8px; border: 2px solid #222; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; }
+.preset-btn:hover { transform: scale(1.05); border-color: #fff; } .preset-btn.active { border-color: var(--primary-red); box-shadow: 0 0 10px var(--primary-red); transform: scale(1.02); }
+.preset-btn small { font-size: 0.55rem; text-align: center; color: white; background: rgba(0,0,0,0.7); font-family: 'Orbitron'; padding: 2px 4px; border-radius: 3px; letter-spacing: .5px; }
+.bg-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.bg-preset-btn { height: 60px; border-radius: 8px; border: 2px solid #222; cursor: pointer; background-size: cover; background-position: center; position: relative; overflow: hidden; transition: all .2s; }
+.bg-preset-btn:hover { transform: scale(1.05); border-color: #fff; }
+.bg-preset-btn.active { border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+.bg-preset-btn span { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; font-size: .55rem; font-family: 'Orbitron'; text-align: center; padding: 2px; }
+.setting-group input[type="range"] { width: 100%; accent-color: var(--primary-red); }
+.checkbox-row { display: flex; align-items: center; gap: 8px; background: #151515; padding: 8px 10px; border-radius: 8px; border: 1px solid #222; cursor: pointer; font-size: .85rem; }
+.checkbox-row input { accent-color: var(--primary-red); width: 16px; height: 16px; }
+.btn-reset { width: 100%; padding: 12px; background: linear-gradient(45deg, #222, #333); border: 1px solid #444; color: white; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s; }
+.btn-reset:hover { background: var(--primary-red); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+.settings-note { font-size: 0.68rem; color: #555; line-height: 1.3; text-align: center; font-family: 'Montserrat', sans-serif; }
+.card-size-row { display: flex; gap: 6px; }
+.card-size-btn { flex: 1; padding: 8px; background: #151515; border: 1px solid #222; color: #aaa; border-radius: 6px; cursor: pointer; font-family: 'Orbitron'; font-size: .65rem; text-align: center; transition: all .2s; }
+.card-size-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+
+.upload-zone { border: 1.5px dashed #333; padding: 14px; border-radius: 10px; text-align: center; cursor: pointer; background: #111; transition: all .25s; position:relative; overflow:hidden; }
+.upload-zone:hover { border-color: var(--primary-red); background: rgba(255,0,60,0.05); }
+.upload-zone i { font-size: 1.6rem; color: var(--primary-red); margin-bottom:6px; display:block; }
+.upload-preview { width: 100%; height: 110px; border-radius: 8px; object-fit: cover; margin-top:10px; display:none; border:1px solid #222; }
+.custom-actions { display:flex; gap:6px; margin-top:8px; }
+.custom-actions button { flex:1; padding:8px; border-radius:6px; border:1px solid #222; background:#151515; color:#aaa; font-family:'Orbitron'; font-size:.6rem; cursor:pointer; }
+.custom-actions button:hover { border-color:var(--primary-red); color:var(--primary-red); }
+
+/* CARROSSEL */
+.hero-carousel { position: relative; width: 100%; height: 400px; border-radius: 10px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,0,60,0.15); background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+.carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+.carousel-slide { flex: 0 0 100%; min-width: 100%; height: 100%; position: relative; cursor: pointer; display: flex; align-items: center; background-size: cover; background-position: center; }
+.carousel-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 100%); }
+.hero-content { max-width: 520px; padding: 32px 32px 70px 32px; z-index: 2; position: relative; }
+.hero-tag { background: var(--primary-red); color: #fff; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 2px; display: inline-block; margin-bottom: 10px; }
+.hero-title { color: #fff; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.1; }
+.hero-description { color: #bbb; font-size: 0.9rem; line-height: 1.45; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.btn-hero-play { background: var(--primary-red); border: none; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 12px rgba(0,0,0,0.4); transition: all 0.25s; }
+.carousel-nav { position: absolute; bottom: 18px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; transition: all 0.25s; backdrop-filter: blur(6px); }
+.carousel-nav:hover { background: var(--primary-red); border-color: var(--primary-red); }
+.carousel-nav.prev { right: 66px; } .carousel-nav.next { right: 18px; }
+.carousel-dots { position: absolute; bottom: 22px; left: 32px; display: flex; gap: 6px; z-index: 3; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.25s; }
+.dot.active { background: var(--primary-red); width: 22px; border-radius: 4px; box-shadow: var(--hdr-glow); }
+
+main { flex: 1; padding: 22px 20px; width: 100%; min-width: 0; }
+.category-section { margin-bottom: 30px; scroll-margin-top: 90px; }
+.grid-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; border-bottom: 2px solid var(--dark-red); padding-bottom: 10px; }
+.grid-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: white; text-transform: uppercase; letter-spacing: 1px; }
+.filter-container { position: relative; }
+.filter-btn { background: var(--surface-color); border: 1px solid var(--primary-red); color: white; padding: 6px 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
+.filter-menu { position: absolute; top: 115%; right: 0; background: #151515; border: 1px solid var(--primary-red); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 6px; width: 280px; z-index: 50; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s; }
+.filter-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+.filter-tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 4px 10px; cursor: pointer; border: 1px solid var(--dark-red); border-radius: 4px; font-weight: bold; font-size: 0.78rem; }
+.filter-tag:hover, .filter-tag.active { background: var(--primary-red); color: white; }
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; width: 100%; transition: all .3s; }
+body.card-compact .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+body.card-large .games-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+.game-card { background: var(--surface-color); border: 1px solid #1e1e1e; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+.game-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--primary-red); box-shadow: var(--hdr-glow); }
+.game-card.favorited { border-color: var(--primary-red); }
+.game-card.favorited::after { content: '♥'; position: absolute; top: 6px; right: 8px; color: var(--primary-red); font-size: 1rem; text-shadow: 0 0 6px var(--primary-red); z-index: 2; }
+.game-img { width: 100%; height: 135px; object-fit: cover; border-bottom: 1px solid #1e1e1e; }
+body.card-compact .game-img { height: 100px; }
+body.card-large .game-img { height: 165px; }
+.game-info { padding: 10px; }
+.game-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 6px; color: white; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { background: rgba(255, 0, 60, 0.08); color: var(--primary-red); padding: 2px 5px; font-size: 0.6rem; border-radius: 3px; border: 1px solid #2a0a14; font-weight: bold; text-transform: uppercase; }
+
+/* CAT NAV */
+.cat-nav { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:20px 0; padding:14px; background: var(--surface-color); border:1px solid #222; border-radius:10px; }
+.cat-nav-btn { background: transparent; border:1px solid var(--primary-red); color: var(--primary-red); padding:10px 18px; border-radius:22px; font-family:'Orbitron'; font-size:.68rem; cursor:pointer; display:flex; align-items:center; gap:8px; transition:.25s; font-weight:700; letter-spacing:.5px; }
+.cat-nav-btn.next { background: var(--primary-red); color:white; box-shadow: var(--hdr-glow); }
+.cat-nav-btn:hover { transform: translateY(-2px); box-shadow: var(--hdr-glow); }
+.cat-nav-btn:disabled { opacity:.3; pointer-events:none; }
+
+/* MODALS */
+.modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 16px; }
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal-content { background: #0a0a0a; width: 760px; max-width: 100%; border: 2px solid var(--primary-red); box-shadow: var(--hdr-glow-intense); border-radius: 10px; transform: scale(0.9) translateY(20px); transition: all 0.35s; position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto; }
+.modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+.close-btn { position: absolute; top: 10px; right: 14px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; }
+.modal-header-img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary-red); }
+.modal-body { padding: 20px; }
+.modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 10px; color: white; }
+.modal-desc { font-size: 0.95rem; line-height: 1.5; color: #ccc; margin-bottom: 18px; background: rgba(0,0,0,0.5); padding: 10px; border-left: 3px solid var(--primary-red); border-radius: 0 4px 4px 0; }
+.btn-download { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: linear-gradient(45deg, var(--dark-red), var(--primary-red)); color: white; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-transform: uppercase; box-shadow: var(--hdr-glow); flex:1; }
+.fav-heart-btn { width: 56px; min-width:56px; height: 52px; background:#151515; border:1px solid #333; border-radius:6px; color:#666; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.35rem; transition:.25s; }
+.fav-heart-btn.active { background: var(--primary-red); border-color: var(--primary-red); color:white; box-shadow: var(--hdr-glow); }
+.fav-heart-btn:hover { border-color: var(--primary-red); color: var(--primary-red); transform: scale(1.05); }
+.fav-heart-btn.active:hover { color:white; }
+
+.modal-actions-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: stretch; }
+.btn-comment-toggle { width: 52px; background: #151515; border: 1px solid #333; color: #aaa; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .2s; }
+.btn-comment-toggle:hover, .btn-comment-toggle.active { border-color: var(--primary-red); color: var(--primary-red); }
+.comments-section { margin-top: 20px; border-top: 1px solid #222; padding-top: 16px; display: none; }
+.comments-section.active { display: block; }
+.comments-header { font-family: 'Orbitron'; font-size: .9rem; color: white; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.comment-list { display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; margin-bottom: 12px; }
+.comment-item { background: #111; border: 1px solid #222; border-radius: 8px; padding: 10px 12px; }
+.comment-user { font-family: 'Orbitron'; font-size: .7rem; color: var(--primary-red); margin-bottom: 4px; display: flex; justify-content: space-between; }
+.comment-text { font-size: .85rem; color: #ccc; line-height: 1.3; }
+.comment-form { display: flex; gap: 8px; flex-wrap:wrap; }
+.comment-form input { background: #000; border: 1px solid #333; color: white; padding: 10px 12px; border-radius: 6px; font-family: 'Rajdhani'; outline: none; }
+.comment-form input#comName { width:110px; }
+.comment-form input#comText { flex:1; min-width:160px; }
+.comment-form input:focus { border-color: var(--primary-red); }
+.btn-send-comment { background: var(--primary-red); border: none; color: white; padding: 0 16px; border-radius: 6px; cursor: pointer; font-size: .9rem; min-height:42px; }
+
+#adblockModal { z-index: 10020 !important; }
+#adblockModal .modal-content { border:2px solid var(--primary-red); box-shadow: var(--hdr-glow-intense), 0 0 0 4px rgba(0,0,0,0.8); }
+.adblock-content { width: 500px; padding: 0; overflow: hidden; text-align: center; }
+.adblock-header { background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); padding: 20px; color: white; }
+.adblock-header i { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+.adblock-header h2 { font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 6px; }
+.adblock-body { padding: 20px; background: #0a0a0a; }
+.adblock-body p { font-size: .9rem; color: #ccc; line-height: 1.5; margin-bottom: 14px; text-align: left; }
+.adblock-body ul { text-align: left; margin: 0 0 16px 18px; color: #aaa; font-size: .85rem; line-height: 1.4; list-style:none; }
+.adblock-body li { margin-bottom:4px; }
+.adblock-actions { display: flex; flex-direction: column; gap: 8px; }
+.btn-adblock-main { background: var(--primary-red); color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-family: 'Orbitron'; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-adblock-sec { background: #151515; border: 1px solid #333; color: #aaa; padding: 10px; border-radius: 6px; cursor: pointer; font-family: 'Rajdhani'; font-weight: 700; }
+
+/* LUCKY OVERLAY V6 */
+.lucky-overlay { position: fixed; inset:0; width:100vw; height:100vh; z-index:10035; background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, #000 75%); backdrop-filter: blur(12px); display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition: all .35s cubic-bezier(.4,0,.2,1); padding:16px; }
+.lucky-overlay.active { opacity:1; visibility:visible; }
+.lucky-roulette { width:min(92vw, 520px); background: linear-gradient(180deg, #121212 0%, #080808 100%); border:2px solid var(--primary-red); border-radius:16px; box-shadow: var(--hdr-glow-intense), 0 0 80px rgba(0,0,0,0.8); overflow:hidden; padding:22px; text-align:center; transform:scale(.85) translateY(20px); transition:.45s cubic-bezier(.4,0,.2,1); position:relative; }
+.lucky-overlay.active .lucky-roulette { transform:scale(1) translateY(0); }
+.lucky-roulette::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--primary-red), transparent); animation: scan 2s linear infinite; }
+@keyframes scan { 0%{ transform:translateX(-100%); } 100%{ transform:translateX(100%); } }
+.lucky-title-anim { font-family:'Orbitron'; color:var(--primary-red); font-size:1.1rem; letter-spacing:4px; font-weight:900; margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:10px; text-shadow: var(--hdr-glow); }
+.lucky-img { width:100%; height:300px; object-fit:cover; border-radius:10px; border:1px solid #222; transition: all .12s; background:#000; }
+.lucky-img.glitch { filter: hue-rotate(90deg) contrast(1.3); transform: scale(1.02) skewX(1deg); }
+.lucky-status { margin-top:14px; font-family:'Orbitron'; color:#888; font-size:.7rem; letter-spacing:3px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.lucky-status .dot-pulse { width:6px; height:6px; background:var(--primary-red); border-radius:50%; animation: pulse-dot 1s infinite; }
+@keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.4; transform:scale(1.6);} }
+.lucky-final h2 { font-family:'Orbitron'; color:white; font-size:1.4rem; margin:14px 0 6px; text-transform:uppercase; letter-spacing:1px; }
+.lucky-final p { color:#aaa; font-size:.85rem; margin-bottom:16px; line-height:1.4; }
+
+/* FOOTER */
+footer { background: linear-gradient(180deg, #0a0a0a, #000); border-top: 2px solid var(--primary-red); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); padding: 30px 20px 20px; margin-top: 40px; }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto 24px; }
+.footer-col h4 { font-family: 'Orbitron'; font-size: .85rem; color: var(--primary-red); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+.footer-col p, .footer-col a { font-size: .85rem; color: #888; line-height: 1.5; text-decoration: none; display: block; margin-bottom: 6px; }
+.footer-col a:hover { color: var(--primary-red); }
+.footer-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+.stat-box { background: #111; border: 1px solid #222; border-radius: 6px; padding: 8px 10px; min-width: 80px; }
+.stat-num { font-family: 'Orbitron'; font-size: 1.1rem; color: white; font-weight: 900; }
+.stat-label { font-size: .6rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.footer-bottom { border-top: 1px solid #1a1a1a; padding-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto; }
+.footer-bottom small { color: #444; font-size: .7rem; font-family: 'Montserrat'; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a { width: 32px; height: 32px; border-radius: 50%; background: #151515; border: 1px solid #222; display: flex; align-items: center; justify-content: center; color: #666; transition: all .2s; }
+.footer-social a:hover { border-color: var(--primary-red); color: var(--primary-red); background: rgba(255,0,60,0.1); }
+
+.search-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.96); backdrop-filter: blur(16px); z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.3s; overflow-y: auto; }
+.search-overlay.active { opacity: 1; visibility: visible; }
+.search-modal-content { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px 18px 50px; min-height: 100vh; }
+.search-top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; position: sticky; top: 0; background: rgba(5,5,5,0.96); padding: 16px 0 12px; z-index: 2; }
+.search-input-wrapper { position: relative; flex: 1; }
+.search-input-wrapper input { width: 100%; padding: 16px 50px 16px 18px; font-size: 1.2rem; font-family: 'Montserrat', sans-serif; color: white; background: #111; border: 2px solid var(--primary-red); border-radius: 40px; outline: none; }
+.modal-search-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-red); }
+.close-search-btn { background: rgba(255,255,255,0.07); border: 1px solid #333; color: #aaa; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; cursor: pointer; padding: 10px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
+.search-results-info { font-family: 'Orbitron'; font-size: .8rem; color: #666; margin-bottom: 14px; } .search-results-info span { color: var(--primary-red); }
+
+@media (max-width: 900px) {
+    aside { position: fixed; left: 0; top: 0; height: 100vh; z-index: 99; transform: translateX(-100%); margin-left: 0 !important; padding-top: 70px; width: 240px; min-width: 240px; }
+    body:not(.sidebar-collapsed) aside { transform: translateX(0); opacity: 1; margin-left: 0 !important; }
+    body:not(.sidebar-collapsed) .sidebar-backdrop { display: block; }
+    .settings-panel { left: 8px; bottom: 70px; width: calc(100vw - 16px); }
+    .settings-gear-btn { bottom: 12px; left: 12px; width: 44px; height: 44px; }
+    .header-right { gap: 6px; }
+    .search-bar { min-width: 0; width: 42px; height: 42px; border-radius: 50%; justify-content: center; padding: 0; }
+    .search-bar input { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .cat-nav { flex-direction:column; }
+    .cat-nav-btn { width:100%; justify-content:center; }
+}
+</style>
 </head>
 <body>
-    <div id="loader"><div class="load-title" onclick="location.reload()">NEXUS</div><div class="spinner"></div><div class="load-sub">Inicializando...</div></div>
-    <div class="vhs-overlay" id="vhsOverlay"></div>
+<div id="siteBg"></div>
+<div id="loader"><div class="load-title" onclick="location.reload()">NEXUS</div><div class="spinner"></div><div class="load-sub">Carregando site..</div></div>
+<div class="vhs-overlay" id="vhsOverlay"></div>
 
-    <!-- BUSCA -->
-    <div class="search-overlay" id="searchOverlay"><div class="search-modal-content"><div class="search-top-bar"><div class="search-input-wrapper"><input type="text" id="modalSearchInput" placeholder="Buscar jogo, app, tag..."><i class="fas fa-search modal-search-icon"></i></div><button class="close-search-btn" id="closeSearchBtn"><i class="fas fa-times"></i> Fechar</button></div><div class="search-results-info" id="searchResultsInfo"></div><div class="games-grid" id="searchResultsGrid"></div></div></div>
+<div class="search-overlay" id="searchOverlay"><div class="search-modal-content"><div class="search-top-bar"><div class="search-input-wrapper"><input type="text" id="modalSearchInput" placeholder="Buscar jogo, app, tag..."><i class="fas fa-search modal-search-icon"></i></div><button class="close-search-btn" id="closeSearchBtn"><i class="fas fa-times"></i> Fechar</button></div><div class="search-results-info" id="searchResultsInfo"></div><div class="games-grid" id="searchResultsGrid"></div></div></div>
 
-    <!-- BOTÃO ENGRENAGEM -->
-    <button class="settings-gear-btn" id="settingsGearBtn" title="Personalizar site"><i class="fas fa-cog"></i></button>
-    <div class="settings-overlay" id="settingsOverlay"></div>
-    <div class="settings-panel" id="settingsPanel">
-        <div class="settings-header">
-            <h3><i class="fas fa-cog"></i> Personalizar NEXUS</h3>
-            <button class="close-settings" id="closeSettingsBtn"><i class="fas fa-times"></i></button>
+<div class="modal-overlay" id="adblockModal">
+    <div class="modal-content adblock-content">
+        <div class="adblock-header">
+            <i class="fas fa-shield-halved"></i>
+            <h2>Proteja sua experiência</h2>
+            <small>Recomendamos AdBlock para downloads seguros</small>
         </div>
-        <div class="settings-body">
-            <div class="setting-group">
-                <label><i class="fas fa-palette"></i> Cor principal do site</label>
-                <div class="color-row"><input type="color" id="colorPrimary"><span id="colorPrimaryText">#ff003c</span></div>
-            </div>
-            <div class="setting-group">
-                <label><i class="fas fa-moon"></i> Fundo do site</label>
-                <div class="color-row"><input type="color" id="colorBg"><span id="colorBgText">#050505</span></div>
-            </div>
-            <div class="setting-group">
-                <label><i class="fas fa-square"></i> Cor dos cards</label>
-                <div class="color-row"><input type="color" id="colorSurface"><span id="colorSurfaceText">#111111</span></div>
-            </div>
-            <div class="setting-group">
-                <label><i class="fas fa-bolt"></i> Presets rápidos</label>
-                <div class="presets">
-                    <div class="preset-btn active" data-preset="original" style="background: linear-gradient(135deg, #ff003c, #050505);" title="Original"><small>ORIGINAL</small></div>
-                    <div class="preset-btn" data-preset="cyber" style="background: linear-gradient(135deg, #00f0ff, #001a1f);" title="Cyber Blue"><small>CYBER</small></div>
-                    <div class="preset-btn" data-preset="toxic" style="background: linear-gradient(135deg, #39ff14, #0a1a00);" title="Toxic Green"><small>TOXIC</small></div>
-                    <div class="preset-btn" data-preset="purple" style="background: linear-gradient(135deg, #b400ff, #1a0033);" title="Neon Purple"><small>PURPLE</small></div>
-                    <div class="preset-btn" data-preset="orange" style="background: linear-gradient(135deg, #ff7b00, #1f0f00);" title="Lava Orange"><small>LAVA</small></div>
-                    <div class="preset-btn" data-preset="gold" style="background: linear-gradient(135deg, #ffcc00, #1a1500);" title="Gold"><small>GOLD</small></div>
-                    <div class="preset-btn" data-preset="white" style="background: linear-gradient(135deg, #ffffff, #222);" title="White"><small>WHITE</small></div>
-                    <div class="preset-btn" data-preset="blood" style="background: linear-gradient(135deg, #8a0000, #000);" title="Blood"><small>BLOOD</small></div>
+        <div class="adblock-body">
+            <p>Alguns sites de download exibem anúncios agressivos. Para evitar sustos e baixar mais rápido:</p>
+            <ul>
+                <li><i class="fas fa-check" style="color:var(--primary-red)"></i> Bloqueia pop-ups e redirecionamentos</li>
+                <li><i class="fas fa-check" style="color:var(--primary-red)"></i> Downloads 3x mais rápidos</li>
+                <li><i class="fas fa-check" style="color:var(--primary-red)"></i> Navegação 100% limpa</li>
+            </ul>
+            <div class="adblock-actions">
+                <a href="https://chromewebstore.google.com/detail/adblock-%E2%80%94-block-ads-acros/gighmmpiobklfepjocnamgkkbiglidom?hl=pt-BR" target="_blank" class="btn-adblock-main"><i class="fas fa-download"></i> INSTALAR ADBLOCK</a>
+                <button class="btn-adblock-sec" id="btnAdblockDownload">Continuar para o download</button>
+                <div style="display:flex; gap:8px; margin-top:6px;">
+                    <button class="btn-adblock-sec" style="flex:1" id="btnAdblockNever">Não mostrar novamente</button>
+                    <button class="btn-adblock-sec" style="flex:1" id="btnAdblockLater">Lembrar depois</button>
                 </div>
             </div>
-            <div class="setting-group">
-                <label>Altura do banner: <span id="bannerHeightVal">400px</span></label>
-                <input type="range" id="bannerHeight" min="250" max="650" step="10">
-            </div>
-            <div class="setting-group">
-                <label>Efeitos</label>
-                <label class="checkbox-row"><input type="checkbox" id="toggleVHS"> Efeito VHS / Scanlines</label>
-            </div>
-            <button class="btn-reset" id="resetTheme"><i class="fas fa-undo"></i> Resetar para original</button>
-            <div class="settings-note">✅ Salvo automaticamente no seu navegador.</div>
         </div>
     </div>
+</div>
 
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-    <header>
-        <div class="header-left">
-            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-            <div class="logo" onclick="location.reload()">NEXUS</div>
-        </div>
-        <div class="search-bar" id="headerSearchTrigger"><input type="text" id="searchInput" placeholder="Buscar no sistema..." readonly><i class="fas fa-search"></i></div>
-    </header>
-
-    <div class="container">
-        <aside id="sidebar">
-            <h3><i class="fas fa-database"></i> Categorias</h3>
-            <ul class="nav-menu">
-                <li><a href="#section-jogos-pc" class="nav-link"><i class="fas fa-gamepad"></i> Jogos PC</a></li>
-                <li><a href="#section-apps-pc" class="nav-link"><i class="fa-solid fa-desktop"></i> Apps PC</a></li>
-                <li><a href="#section-jogos-android" class="nav-link"><i class="fa-brands fa-android"></i> Jogos Android</a></li>
-                <li><a href="#section-apps-android" class="nav-link"><i class="fa-solid fa-mobile-screen"></i> Apps Android</a></li>
-                <li><a href="#section-emuladores" class="nav-link"><i class="fa fa-keyboard"></i> Emuladores</a></li>
-                <li><a href="#section-extras" class="nav-link"><i class="fa fa-coffee"></i> Extras</a></li>
-                <li><a href="javascript:void(0);" onclick="playRandomGame()" class="random-btn"><i class="fas fa-dice"></i> Estou com sorte</a></li>
-            </ul>
-            <h3 style="margin-top: 22px;"><i class="fas fa-server"></i> Outros</h3>
-            <ul class="nav-menu">
-                <li><a href="#" onclick="openDmcaModal()" style="color:#ff3333 !important;"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
-                <li><a href="https://discord.gg/H7e8Z3AGkQ" style="color:#4733ff !important;"><i class="fa-brands fa-discord"></i>DISCORD</a></li>
-            </ul>
-        </aside>
-        <main id="mainContent">
-            <div class="hero-carousel" id="heroCarousel">
-                <div class="carousel-track" id="carouselTrack"></div>
-                <button class="carousel-nav prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
-                <button class="carousel-nav next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
-                <div class="carousel-dots" id="carouselDots"></div>
-            </div>
-            <div class="category-section" id="section-jogos-pc"><div class="grid-header"><h2><i class="fas fa-gamepad"></i> Jogos - PC</h2><div class="filter-container"><button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> Filtrar Tags</button><div class="filter-menu" id="filterMenu"></div></div></div><div class="games-grid" id="container-jogos-pc"></div></div>
-            <div class="category-section" id="section-apps-pc"><div class="grid-header"><h2><i class="fa-solid fa-desktop"></i> Apps - PC</h2></div><div class="games-grid" id="container-apps-pc"></div></div>
-            <div class="category-section" id="section-jogos-android"><div class="grid-header"><h2><i class="fa-brands fa-android"></i> Jogos - Android</h2></div><div class="games-grid" id="container-jogos-android"></div></div>
-            <div class="category-section" id="section-apps-android"><div class="grid-header"><h2><i class="fa-solid fa-mobile-screen"></i> Apps - Android</h2></div><div class="games-grid" id="container-apps-android"></div></div>
-            <div class="category-section" id="section-emuladores"><div class="grid-header"><h2><i class="fa fa-keyboard"></i> Emuladores</h2></div><div class="games-grid" id="container-emuladores"></div></div>
-            <div class="category-section" id="section-extras"><div class="grid-header"><h2><i class="fa fa-coffee"></i> Extras</h2></div><div class="games-grid" id="container-extras"></div></div>
-        </main>
+<button class="settings-gear-btn" id="settingsGearBtn" title="Personalizar NEXUS"><i class="fas fa-cog"></i></button>
+<div class="settings-overlay" id="settingsOverlay"></div>
+<div class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+        <h3><i class="fas fa-wand-magic-sparkles"></i> Personalizar NEXUS</h3>
+        <button class="close-settings" id="closeSettingsBtn"><i class="fas fa-times"></i></button>
     </div>
+    <div class="settings-body">
+        <div class="setting-group">
+            <label><i class="fas fa-image"></i> MEU FUNDO CUSTOM</label>
+            <div class="upload-zone" id="uploadZone">
+                <i class="fas fa-cloud-arrow-up"></i>
+                <div style="font-family:Orbitron; font-size:.7rem; color:#aaa; font-weight:700;">CLIQUE PARA ENVIAR SUA FOTO</div>
+                <small style="color:#555; font-size:.6rem;">JPG, PNG, WEBP</small>
+                <img id="uploadPreview" class="upload-preview" />
+            </div>
+            <input type="file" id="customFileInput" accept="image/*" style="display:none;">
+            <div class="custom-actions">
+                <button id="btnRemoveCustom"><i class="fas fa-trash"></i> Remover fundo</button>
+                <button id="btnApplyColor"><i class="fas fa-palette"></i> Aplicar Cor</button>
+            </div>
+            <label class="checkbox-row" style="margin-top:6px;"><input type="checkbox" id="toggleAdapt" checked> <i class="fas fa-wand-magic"></i> Adaptar cores automaticamente ao fundo</label>
+        </div>
 
-    <div class="modal-overlay" id="gameModal"><div class="modal-content"><i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i><img src="" class="modal-header-img" id="modalImg"><div class="modal-body"><h2 class="modal-title" id="modalTitle"></h2><div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;" id="modalTags"></div><p class="modal-desc" id="modalDesc"></p><a href="#" class="btn-download" id="modalDownloadBtn" target="_blank"><i class="fas fa-download"></i> Baixar</a></div></div></div>
-    <div class="modal-overlay" id="dmcaModal"><div class="modal-content" style="padding:30px; text-align:center;"><i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i><i class="fa-solid fa-triangle-exclamation" style="font-size:3.5rem; color:var(--primary-red); margin-bottom:12px;"></i><h2 style="font-family:Orbitron; color:var(--primary-red); margin-bottom:12px;">Aviso DMCA</h2><p class="modal-desc" style="text-align:left;">O NEXUS funciona apenas como indexador. Contato: nexushope31@gmail.com</p><button class="btn-download" style="background:#222;" onclick="closeModal('dmcaModal')">ENTENDIDO</button></div></div>
+        <div class="setting-group">
+            <label><i class="fas fa-palette"></i> Temas</label>
+            <div class="presets" id="presetGrid"></div>
+        </div>
+        <div class="setting-group">
+            <label><i class="fas fa-image"></i> Fundos predefinidos</label>
+            <div class="bg-presets" id="bgPresetGrid"></div>
+        </div>
+        <div class="setting-group">
+            <label>Altura do banner: <span id="bannerHeightVal">400px</span></label>
+            <input type="range" id="bannerHeight" min="250" max="650" step="10">
+        </div>
+        <div class="setting-group">
+            <label>Desfoque do fundo: <span id="bgBlurVal">12px</span></label>
+            <input type="range" id="bgBlur" min="0" max="30" step="1">
+        </div>
+        <div class="setting-group">
+            <label>Opacidade do fundo: <span id="bgOpacityVal">25%</span></label>
+            <input type="range" id="bgOpacity" min="5" max="70" step="1">
+        </div>
+        <div class="setting-group">
+            <label><i class="fas fa-table-cells"></i> Tamanho dos cards</label>
+            <div class="card-size-row">
+                <div class="card-size-btn" data-size="compact" onclick="setCardSize('compact')">Compacto</div>
+                <div class="card-size-btn active" data-size="normal" onclick="setCardSize('normal')">Normal</div>
+                <div class="card-size-btn" data-size="large" onclick="setCardSize('large')">Grande</div>
+            </div>
+        </div>
+        <div class="setting-group">
+            <label>Efeitos & Performance</label>
+            <label class="checkbox-row"><input type="checkbox" id="toggleVHS"> <i class="fas fa-tv"></i> Efeito VHS / Scanlines</label>
+            <label class="checkbox-row"><input type="checkbox" id="toggleAnim" checked> <i class="fas fa-bolt"></i> Animações de hover</label>
+        </div>
+        <button class="btn-reset" id="resetTheme"><i class="fas fa-undo"></i> Resetar para original</button>
+        <div class="settings-note">✅ Tudo aqui é salvo localmente, então recomendamos não trocar de navegador caso queira manter suas configurações.</div>
+    </div>
+</div>
 
-    <script>
-        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-        window.scrollTo(0,0);
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<header>
+    <div class="header-left">
+        <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+        <div class="logo" onclick="location.reload()">NEXUS</div>
+    </div>
+    <div class="header-right">
+        <div class="search-bar" id="headerSearchTrigger"><input type="text" placeholder="Buscar..." readonly><i class="fas fa-search"></i></div>
+        <button class="user-btn logged" id="favHeaderBtn" onclick="showFavorites()"><i class="fas fa-heart" style="color:var(--primary-red)"></i> FAVORITOS <span class="fav-count" id="favHeaderCount">0</span></button>
+    </div>
+</header>
 
-        // ===== SISTEMA DE TEMA PERSONALIZAVEL =====
-        const defaultTheme = {
-            primary: '#ff003c',
+<div class="container">
+    <aside id="sidebar">
+        <h3><i class="fas fa-database"></i> Categorias</h3>
+        <ul class="nav-menu">
+            <li><a class="nav-link" onclick="showCategory(0)"><i class="fas fa-gamepad"></i> Jogos PC</a></li>
+            <li><a class="nav-link" onclick="showCategory(1)"><i class="fa-solid fa-desktop"></i> Apps PC</a></li>
+            <li><a class="nav-link" onclick="showCategory(2)"><i class="fa-brands fa-android"></i> Jogos Android</a></li>
+            <li><a class="nav-link" onclick="showCategory(3)"><i class="fa-solid fa-mobile-screen"></i> Apps Android</a></li>
+            <li><a class="nav-link" onclick="showCategory(4)"><i class="fa fa-keyboard"></i> Emuladores</a></li>
+            <li><a class="nav-link" onclick="showCategory(5)"><i class="fa fa-coffee"></i> Extras</a></li>
+            <li><a href="javascript:void(0);" onclick="playRandomGame()" class="random-btn"><i class="fas fa-dice"></i> Estou com sorte</a></li>
+        </ul>
+        <h3 style="margin-top: 22px;"><i class="fas fa-server"></i> Outros</h3>
+        <ul class="nav-menu">
+            <li><a class="nav-link" id="favNavLink" onclick="showFavorites()"><i class="fas fa-heart"></i> Favoritos <span class="fav-count" id="favCountSide">0</span></a></li>
+            <li><a onclick="openDmcaModal()" style="color:#ff3333 !important;"><i class="fa-solid fa-triangle-exclamation"></i> Alerta DMCA</a></li>
+            <li><a href="https://discord.gg/H7e8Z3AGkQ" target="_blank" class="discord-btn"><i class="fa-brands fa-discord"></i> DISCORD</a></li>
+        </ul>
+    </aside>
+    <main id="mainContent">
+        <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-track" id="carouselTrack"></div>
+            <button class="carousel-nav prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-nav next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+
+        <div class="category-section" id="favSection" style="display:none"><div class="grid-header"><h2><i class="fas fa-heart"></i> Meus Favoritos</h2><button class="filter-btn" onclick="showCategory(lastCategoryIndex)"><i class="fas fa-arrow-left"></i> Voltar</button></div><div class="games-grid" id="container-favoritos"></div></div>
+
+        <div class="category-section" id="section-jogos-pc"><div class="grid-header"><h2><i class="fas fa-gamepad"></i> Jogos - PC</h2><div class="filter-container"><button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> Filtrar Tags</button><div class="filter-menu" id="filterMenu"></div></div></div><div class="games-grid" id="container-jogos-pc"></div></div>
+        <div class="category-section" id="section-apps-pc"><div class="grid-header"><h2><i class="fa-solid fa-desktop"></i> Apps - PC</h2></div><div class="games-grid" id="container-apps-pc"></div></div>
+        <div class="category-section" id="section-jogos-android"><div class="grid-header"><h2><i class="fa-brands fa-android"></i> Jogos - Android</h2></div><div class="games-grid" id="container-jogos-android"></div></div>
+        <div class="category-section" id="section-apps-android"><div class="grid-header"><h2><i class="fa-solid fa-mobile-screen"></i> Apps - Android</h2></div><div class="games-grid" id="container-apps-android"></div></div>
+        <div class="category-section" id="section-emuladores"><div class="grid-header"><h2><i class="fa fa-keyboard"></i> Emuladores</h2></div><div class="games-grid" id="container-emuladores"></div></div>
+        <div class="category-section" id="section-extras"><div class="grid-header"><h2><i class="fa fa-coffee"></i> Extras</h2></div><div class="games-grid" id="container-extras"></div></div>
+
+        <footer id="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+            <div class="footer-bottom">
+                <small>Atualmente estamos na versão 5 - Caso queira comparilhar links daqui, deixe meu créditos, por favor.</small>
+                <div class="footer-social">
+                    <a href="https://discord.gg/H7e8Z3AGkQ" target="_blank"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" onclick="document.getElementById('settingsGearBtn').click()"><i class="fas fa-cog"></i></a>
+                    <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fas fa-arrow-up"></i></a>
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>
+
+<div class="modal-overlay" id="gameModal"><div class="modal-content">
+    <i class="fas fa-times close-btn" onclick="closeModal('gameModal')"></i>
+    <img src="" class="modal-header-img" id="modalImg">
+    <div class="modal-body">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;" id="modalTags"></div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-actions-row">
+            <a href="#" class="btn-download" id="modalDownloadBtn" target="_blank"><i class="fas fa-download"></i> BAIXAR AGORA</a>
+            <button class="fav-heart-btn" id="btnFav" title="Favoritar"><i class="fas fa-heart"></i></button>
+            <button class="btn-comment-toggle" id="btnCommentToggle" title="Comentários"><i class="fas fa-comment-dots"></i></button>
+        </div>
+
+        <div class="comments-section" id="commentsSection">
+            <div class="comments-header"><i class="fas fa-comments"></i> Comentários da comunidade <span id="commentCount" style="background:var(--primary-red); color:white; padding:2px 6px; border-radius:10px; font-size:.6rem;">0</span></div>
+            <div class="comment-list" id="commentList"></div>
+            <div class="comment-form">
+                <input type="text" id="comName" placeholder="Seu nome">
+                <input type="text" id="comText" placeholder="Deixe sua opinião...">
+                <button class="btn-send-comment" onclick="addComment()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="dmcaModal"><div class="modal-content" style="padding:30px; text-align:center;"><i class="fas fa-times close-btn" onclick="closeModal('dmcaModal')"></i><i class="fa-solid fa-triangle-exclamation" style="font-size:3.5rem; color:var(--primary-red); margin-bottom:12px;"></i><h2 style="font-family:Orbitron; color:var(--primary-red); margin-bottom:12px;">Aviso DMCA</h2><p class="modal-desc" style="text-align:left;">O NEXUS funciona apenas como indexador. Não hospedamos arquivos e pode conter algum tipo de Malware, baixe por sua conta e risco. Se você é detentor de direitos e deseja remoção, contate: <b>nexushope31@gmail.com</b> Obrigado.</p><button class="btn-download" style="background:#222;" onclick="closeModal('dmcaModal')">ENTENDIDO</button></div></div>
+
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0,0);
+
+const presetsV5 = {
+    original: { name:'ORIGINAL', primary:'#ff003c', bg:'#050505', surface:'#111111', luckyBg:'rgba(0,240,255,0.10)', luckyColor:'#00f0ff', luckyBorder:'#00f0ff', discordBg:'rgba(88,101,242,0.12)', discordColor:'#8b93ff', discordBorder:'#5865F2', grad:'linear-gradient(135deg, #ff003c, #050505)' },
+    cyber: { name:'CYBER', primary:'#00f0ff', bg:'#020a0e', surface:'#0a1e24', luckyBg:'rgba(255,0,60,0.12)', luckyColor:'#ff4d6d', luckyBorder:'#ff4d6d', discordBg:'rgba(0,240,255,0.12)', discordColor:'#00f0ff', discordBorder:'#00f0ff', grad:'linear-gradient(135deg, #00f0ff, #001a1f)' },
+    toxic: { name:'TOXIC', primary:'#39ff14', bg:'#050a02', surface:'#111f0a', luckyBg:'rgba(57,255,20,0.12)', luckyColor:'#39ff14', luckyBorder:'#39ff14', discordBg:'rgba(168,255,120,0.10)', discordColor:'#a8ff78', discordBorder:'#39ff14', grad:'linear-gradient(135deg, #39ff14, #0a1a00)' },
+    purple: { name:'PURPLE', primary:'#b400ff', bg:'#0a0212', surface:'#1a0a2a', luckyBg:'rgba(255,0,255,0.12)', luckyColor:'#e879f9', luckyBorder:'#e879f9', discordBg:'rgba(180,0,255,0.12)', discordColor:'#d8b4fe', discordBorder:'#b400ff', grad:'linear-gradient(135deg, #b400ff, #1a0033)' },
+    lava: { name:'LAVA', primary:'#ff7b00', bg:'#120800', surface:'#221505', luckyBg:'rgba(255,123,0,0.12)', luckyColor:'#ffb86a', luckyBorder:'#ff7b00', discordBg:'rgba(255,80,0,0.12)', discordColor:'#ff8c42', discordBorder:'#ff7b00', grad:'linear-gradient(135deg, #ff7b00, #1f0f00)' },
+    gold: { name:'GOLD', primary:'#ffcc00', bg:'#0f0e02', surface:'#1e1c08', luckyBg:'rgba(255,204,0,0.12)', luckyColor:'#ffcc00', luckyBorder:'#ffcc00', discordBg:'rgba(255,215,0,0.10)', discordColor:'#ffe566', discordBorder:'#ffcc00', grad:'linear-gradient(135deg, #ffcc00, #1a1500)' },
+    ghost: { name:'GHOST', primary:'#ffffff', bg:'#0a0a0a', surface:'#1a1a1a', luckyBg:'rgba(255,255,255,0.08)', luckyColor:'#ffffff', luckyBorder:'#ffffff', discordBg:'rgba(255,255,255,0.06)', discordColor:'#cccccc', discordBorder:'#888', grad:'linear-gradient(135deg, #ffffff, #222)' },
+    blood: { name:'BLOOD', primary:'#ff0000', bg:'#000000', surface:'#1a0000', luckyBg:'rgba(255,0,0,0.12)', luckyColor:'#ff4444', luckyBorder:'#ff0000', discordBg:'rgba(139,0,0,0.15)', discordColor:'#ff6b6b', discordBorder:'#8a0000', grad:'linear-gradient(135deg, #8a0000, #000)' },
+    arctic: { name:'ARCTIC', primary:'#7dd3fc', bg:'#020617', surface:'#0f172a', luckyBg:'rgba(125,211,252,0.12)', luckyColor:'#7dd3fc', luckyBorder:'#7dd3fc', discordBg:'rgba(14,165,233,0.12)', discordColor:'#38bdf8', discordBorder:'#0ea5e9', grad:'linear-gradient(135deg, #7dd3fc, #020617)' },
+    cyberpunk: { name:'PUNK', primary:'#fcee0a', bg:'#0a0a00', surface:'#1a1a00', luckyBg:'rgba(252,238,10,0.12)', luckyColor:'#fcee0a', luckyBorder:'#fcee0a', discordBg:'rgba(255,0,255,0.12)', discordColor:'#ff00ff', discordBorder:'#ff00ff', grad:'linear-gradient(135deg, #fcee0a, #ff00ff)' },
+    vapor: { name:'VAPOR', primary:'#ff71ce', bg:'#0f0218', surface:'#1a0a2a', luckyBg:'rgba(113,255,206,0.12)', luckyColor:'#71ffce', luckyBorder:'#71ffce', discordBg:'rgba(255,113,206,0.12)', discordColor:'#ff71ce', discordBorder:'#ff71ce', grad:'linear-gradient(135deg, #ff71ce, #01cdfe)' },
+    matrix: { name:'MATRIX', primary:'#00ff41', bg:'#001100', surface:'#002200', luckyBg:'rgba(0,255,65,0.12)', luckyColor:'#00ff41', luckyBorder:'#00ff41', discordBg:'rgba(0,200,30,0.12)', discordColor:'#00cc33', discordBorder:'#00ff41', grad:'linear-gradient(135deg, #00ff41, #001100)' },
+};
+
+const bgImages = {
+    none: { name:'SEM FUNDO', url:'' },
+    city: { name:'NEXUS', url:'https://i.pinimg.com/736x/ba/5e/56/ba5e567b6b584210918ef31552f2a8a4.jpg' },
+    gaming: { name:'ARVORE', url:'https://i.pinimg.com/736x/8d/19/f7/8d19f7cea4bb799e34a3f1c0173ef6bf.jpg' },
+    neon: { name:'TECLADO', url:'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1920&q=80&auto=format&fit=crop' },
+    space: { name:'ESPAÇO', url:'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1920&q=80&auto=format&fit=crop' },
+    dark: { name:'MONTANHA', url:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80&auto=format&fit=crop' },
+    custom: { name:'MEU FUNDO', url:'' },
+};
+
+const defaultThemeV5 = { preset:'original', bannerHeight:400, bgImage:'none', bgBlur:12, bgOpacity:25, vhs:true, animations:true, cardSize:'normal', adapt:true };
+function hexToDark(hex){ try{ const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16); return `rgb(${Math.floor(r*0.4)}, ${Math.floor(g*0.15)}, ${Math.floor(b*0.25)})`; }catch{ return '#8a0020'; } }
+function hexToRgba(hex,a){ try{ const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }catch{ return `rgba(255,0,60,${a})`; } }
+function rgbToHex(r,g,b){ return '#' + [r,g,b].map(x=>{ const h=x.toString(16); return h.length===1?'0'+h:h; }).join(''); }
+function rgbToHsl(r,g,b){ r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){ h=s=0; } else { const d=max-min; s=l>0.5? d/(2-max-min) : d/(max+min); switch(max){ case r: h=(g-b)/d + (g<b?6:0); break; case g: h=(b-r)/d +2; break; case b: h=(r-g)/d +4; break; } h/=6; } return [h,s,l]; }
+function hslToRgb(h,s,l){ let r,g,b; if(s===0){ r=g=b=l; } else { const hue2rgb=(p,q,t)=>{ if(t<0) t+=1; if(t>1) t-=1; if(t<1/6) return p + (q-p)*6*t; if(t<1/2) return q; if(t<2/3) return p + (q-p)*(2/3 - t)*6; return p; }; const q=l<0.5? l*(1+s): l+s - l*s; const p=2*l - q; r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3); } return [Math.round(r*255), Math.round(g*255), Math.round(b*255)]; }
+
+let customBgDataURL = localStorage.getItem('nexus_custom_bg') || null;
+if(customBgDataURL) bgImages.custom.url = customBgDataURL;
+
+function applyThemeV5(theme){
+    const p = presetsV5[theme.preset] || presetsV5.original;
+    document.documentElement.style.setProperty('--primary-red', p.primary);
+    document.documentElement.style.setProperty('--dark-red', hexToDark(p.primary));
+    document.documentElement.style.setProperty('--bg-color', p.bg);
+    document.documentElement.style.setProperty('--surface-color', p.surface);
+    document.documentElement.style.setProperty('--lucky-bg', p.luckyBg);
+    document.documentElement.style.setProperty('--lucky-color', p.luckyColor);
+    document.documentElement.style.setProperty('--lucky-border', p.luckyBorder);
+    document.documentElement.style.setProperty('--discord-bg', p.discordBg);
+    document.documentElement.style.setProperty('--discord-color', p.discordColor);
+    document.documentElement.style.setProperty('--discord-border', p.discordBorder);
+    document.documentElement.style.setProperty('--hdr-glow', `0 0 15px ${hexToRgba(p.primary,0.6)}, 0 0 30px ${hexToRgba(p.primary,0.4)}`);
+    document.documentElement.style.setProperty('--hdr-glow-intense', `0 0 20px ${hexToRgba(p.primary,0.8)}, 0 0 40px ${hexToRgba(p.primary,0.6)}`);
+    document.documentElement.style.setProperty('--bg-overlay-opacity', (theme.bgOpacity/100).toFixed(2));
+    const hero = document.getElementById('heroCarousel');
+    if(hero) hero.style.height = theme.bannerHeight + 'px';
+    const vhs = document.getElementById('vhsOverlay');
+    if(vhs) vhs.style.display = theme.vhs ? 'block' : 'none';
+    document.body.style.backgroundColor = p.bg;
+    document.body.classList.toggle('card-compact', theme.cardSize==='compact');
+    document.body.classList.toggle('card-large', theme.cardSize==='large');
+    const bgDiv = document.getElementById('siteBg');
+    let bgData = bgImages[theme.bgImage];
+    if(theme.bgImage==='custom' && customBgDataURL) bgData = { url: customBgDataURL };
+    if(bgData && bgData.url){
+        bgDiv.style.backgroundImage = `url('${bgData.url}')`;
+        bgDiv.style.filter = `blur(${theme.bgBlur}px)`;
+        bgDiv.classList.add('active');
+        document.body.classList.add('has-bg');
+    } else {
+        bgDiv.classList.remove('active');
+        document.body.classList.remove('has-bg');
+        bgDiv.style.backgroundImage = '';
+    }
+    const bh = document.getElementById('bannerHeight'); if(bh){ bh.value = theme.bannerHeight; document.getElementById('bannerHeightVal').innerText = theme.bannerHeight+'px'; }
+    const bb = document.getElementById('bgBlur'); if(bb){ bb.value = theme.bgBlur; document.getElementById('bgBlurVal').innerText = theme.bgBlur+'px'; }
+    const bo = document.getElementById('bgOpacity'); if(bo){ bo.value = theme.bgOpacity; document.getElementById('bgOpacityVal').innerText = theme.bgOpacity+'%'; }
+    const tvhs = document.getElementById('toggleVHS'); if(tvhs) tvhs.checked = theme.vhs;
+    const tanim = document.getElementById('toggleAnim'); if(tanim) tanim.checked = theme.animations;
+    const tadapt = document.getElementById('toggleAdapt'); if(tadapt) tadapt.checked = theme.adapt!==false;
+    document.querySelectorAll('.preset-btn').forEach(b=> b.classList.toggle('active', b.dataset.preset===theme.preset));
+    document.querySelectorAll('.bg-preset-btn').forEach(b=> b.classList.toggle('active', b.dataset.bg===theme.bgImage));
+    document.querySelectorAll('.card-size-btn').forEach(b=> b.classList.toggle('active', b.dataset.size===theme.cardSize));
+}
+function saveThemeV5(t){ localStorage.setItem('nexus_v5_theme', JSON.stringify(t)); try{ document.cookie = `nexus_v5_theme=${encodeURIComponent(JSON.stringify(t))}; max-age=31536000; path=/`; }catch{} }
+function loadThemeV5(){
+    try{
+        const s = localStorage.getItem('nexus_v5_theme');
+        if(s) return {...defaultThemeV5, ...JSON.parse(s)};
+        const m = document.cookie.match(/nexus_v5_theme=([^;]+)/);
+        if(m) return {...defaultThemeV5, ...JSON.parse(decodeURIComponent(m[1]))};
+    }catch{}
+    return {...defaultThemeV5};
+}
+let currentThemeV5 = loadThemeV5();
+
+function renderPresetUI(){
+    const grid = document.getElementById('presetGrid');
+    grid.innerHTML = Object.entries(presetsV5).map(([key, p])=> `<div class="preset-btn" data-preset="${key}" style="background:${p.grad}" title="${p.name}"><small>${p.name}</small></div>`).join('');
+    grid.querySelectorAll('.preset-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            currentThemeV5.preset = btn.dataset.preset;
+            applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5);
+        });
+    });
+    const bgGrid = document.getElementById('bgPresetGrid');
+    bgGrid.innerHTML = Object.entries(bgImages).map(([key, b])=> {
+        if(key==='none') return `<div class="bg-preset-btn active" data-bg="none" style="background:#111; display:flex; align-items:center; justify-content:center;"><span>SEM FUNDO</span></div>`;
+        if(key==='custom'){
+            if(!customBgDataURL) return `<div class="bg-preset-btn" data-bg="custom" style="background:#111; display:flex; align-items:center; justify-content:center; opacity:.5;"><span>MEU FUNDO</span></div>`;
+            return `<div class="bg-preset-btn" data-bg="custom" style="background-image:url('${customBgDataURL}')" title="MEU FUNDO"><span>MEU FUNDO</span></div>`;
+        }
+        return `<div class="bg-preset-btn" data-bg="${key}" style="background-image:url('${b.url}')" title="${b.name}"><span>${b.name}</span></div>`;
+    }).join('');
+    bgGrid.querySelectorAll('.bg-preset-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            currentThemeV5.bgImage = btn.dataset.bg;
+            applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5);
+        });
+    });
+}
+renderPresetUI();
+applyThemeV5(currentThemeV5);
+
+const gearBtn = document.getElementById('settingsGearBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+const settingsOverlay = document.getElementById('settingsOverlay');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+function openSettings(){ settingsPanel.classList.add('active'); settingsOverlay.classList.add('active'); gearBtn.style.transform='rotate(90deg)'; }
+function closeSettings(){ settingsPanel.classList.remove('active'); settingsOverlay.classList.remove('active'); gearBtn.style.transform=''; }
+gearBtn.addEventListener('click', ()=> settingsPanel.classList.contains('active') ? closeSettings() : openSettings());
+closeSettingsBtn.addEventListener('click', closeSettings);
+settingsOverlay.addEventListener('click', closeSettings);
+document.getElementById('bannerHeight').addEventListener('input', e=>{ currentThemeV5.bannerHeight=parseInt(e.target.value); applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); });
+document.getElementById('bgBlur').addEventListener('input', e=>{ currentThemeV5.bgBlur=parseInt(e.target.value); applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); });
+document.getElementById('bgOpacity').addEventListener('input', e=>{ currentThemeV5.bgOpacity=parseInt(e.target.value); applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); });
+document.getElementById('toggleVHS').addEventListener('change', e=>{ currentThemeV5.vhs=e.target.checked; applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); });
+document.getElementById('toggleAnim').addEventListener('change', e=>{ currentThemeV5.animations=e.target.checked; applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); });
+document.getElementById('toggleAdapt').addEventListener('change', e=>{ currentThemeV5.adapt=e.target.checked; saveThemeV5(currentThemeV5); });
+function setCardSize(s){ currentThemeV5.cardSize=s; applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5); }
+document.getElementById('resetTheme').addEventListener('click', ()=>{
+    localStorage.removeItem('nexus_v5_theme'); document.cookie='nexus_v5_theme=; max-age=0; path=/';
+    currentThemeV5={...defaultThemeV5}; applyThemeV5(currentThemeV5);
+});
+
+/* CUSTOM BG LOGIC */
+const fileInput = document.getElementById('customFileInput');
+const uploadZone = document.getElementById('uploadZone');
+const uploadPreview = document.getElementById('uploadPreview');
+uploadZone.addEventListener('click', ()=> fileInput.click());
+if(customBgDataURL){ uploadPreview.src=customBgDataURL; uploadPreview.style.display='block'; }
+
+function compressImage(file, maxW=1280){
+    return new Promise(res=>{
+        const reader = new FileReader();
+        reader.onload = e=>{
+            const img = new Image();
+            img.onload = ()=>{
+                const canvas = document.createElement('canvas');
+                let w=img.width, h=img.height;
+                if(w>maxW){ h = h*(maxW/w); w=maxW; }
+                canvas.width=w; canvas.height=h;
+                canvas.getContext('2d').drawImage(img,0,0,w,h);
+                res(canvas.toDataURL('image/jpeg',0.8));
+            };
+            img.src=e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+function extractDominantColor(dataURL){
+    return new Promise(resolve=>{
+        const img = new Image();
+        img.onload = ()=>{
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width=80; canvas.height=80;
+            ctx.drawImage(img,0,0,80,80);
+            const data = ctx.getImageData(0,0,80,80).data;
+            let r=0,g=0,b=0,count=0;
+            for(let i=0;i<data.length;i+=16){
+                const pr=data[i], pg=data[i+1], pb=data[i+2], pa=data[i+3];
+                if(pa<120) continue;
+                if(pr<15 && pg<15 && pb<15) continue;
+                if(pr>250 && pg>250 && pb>250) continue;
+                const sat = Math.max(pr,pg,pb)-Math.min(pr,pg,pb);
+                if(sat<20) continue;
+                r+=pr; g+=pg; b+=pb; count++;
+            }
+            if(count===0){ resolve('#ff003c'); return; }
+            r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
+            const hsl = rgbToHsl(r,g,b);
+            hsl[1]=0.9; hsl[2]=0.58;
+            const rgb = hslToRgb(...hsl);
+            resolve(rgbToHex(rgb[0],rgb[1],rgb[2]));
+        };
+        img.src=dataURL;
+    });
+}
+async function handleCustomUpload(file){
+    const compressed = await compressImage(file);
+    customBgDataURL = compressed;
+    localStorage.setItem('nexus_custom_bg', compressed);
+    bgImages.custom.url = compressed;
+    uploadPreview.src=compressed; uploadPreview.style.display='block';
+    currentThemeV5.bgImage='custom';
+    if(currentThemeV5.adapt!==false){
+        const color = await extractDominantColor(compressed);
+        presetsV5.custom = {
+            name:'MEU FUNDO',
+            primary: color,
             bg: '#050505',
-            surface: '#111111',
-            bannerHeight: 400,
-            vhs: true
+            surface: '#121212',
+            luckyBg: hexToRgba(color,0.12),
+            luckyColor: color,
+            luckyBorder: color,
+            discordBg: hexToRgba(color,0.12),
+            discordColor: color,
+            discordBorder: color,
+            grad: `linear-gradient(135deg, ${color}, #000)`
         };
+        currentThemeV5.preset='custom';
+    }
+    renderPresetUI();
+    applyThemeV5(currentThemeV5);
+    saveThemeV5(currentThemeV5);
+}
+fileInput.addEventListener('change', async e=>{
+    const file = e.target.files[0];
+    if(file) await handleCustomUpload(file);
+});
+uploadZone.addEventListener('dragover', e=>{ e.preventDefault(); uploadZone.style.borderColor='var(--primary-red)'; });
+uploadZone.addEventListener('dragleave', ()=>{ uploadZone.style.borderColor='#333'; });
+uploadZone.addEventListener('drop', async e=>{
+    e.preventDefault(); uploadZone.style.borderColor='#333';
+    const file = e.dataTransfer.files[0];
+    if(file && file.type.startsWith('image/')) await handleCustomUpload(file);
+});
+document.getElementById('btnRemoveCustom').addEventListener('click', ()=>{
+    localStorage.removeItem('nexus_custom_bg');
+    customBgDataURL=null;
+    bgImages.custom.url='';
+    uploadPreview.style.display='none';
+    uploadPreview.src='';
+    if(currentThemeV5.bgImage==='custom') currentThemeV5.bgImage='none';
+    if(currentThemeV5.preset==='custom') currentThemeV5.preset='original';
+    renderPresetUI(); applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5);
+});
+document.getElementById('btnApplyColor').addEventListener('click', async ()=>{
+    if(!customBgDataURL) return alert('Envie uma foto primeiro');
+    const color = await extractDominantColor(customBgDataURL);
+    presetsV5.custom = {
+        name:'MEU FUNDO', primary:color, bg:'#050505', surface:'#121212',
+        luckyBg:hexToRgba(color,0.12), luckyColor:color, luckyBorder:color,
+        discordBg:hexToRgba(color,0.12), discordColor:color, discordBorder:color,
+        grad:`linear-gradient(135deg, ${color}, #000)`
+    };
+    currentThemeV5.preset='custom';
+    renderPresetUI(); applyThemeV5(currentThemeV5); saveThemeV5(currentThemeV5);
+});
 
-        const presets = {
-            original: { primary: '#ff003c', bg: '#050505', surface: '#111111' },
-            cyber: { primary: '#00f0ff', bg: '#020a0e', surface: '#0a1e24' },
-            toxic: { primary: '#39ff14', bg: '#050a02', surface: '#111f0a' },
-            purple: { primary: '#b400ff', bg: '#0a0212', surface: '#1a0a2a' },
-            orange: { primary: '#ff7b00', bg: '#120800', surface: '#221505' },
-            gold: { primary: '#ffcc00', bg: '#0f0e02', surface: '#1e1c08' },
-            white: { primary: '#ffffff', bg: '#0a0a0a', surface: '#1a1a1a' },
-            blood: { primary: '#ff0000', bg: '#000000', surface: '#1a0000' }
-        };
+/* STORAGE V6 - FAVORITOS SEM CONTA */
+const FAV_KEY='nexus_favs_v6';
+const COM_KEY='nexus_comments_v6';
+function loadFavs(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)||'[]'); }catch{ return []; } }
+function saveFavs(a){ localStorage.setItem(FAV_KEY, JSON.stringify(a)); }
+function isFavorited(id){ return loadFavs().includes(id); }
+let currentGameId=null;
+function toggleFavorite(id){
+    const favs = loadFavs();
+    const idx = favs.indexOf(id);
+    if(idx>=0) favs.splice(idx,1); else favs.push(id);
+    saveFavs(favs);
+    refreshFavUI();
+    updateFavButton(id);
+    renderFavorites();
+    // animacao no card
+    renderGames(window.filteredGames || gamesDB);
+}
+function refreshFavUI(){
+    const favs = loadFavs();
+    document.getElementById('favHeaderCount').innerText = favs.length;
+    document.getElementById('favCountSide').innerText = favs.length;
+}
+function updateFavButton(id){
+    const btn = document.getElementById('btnFav');
+    if(!btn) return;
+    const fav = isFavorited(id);
+    btn.classList.toggle('active', fav);
+    btn.innerHTML = fav ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+}
+function renderFavorites(){
+    const favIds = loadFavs();
+    const favGames = gamesDB.filter(g=> favIds.includes(g.id));
+    renderSingleGrid('container-favoritos', favGames);
+}
 
-        function hexToDark(hex){
-            // escurece 50%
-            const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(2,4),16); const b = parseInt(hex.slice(4,6),16);
-            return `rgb(${Math.floor(r*0.4)}, ${Math.floor(g*0.15)}, ${Math.floor(b*0.25)})`;
-        }
-        function hexToRgba(hex, alpha){
-            const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(3,5),16); const b = parseInt(hex.slice(5,7),16);
-            return `rgba(${r},${g},${b},${alpha})`;
-        }
+/* COMENTARIOS SEM CONTA */
+function loadComments(){ try{ return JSON.parse(localStorage.getItem(COM_KEY)||'{}'); }catch{ return {}; } }
+function saveComments(c){ localStorage.setItem(COM_KEY, JSON.stringify(c)); }
+function loadGameComments(id){ const all=loadComments(); return all[id]||[]; }
+function renderComments(id){
+    const list = loadGameComments(id);
+    const container = document.getElementById('commentList');
+    const count = document.getElementById('commentCount');
+    count.innerText = list.length;
+    if(list.length===0){ container.innerHTML = `<div style="color:#555; font-size:.8rem; text-align:center; padding:10px; border:1px dashed #222; border-radius:6px;">Deixe sua opinião guardada.</div>`; return; }
+    container.innerHTML = list.map(c=> `<div class="comment-item"><div class="comment-user"><span><i class="fas fa-user"></i> ${c.user}</span><small>${c.date}</small></div><div class="comment-text">${escapeHtml(c.text)}</div></div>`).join('');
+}
+function escapeHtml(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+function addComment(){
+    const nameInput = document.getElementById('comName');
+    const textInput = document.getElementById('comText');
+    const text = textInput.value.trim();
+    if(!text) return;
+    if(!currentGameId) return;
+    const name = nameInput.value.trim() || 'Anônimo';
+    const all = loadComments();
+    if(!all[currentGameId]) all[currentGameId]=[];
+    all[currentGameId].push({user:name, text, date: new Date().toLocaleDateString('pt-BR')});
+    saveComments(all); textInput.value=''; renderComments(currentGameId);
+    if(nameInput.value.trim()) localStorage.setItem('nexus_last_name', nameInput.value.trim());
+}
 
-        function applyTheme(theme){
-            document.documentElement.style.setProperty('--primary-red', theme.primary);
-            document.documentElement.style.setProperty('--dark-red', hexToDark(theme.primary));
-            document.documentElement.style.setProperty('--bg-color', theme.bg);
-            document.documentElement.style.setProperty('--surface-color', theme.surface);
-            document.documentElement.style.setProperty('--hdr-glow', `0 0 15px ${hexToRgba(theme.primary,0.6)}, 0 0 30px ${hexToRgba(theme.primary,0.4)}`);
-            document.documentElement.style.setProperty('--hdr-glow-intense', `0 0 20px ${hexToRgba(theme.primary,0.8)}, 0 0 40px ${hexToRgba(theme.primary,0.6)}`);
-            document.getElementById('heroCarousel').style.height = theme.bannerHeight + 'px';
-            document.getElementById('vhsOverlay').style.display = theme.vhs ? 'block' : 'none';
-            document.body.style.backgroundColor = theme.bg;
+/* ADBLOCK */
+let pendingDownloadUrl = null;
+let adblockChoice = localStorage.getItem('nexus_adblock_pref') || 'none';
+function handleDownloadClick(e, url){
+    if(adblockChoice==='never'){ return true; }
+    e.preventDefault();
+    pendingDownloadUrl = url;
+    document.getElementById('adblockModal').classList.add('active');
+    document.body.style.overflow='hidden';
+    return false;
+}
+document.getElementById('btnAdblockDownload').addEventListener('click', ()=>{
+    closeModal('adblockModal');
+    if(pendingDownloadUrl) window.open(pendingDownloadUrl, '_blank');
+});
+document.getElementById('btnAdblockNever').addEventListener('click', ()=>{
+    localStorage.setItem('nexus_adblock_pref','never'); adblockChoice='never';
+    closeModal('adblockModal');
+    if(pendingDownloadUrl) window.open(pendingDownloadUrl, '_blank');
+});
+document.getElementById('btnAdblockLater').addEventListener('click', ()=>{
+    localStorage.setItem('nexus_adblock_pref','later'); adblockChoice='later';
+    closeModal('adblockModal');
+    if(pendingDownloadUrl) window.open(pendingDownloadUrl, '_blank');
+});
 
-            // atualiza inputs
-            document.getElementById('colorPrimary').value = theme.primary;
-            document.getElementById('colorPrimaryText').innerText = theme.primary;
-            document.getElementById('colorBg').value = theme.bg;
-            document.getElementById('colorBgText').innerText = theme.bg;
-            document.getElementById('colorSurface').value = theme.surface;
-            document.getElementById('colorSurfaceText').innerText = theme.surface;
-            document.getElementById('bannerHeight').value = theme.bannerHeight;
-            document.getElementById('bannerHeightVal').innerText = theme.bannerHeight + 'px';
-            document.getElementById('toggleVHS').checked = theme.vhs;
-        }
-
-        function saveTheme(theme){
-            localStorage.setItem('nexus_theme', JSON.stringify(theme));
-            document.cookie = `nexus_theme=${encodeURIComponent(JSON.stringify(theme))}; max-age=31536000; path=/`;
-        }
-
-        function loadTheme(){
-            try{
-                const saved = localStorage.getItem('nexus_theme');
-                if(saved) return {...defaultTheme, ...JSON.parse(saved)};
-                const m = document.cookie.match(/nexus_theme=([^;]+)/);
-                if(m) return {...defaultTheme, ...JSON.parse(decodeURIComponent(m[1]))};
-            }catch(e){}
-            return {...defaultTheme};
-        }
-
-        let currentTheme = loadTheme();
-        applyTheme(currentTheme);
-
-        // Controles do painel
-        const gearBtn = document.getElementById('settingsGearBtn');
-        const settingsPanel = document.getElementById('settingsPanel');
-        const settingsOverlay = document.getElementById('settingsOverlay');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-
-        function openSettings(){ settingsPanel.classList.add('active'); settingsOverlay.classList.add('active'); gearBtn.style.transform = 'rotate(90deg)'; }
-        function closeSettings(){ settingsPanel.classList.remove('active'); settingsOverlay.classList.remove('active'); gearBtn.style.transform = ''; }
-
-        gearBtn.addEventListener('click', ()=>{ settingsPanel.classList.contains('active') ? closeSettings() : openSettings(); });
-        closeSettingsBtn.addEventListener('click', closeSettings);
-        settingsOverlay.addEventListener('click', closeSettings);
-
-        document.getElementById('colorPrimary').addEventListener('input', e=>{ currentTheme.primary = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
-        document.getElementById('colorBg').addEventListener('input', e=>{ currentTheme.bg = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
-        document.getElementById('colorSurface').addEventListener('input', e=>{ currentTheme.surface = e.target.value; applyTheme(currentTheme); saveTheme(currentTheme); });
-        document.getElementById('bannerHeight').addEventListener('input', e=>{ currentTheme.bannerHeight = parseInt(e.target.value); applyTheme(currentTheme); saveTheme(currentTheme); });
-        document.getElementById('toggleVHS').addEventListener('change', e=>{ currentTheme.vhs = e.target.checked; applyTheme(currentTheme); saveTheme(currentTheme); });
-
-        document.querySelectorAll('.preset-btn').forEach(btn=>{
-            btn.addEventListener('click', ()=>{
-                const key = btn.dataset.preset;
-                const p = presets[key];
-                if(p){ currentTheme = {...currentTheme, ...p}; applyTheme(currentTheme); saveTheme(currentTheme);
-                    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-                }
-            });
-        });
-
-        document.getElementById('resetTheme').addEventListener('click', ()=>{
-            currentTheme = {...defaultTheme};
-            localStorage.removeItem('nexus_theme');
-            document.cookie = 'nexus_theme=; max-age=0; path=/';
-            applyTheme(currentTheme);
-            document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
-            document.querySelector('[data-preset="original"]').classList.add('active');
-        });
-
-        // ===== RESTO DO SITE (igual V5) =====
-        const gamesDB = [
+/* DB */
+const gamesDB = [
             // JOGOS PC
             { id: 1, category: "jogos-pc",
              title: "Angry Birds",
@@ -588,7 +1019,7 @@
               img: "https://gogunlocked.com/wp-content/uploads/2026/06/Evil-Nun-The-Broken-Mask-Free-Download-1-639x361.png",
                tags: ["Terror", "Puzzle" ],
                 desc: "Evil Nun: The Broken Mask é um jogo de terror em primeira pessoa onde você é capturado pela Irmã Madeline em uma escola abandonada. ",
-                 link: "https://bzzhr.to/1hfwavoruzcr" },
+                 link: "https://gofile.io/d/J0YOFG" },
 
             { id: 32, category: "jogos-pc",
              title: "Far Cry 1",
@@ -651,21 +1082,7 @@
               img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTihsZMP9aa8ELOTsuvUO3KfDK7hVxrerpmoyS7Gn3jyUqzN4Vnc_LyYOAQ&s=10",
                tags: ["Casual", "Puzzle", "Terror" ],
                 desc: "Fears to Fathom: Scratch Creek acompanha Tessa Langley e Marcus Reed, um jovem casal do Oregon que precisa lidar com uma viagem de carro interrompida, uma cidade sinistra e uma experiência cooperativa inédita na franquia",
-                 link: "https://bzzhr.to/tarai76sva5q" },
-
-            { id: 3711111111111111111111112, category: "jogos-pc",
-             title: "Fears to Fathom: Norwood Hitchhike",
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKp8m0jIJlaqiURajKXO2F7xxjKjmXwjEKgwtxuSsXO_Fyaky6Rc9isQg&s=10",
-               tags: ["Casual", "Puzzle", "Terror" ],
-                desc: "Fears to Fathom: Norwood Hitchhike é o segundo episódio da antologia de terror psicológico da Rayll Studios, baseado em fatos reais. A trama acompanha Holly Gardner, uma jovem de 19 anos que precisa desviar de um engarrafamento e acaba hospedada em um motel isolado, enfrentando uma noite aterrorizante de perseguição no Vale de Norwood",
-                 link: "https://bzzhr.to/yh3te4j26dop" },
-
-            { id: 37111111111111111111111123, category: "jogos-pc",
-             title: "Fears to Fathom: Carson House",
-              img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2120900/header.jpg?t=1761626861",
-               tags: ["Casual", "Puzzle", "Terror" ],
-                desc: "Fears to Fathom: Carson House é o terceiro episódio da antologia de terror psicológico baseada em Fears to Fathom no Steam. A história acompanha Noah Baker, um jovem de 18 anos que aceita o trabalho de cuidar da casa de um rico empresário e personalidade da mídia durante a noite.",
-                 link: "https://bzzhr.to/0ahxm3z8vz9r" },
+                 link: "https://gofile.io/d/xOAHes" },
 
             { id: 371111111111111111111111234, category: "jogos-pc",
              title: "Fears to Fathom: Woodbury Getaway",
@@ -1980,130 +2397,277 @@
                tags: ["Ajudante", ],
                 desc: "O scrcpy serve para você espelhar e controlar a tela do seu celular Android diretamente pelo computador, permitindo que você use o mouse e o teclado para abrir aplicativos, digite mensagens com rapidez, transmita o áudio do aparelho para os alto-falantes do PC, grave vídeos de tudo o que acontece e ainda transfira arquivos ou copie textos entre os dois dispositivos de forma instantânea através de um cabo USB ou da rede Wi-Fi.  VERSÃO PRA COMPUTADORES de 32 BITS(86x): https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win32-v4.0.zip",
                  link: "https://github.com/Genymobile/scrcpy/releases/download/v4.0/scrcpy-win64-v4.0.zip" },
-            // COLE AQUI O RESTO DO SEU gamesDB COMPLETO - mantive resumido pra ficar leve, mas funciona com o completo também
-        ];
+];
 
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-        function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
-        hamburgerBtn.addEventListener('click', toggleSidebar);
-        sidebarBackdrop.addEventListener('click', toggleSidebar);
-        document.querySelectorAll('.nav-link').forEach(link=>{ link.addEventListener('click', ()=>{ if(window.innerWidth <= 900) document.body.classList.add('sidebar-collapsed'); }); });
+/* CATEGORIA NAVEGACAO - NAO FICA TUDO EMBAIXO */
+const categoryOrder = ["jogos-pc","apps-pc","jogos-android","apps-android","emuladores","extras"];
+const categoryNames = { "jogos-pc":"Jogos PC", "apps-pc":"Apps PC", "jogos-android":"Jogos Android", "apps-android":"Apps Android", "emuladores":"Emuladores", "extras":"Extras" };
+let currentCategoryIndex = 0;
+let lastCategoryIndex = 0;
 
-        let currentSlide = 0, carouselInterval, carouselGames = [];
-        function initCarousel(){
-            const track = document.getElementById('carouselTrack');
-            const dots = document.getElementById('carouselDots');
-            const shuffled = [...gamesDB].sort(()=>0.5-Math.random());
-            carouselGames = shuffled.slice(0, 6);
-            track.innerHTML = ''; dots.innerHTML = '';
-            carouselGames.forEach((game, idx)=>{
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                slide.style.backgroundImage = `url('${game.img}')`;
-                slide.onclick = ()=> openGameModal(game.id);
-                slide.innerHTML = `<div class="hero-content"><span class="hero-tag">DESTAQUE</span><h1 class="hero-title">${game.title}</h1><p class="hero-description">${game.desc}</p><button class="btn-hero-play" onclick="event.stopPropagation(); openGameModal(${game.id})"><i class="fas fa-play"></i>CONFERIR</button></div>`;
-                track.appendChild(slide);
-                const dot = document.createElement('div'); dot.className = 'dot'+(idx===0?' active':''); dot.onclick=(e)=>{ e.stopPropagation(); goToSlide(idx); }; dots.appendChild(dot);
-            });
-            goToSlide(0); startCarousel();
-        }
-        function goToSlide(idx){ currentSlide = idx; document.getElementById('carouselTrack').style.transform = `translateX(-${idx * 100}%)`; document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===idx)); resetInterval(); }
-        function nextSlide(){ goToSlide((currentSlide+1)%carouselGames.length); }
-        function prevSlide(){ goToSlide((currentSlide-1+carouselGames.length)%carouselGames.length); }
-        function startCarousel(){ carouselInterval = setInterval(nextSlide, 4000); }
-        function resetInterval(){ clearInterval(carouselInterval); startCarousel(); }
-        document.getElementById('carouselNext').addEventListener('click', e=>{ e.stopPropagation(); nextSlide(); });
-        document.getElementById('carouselPrev').addEventListener('click', e=>{ e.stopPropagation(); prevSlide(); });
+function getCatName(id){ return categoryNames[id] || id; }
 
-        function renderSingleGrid(containerId, games){
-            const el = document.getElementById(containerId);
-            if(!el) return;
-            if(games.length===0){
-                el.innerHTML = `<div style="grid-column:1/-1; color:#555; padding:18px; text-align:center; font-family:Orbitron; font-size:0.7rem; border:1px dashed #222; border-radius:6px;">Nenhum item aqui</div>`;
-            } else {
-                el.innerHTML = games.map(game=>{
-                    const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
-                    return `<div class="game-card" onclick="openGameModal(${game.id})"><img src="${game.img}" class="game-img" loading="lazy"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
-                }).join('');
-            }
-        }
-        function renderGames(list){
-            const byCat = {"jogos-pc":[], "apps-pc":[], "jogos-android":[], "apps-android":[], "emuladores":[], "extras":[]};
-            list.forEach(g=>{ if(byCat[g.category]!==undefined) byCat[g.category].push(g); });
-            Object.entries(byCat).forEach(([cat, games])=>{ renderSingleGrid(`container-${cat}`, games); });
-        }
+function showCategory(idx){
+    if(idx<0) idx=0; if(idx>=categoryOrder.length) idx=categoryOrder.length-1;
+    lastCategoryIndex = currentCategoryIndex;
+    currentCategoryIndex = idx;
+    document.querySelectorAll('.category-section').forEach(sec=> sec.style.display='none');
+    const id = categoryOrder[idx];
+    const el = document.getElementById(`section-${id}`);
+    if(el) el.style.display='block';
+    document.getElementById('favSection').style.display='none';
+    const hero = document.getElementById('heroCarousel');
+    if(hero) hero.style.display = idx===0 ? 'block' : 'none';
+    window.scrollTo({top:0, behavior:'smooth'});
+    // update active in sidebar visually
+    document.querySelectorAll('aside .nav-link').forEach((a,i)=>{ a.style.background = i===idx ? 'rgba(255,255,255,0.05)' : ''; a.style.borderLeft = i===idx ? '3px solid var(--primary-red)' : ''; });
+    // refresh grid for that category if filtered
+    if(id==='jogos-pc' && window.pcFilterTag && window.pcFilterTag!=='Todos'){
+        renderSingleGrid('container-jogos-pc', gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(window.pcFilterTag)));
+    }
+}
+function showFavorites(){
+    document.querySelectorAll('.category-section').forEach(sec=> sec.style.display='none');
+    document.getElementById('favSection').style.display='block';
+    document.getElementById('heroCarousel').style.display='none';
+    renderFavorites();
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+function addCategoryNavs(){
+    categoryOrder.forEach((catId, idx)=>{
+        const section = document.getElementById(`section-${catId}`);
+        if(!section) return;
+        section.querySelectorAll('.cat-nav').forEach(n=>n.remove());
+        const prevId = idx>0 ? categoryOrder[idx-1] : null;
+        const nextId = idx<categoryOrder.length-1 ? categoryOrder[idx+1] : null;
+        const navHTML = (pos)=>{
+            if(idx===0 && pos==='top') return '';
+            return `<div class="cat-nav cat-nav-${pos}">
+                ${prevId ? `<button class="cat-nav-btn prev" onclick="showCategory(${idx-1})"><i class='fas fa-arrow-left'></i> VOLTAR: ${getCatName(prevId).toUpperCase()}</button>` : `<span></span>`}
+                ${nextId ? `<button class="cat-nav-btn next" onclick="showCategory(${idx+1})">${getCatName(nextId).toUpperCase()} <i class='fas fa-arrow-right'></i> PRÓXIMA</button>` : `<span></span>`}
+            </div>`;
+        };
+        const header = section.querySelector('.grid-header');
+        if(header) header.insertAdjacentHTML('afterend', navHTML('top'));
+        const grid = section.querySelector('.games-grid');
+        if(grid) grid.insertAdjacentHTML('afterend', navHTML('bottom'));
+    });
+}
 
-        const searchOverlay = document.getElementById('searchOverlay');
-        const modalSearchInput = document.getElementById('modalSearchInput');
-        const headerSearchTrigger = document.getElementById('headerSearchTrigger');
-        const searchResultsGrid = document.getElementById('searchResultsGrid');
-        const searchResultsInfo = document.getElementById('searchResultsInfo');
-        const closeSearchBtn = document.getElementById('closeSearchBtn');
-        function openSearchOverlay(){ searchOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; setTimeout(()=> modalSearchInput.focus(), 100); renderSearchResults(modalSearchInput.value); }
-        function closeSearchOverlay(){ searchOverlay.classList.remove('active'); if(!document.querySelector('.modal-overlay.active')) document.body.style.overflow = ''; modalSearchInput.value = ''; }
-        function renderSearchResults(term){
-            const q = term.toLowerCase().trim();
-            let filtered = gamesDB;
-            if(q) filtered = gamesDB.filter(g=> g.title.toLowerCase().includes(q) || g.tags.some(t=> t.toLowerCase().includes(q)));
-            searchResultsInfo.innerHTML = q ? `Encontrado <span>${filtered.length}</span> resultado(s) para "<span>${term}</span>"` : `Mostrando <span>${filtered.length}</span> arquivos`;
-            if(filtered.length===0){ searchResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#666; font-family:Orbitron;">Nenhum resultado</div>`; return; }
-            searchResultsGrid.innerHTML = filtered.map(game=>{
-                const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
-                return `<div class="game-card" onclick="closeSearchOverlay(); setTimeout(()=>openGameModal(${game.id}),200)"><img src="${game.img}" class="game-img"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
-            }).join('');
-        }
-        headerSearchTrigger.addEventListener('click', openSearchOverlay);
-        modalSearchInput.addEventListener('input', e=> renderSearchResults(e.target.value));
-        closeSearchBtn.addEventListener('click', closeSearchOverlay);
-        searchOverlay.addEventListener('click', e=>{ if(e.target===searchOverlay) closeSearchOverlay(); });
+/* SIDEBAR */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
+hamburgerBtn.addEventListener('click', toggleSidebar);
+sidebarBackdrop.addEventListener('click', toggleSidebar);
 
-        const filterBtn = document.getElementById('filterBtn');
-        const filterMenu = document.getElementById('filterMenu');
-        const todasTags = [...new Set(gamesDB.filter(g=>g.category==='jogos-pc').flatMap(g=>g.tags))].sort();
-        filterMenu.innerHTML = `<div class="filter-tag active" onclick="filtrarPorTag('Todos', event)">Todos</div>`;
-        todasTags.forEach(tag=>{ filterMenu.innerHTML += `<div class="filter-tag" onclick="filtrarPorTag('${tag}', event)">${tag}</div>`; });
-        filterBtn.addEventListener('click', ()=> filterMenu.classList.toggle('active'));
-        function filtrarPorTag(tag, ev){
-            document.querySelectorAll('.filter-tag').forEach(el=> el.classList.remove('active'));
-            ev.target.classList.add('active');
-            filterMenu.classList.remove('active');
-            if(tag==='Todos'){ renderSingleGrid('container-jogos-pc', gamesDB.filter(g=>g.category==='jogos-pc')); }
-            else { renderSingleGrid('container-jogos-pc', gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(tag))); }
-        }
-        document.addEventListener('click', e=>{ if(!e.target.closest('.filter-container')) filterMenu.classList.remove('active'); });
+/* CARROSSEL */
+let currentSlide = 0, carouselInterval, carouselGames = [];
+function initCarousel(){
+    const track = document.getElementById('carouselTrack');
+    const dots = document.getElementById('carouselDots');
+    const shuffled = [...gamesDB].sort(()=>0.5-Math.random());
+    carouselGames = shuffled.slice(0, 6);
+    track.innerHTML = ''; dots.innerHTML = '';
+    carouselGames.forEach((game, idx)=>{
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.style.backgroundImage = `url('${game.img}')`;
+        slide.onclick = ()=> openGameModal(game.id);
+        slide.innerHTML = `<div class="hero-content"><span class="hero-tag">DESTAQUE</span><h1 class="hero-title">${game.title}</h1><p class="hero-description">${game.desc}</p><button class="btn-hero-play" onclick="event.stopPropagation(); openGameModal(${game.id})"><i class="fas fa-play"></i>CONFERIR</button></div>`;
+        track.appendChild(slide);
+        const dot = document.createElement('div'); dot.className = 'dot'+(idx===0?' active':''); dot.onclick=(e)=>{ e.stopPropagation(); goToSlide(idx); }; dots.appendChild(dot);
+    });
+    goToSlide(0); startCarousel();
+}
+function goToSlide(idx){ currentSlide = idx; document.getElementById('carouselTrack').style.transform = `translateX(-${idx * 100}%)`; document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===idx)); resetInterval(); }
+function nextSlide(){ goToSlide((currentSlide+1)%carouselGames.length); }
+function prevSlide(){ goToSlide((currentSlide-1+carouselGames.length)%carouselGames.length); }
+function startCarousel(){ carouselInterval = setInterval(nextSlide, 5000); }
+function resetInterval(){ clearInterval(carouselInterval); startCarousel(); }
+document.getElementById('carouselNext').addEventListener('click', e=>{ e.stopPropagation(); nextSlide(); });
+document.getElementById('carouselPrev').addEventListener('click', e=>{ e.stopPropagation(); prevSlide(); });
 
-        function openGameModal(id){
-            const game = gamesDB.find(g=> g.id===id);
-            if(!game) return;
-            document.getElementById('modalImg').src = game.img;
-            document.getElementById('modalTitle').innerText = game.title;
-            document.getElementById('modalDesc').innerText = game.desc;
-            document.getElementById('modalTags').innerHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
-            document.getElementById('modalDownloadBtn').href = game.link;
-            document.getElementById('gameModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function openDmcaModal(){ document.getElementById('dmcaModal').classList.add('active'); document.body.style.overflow='hidden'; }
-        function closeModal(id){ document.getElementById(id).classList.remove('active'); if(!searchOverlay.classList.contains('active')) document.body.style.overflow=''; }
-        window.addEventListener('click', e=>{ if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('active'); document.body.style.overflow=''; } });
-        window.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(document.getElementById('settingsPanel').classList.contains('active')) closeSettings(); else if(searchOverlay.classList.contains('active')) closeSearchOverlay(); else document.querySelectorAll('.modal-overlay').forEach(m=> m.classList.remove('active')); document.body.style.overflow=''; } });
-        function playRandomGame(){
-            const btn = document.querySelector('.random-btn'); btn.style.pointerEvents='none';
-            const overlay = document.createElement('div'); overlay.style.cssText='position:fixed;inset:0;background:#000;color:#fff;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:bold;z-index:10002;font-family:Orbitron;text-align:center;padding:20px;'; document.body.appendChild(overlay);
-            const eff = setInterval(()=>{ const g=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`🎲 ${g.title}`; },80);
-            setTimeout(()=>{ clearInterval(eff); const final=gamesDB[Math.floor(Math.random()*gamesDB.length)]; overlay.innerHTML=`<div style="color:gold;text-shadow:0 0 30px gold">🏆 ${final.title}</div>`; setTimeout(()=>{ overlay.remove(); btn.style.pointerEvents='auto'; openGameModal(final.id); },800); },1800);
-        }
+function renderSingleGrid(containerId, games){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    if(games.length===0){
+        el.innerHTML = `<div style="grid-column:1/-1; color:#555; padding:18px; text-align:center; font-family:Orbitron; font-size:0.7rem; border:1px dashed #222; border-radius:6px;">Nenhum item aqui</div>`;
+    } else {
+        el.innerHTML = games.map(game=>{
+            const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+            const favClass = isFavorited(game.id) ? ' favorited' : '';
+            return `<div class="game-card${favClass}" onclick="openGameModal(${game.id})"><img src="${game.img}" class="game-img" loading="lazy"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
+        }).join('');
+    }
+}
+function renderGames(list){
+    window.filteredGames = list;
+    const byCat = {"jogos-pc":[], "apps-pc":[], "jogos-android":[], "apps-android":[], "emuladores":[], "extras":[]};
+    list.forEach(g=>{ if(byCat[g.category]!==undefined) byCat[g.category].push(g); });
+    Object.entries(byCat).forEach(([cat, games])=>{ renderSingleGrid(`container-${cat}`, games); });
+    const stat = document.getElementById('statTotal'); if(stat) stat.innerText = gamesDB.length;
+}
 
-        window.addEventListener('load', ()=>{
-            window.scrollTo(0,0);
-            setTimeout(()=>{
-                document.getElementById('loader').classList.add('hidden');
-                if(window.innerWidth > 900) document.body.classList.remove('sidebar-collapsed');
-                else document.body.classList.add('sidebar-collapsed');
-                initCarousel(); renderGames(gamesDB); renderSearchResults(''); window.scrollTo(0,0);
-            }, 2500);
-        });
-    </script>
+/* BUSCA */
+const searchOverlay = document.getElementById('searchOverlay');
+const modalSearchInput = document.getElementById('modalSearchInput');
+const headerSearchTrigger = document.getElementById('headerSearchTrigger');
+const searchResultsGrid = document.getElementById('searchResultsGrid');
+const searchResultsInfo = document.getElementById('searchResultsInfo');
+const closeSearchBtn = document.getElementById('closeSearchBtn');
+function openSearchOverlay(){ searchOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; setTimeout(()=> modalSearchInput.focus(), 100); renderSearchResults(modalSearchInput.value); }
+function closeSearchOverlay(){ searchOverlay.classList.remove('active'); if(!document.querySelector('.modal-overlay.active')) document.body.style.overflow=''; modalSearchInput.value=''; }
+function renderSearchResults(term){
+    const q = term.toLowerCase().trim();
+    let filtered = gamesDB;
+    if(q) filtered = gamesDB.filter(g=> g.title.toLowerCase().includes(q) || g.tags.some(t=> t.toLowerCase().includes(q)));
+    searchResultsInfo.innerHTML = q ? `Encontrado <span>${filtered.length}</span> resultado(s) para "<span>${term}</span>"` : `Mostrando <span>${filtered.length}</span> arquivos`;
+    if(filtered.length===0){ searchResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#666; font-family:Orbitron;">Nenhum resultado</div>`; return; }
+    searchResultsGrid.innerHTML = filtered.map(game=>{
+        const tagsHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+        return `<div class="game-card" onclick="closeSearchOverlay(); setTimeout(()=>openGameModal(${game.id}),200)"><img src="${game.img}" class="game-img"><div class="game-info"><h3 class="game-title">${game.title}</h3><div class="game-tags">${tagsHTML}</div></div></div>`;
+    }).join('');
+}
+headerSearchTrigger.addEventListener('click', openSearchOverlay);
+modalSearchInput.addEventListener('input', e=> renderSearchResults(e.target.value));
+closeSearchBtn.addEventListener('click', closeSearchOverlay);
+searchOverlay.addEventListener('click', e=>{ if(e.target===searchOverlay) closeSearchOverlay(); });
+
+const filterBtn = document.getElementById('filterBtn');
+const filterMenu = document.getElementById('filterMenu');
+const todasTags = [...new Set(gamesDB.filter(g=>g.category==='jogos-pc').flatMap(g=>g.tags))].sort();
+filterMenu.innerHTML = `<div class="filter-tag active" onclick="filtrarPorTag('Todos', event)">Todos</div>`;
+todasTags.forEach(tag=>{ filterMenu.innerHTML += `<div class="filter-tag" onclick="filtrarPorTag('${tag}', event)">${tag}</div>`; });
+filterBtn.addEventListener('click', ()=> filterMenu.classList.toggle('active'));
+window.pcFilterTag='Todos';
+function filtrarPorTag(tag, ev){
+    document.querySelectorAll('.filter-tag').forEach(el=> el.classList.remove('active'));
+    ev.target.classList.add('active');
+    filterMenu.classList.remove('active');
+    window.pcFilterTag=tag;
+    if(tag==='Todos'){ renderSingleGrid('container-jogos-pc', gamesDB.filter(g=>g.category==='jogos-pc')); }
+    else { renderSingleGrid('container-jogos-pc', gamesDB.filter(g=> g.category==='jogos-pc' && g.tags.includes(tag))); }
+}
+document.addEventListener('click', e=>{ if(!e.target.closest('.filter-container')) filterMenu.classList.remove('active'); });
+
+function openGameModal(id){
+    const game = gamesDB.find(g=> g.id===id);
+    if(!game) return;
+    currentGameId = id;
+    document.getElementById('modalImg').src = game.img;
+    document.getElementById('modalTitle').innerText = game.title;
+    document.getElementById('modalDesc').innerText = game.desc;
+    document.getElementById('modalTags').innerHTML = game.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+    const dlBtn = document.getElementById('modalDownloadBtn');
+    dlBtn.href = game.link;
+    dlBtn.onclick = (e)=> handleDownloadClick(e, game.link);
+    updateFavButton(id);
+    document.getElementById('btnFav').onclick = ()=> toggleFavorite(id);
+    const commentSec = document.getElementById('commentsSection');
+    commentSec.classList.remove('active');
+    document.getElementById('btnCommentToggle').classList.remove('active');
+    const lastName = localStorage.getItem('nexus_last_name')||'';
+    document.getElementById('comName').value = lastName;
+    renderComments(id);
+    document.getElementById('gameModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+document.getElementById('btnCommentToggle').addEventListener('click', ()=>{
+    const sec = document.getElementById('commentsSection');
+    sec.classList.toggle('active');
+    document.getElementById('btnCommentToggle').classList.toggle('active');
+});
+
+function openDmcaModal(){ document.getElementById('dmcaModal').classList.add('active'); document.body.style.overflow='hidden'; }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); if(!document.querySelector('.search-overlay.active') && !document.querySelector('.lucky-overlay.active')) document.body.style.overflow=''; }
+window.addEventListener('click', e=>{ if(e.target.classList.contains('modal-overlay')){ e.target.classList.remove('active'); document.body.style.overflow=''; } });
+window.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(document.getElementById('settingsPanel').classList.contains('active')) closeSettings(); else if(searchOverlay.classList.contains('active')) closeSearchOverlay(); else { document.querySelectorAll('.modal-overlay').forEach(m=> m.classList.remove('active')); const lucky=document.getElementById('luckyOverlay'); if(lucky) lucky.remove(); document.body.style.overflow=''; } } });
+
+/* ROLETA V6 */
+function playRandomGame(){
+    const existing = document.getElementById('luckyOverlay');
+    if(existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.id='luckyOverlay';
+    overlay.className='lucky-overlay';
+    overlay.innerHTML=`
+    <div class="lucky-roulette">
+        <div class="lucky-title-anim"><i class="fas fa-bolt"></i> NEXUS ROULETTE<i class="fas fa-bolt"></i></div>
+        <div style="position:relative; border-radius:10px; overflow:hidden;">
+            <img id="luckyImg" class="lucky-img" src="${gamesDB[0].img}">
+            <div id="luckyName" style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.95)); padding:36px 14px 12px; color:white; font-family:Orbitron; font-size:.95rem; font-weight:700; text-align:left; letter-spacing:.5px; text-shadow:0 2px 8px rgba(0,0,0,0.8);">...</div>
+            <div style="position:absolute; top:10px; left:10px; background:var(--primary-red); color:white; font-family:Orbitron; font-size:.6rem; padding:4px 8px; border-radius:4px; letter-spacing:1px;">SORTEANDO</div>
+        </div>
+        <div id="luckyStatus" class="lucky-status"><span class="dot-pulse"></span> ANALISANDO BIBLIOTECA... <span class="dot-pulse"></span></div>
+        <div id="luckyFinal" class="lucky-final" style="display:none;">
+            <h2 id="luckyFinalTitle"></h2>
+            <p id="luckyFinalDesc"></p>
+            <div style="display:flex; gap:8px;">
+                <button id="luckyPlayBtn" class="btn-download"><i class="fas fa-play"></i> VER AGORA</button>
+                <button id="luckyCloseBtn" class="btn-adblock-sec" style="padding:12px 16px; min-width:52px;"><i class="fas fa-times"></i></button>
+            </div>
+            <button id="luckyAgainBtn" style="margin-top:12px; background:transparent; border:1px dashed #333; color:#777; font-family:Orbitron; font-size:.62rem; cursor:pointer; letter-spacing:1.5px; padding:8px 14px; border-radius:20px;"><i class="fas fa-rotate"></i> GIRAR NOVAMENTE</button>
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(()=> overlay.classList.add('active'));
+    document.body.style.overflow='hidden';
+    const imgEl = document.getElementById('luckyImg');
+    const nameEl = document.getElementById('luckyName');
+    const statusEl = document.getElementById('luckyStatus');
+    let counter=0;
+    let interval = setInterval(()=>{
+        const g = gamesDB[Math.floor(Math.random()*gamesDB.length)];
+        if(counter%3===0) imgEl.classList.add('glitch'); else imgEl.classList.remove('glitch');
+        imgEl.src=g.img;
+        nameEl.innerText=g.title;
+        counter++;
+        if(counter>28){
+            clearInterval(interval);
+            let slowCounter=0;
+            let slowInt = setInterval(()=>{
+                const g2 = gamesDB[Math.floor(Math.random()*gamesDB.length)];
+                imgEl.classList.remove('glitch');
+                imgEl.src=g2.img;
+                nameEl.innerText=g2.title;
+                slowCounter++;
+                if(slowCounter>12){
+                    clearInterval(slowInt);
+                    const finalGame = gamesDB[Math.floor(Math.random()*gamesDB.length)];
+                    imgEl.src=finalGame.img;
+                    nameEl.innerText=finalGame.title;
+                    imgEl.style.borderColor='var(--primary-red)';
+                    imgEl.style.boxShadow='var(--hdr-glow-intense)';
+                    imgEl.style.filter='none';
+                    statusEl.style.display='none';
+                    const finalDiv = document.getElementById('luckyFinal');
+                    document.getElementById('luckyFinalTitle').innerText=finalGame.title;
+                    document.getElementById('luckyFinalDesc').innerText=finalGame.desc;
+                    finalDiv.style.display='block';
+                    const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary-red').trim()||'#ff003c';
+                    overlay.style.background=`radial-gradient(ellipse at center, ${hexToRgba(primary,0.18)} 0%, #000 72%)`;
+                    document.getElementById('luckyPlayBtn').onclick=()=>{
+                        overlay.remove(); document.body.style.overflow=''; openGameModal(finalGame.id);
+                    };
+                    document.getElementById('luckyCloseBtn').onclick=()=>{ overlay.remove(); document.body.style.overflow=''; };
+                    document.getElementById('luckyAgainBtn').onclick=()=>{ overlay.remove(); playRandomGame(); };
+                }
+            }, 130);
+        }
+    }, 55);
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay){ overlay.remove(); document.body.style.overflow=''; } });
+}
+
+window.addEventListener('load', ()=>{
+    window.scrollTo(0,0);
+    setTimeout(()=>{
+        document.getElementById('loader').classList.add('hidden');
+        if(window.innerWidth > 900) document.body.classList.remove('sidebar-collapsed');
+        else document.body.classList.add('sidebar-collapsed');
+        initCarousel(); renderGames(gamesDB); renderSearchResults(''); refreshFavUI(); addCategoryNavs(); showCategory(0); window.scrollTo(0,0);
+    }, 1200);
+});
+</script>
 </body>
 </html>
